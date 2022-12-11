@@ -27,7 +27,7 @@ public:
     void reserve() = delete;
     void shrink_to_fit() = delete;
 
-    void clear()
+    void clear() noexcept
     {
         ActualPtr()->m_insides.m_str[0] = '\0';
         ActualPtr()->m_insides.m_size = 0;
@@ -36,12 +36,12 @@ public:
     void operator+=(const CharT in_char) {ActualPtr()->__append__(in_char);}
     void operator+=(const CharT* in_str) {ActualPtr()->__append__(in_str);}
 
-    void operator=(const CharT in_char)
+    void operator=(const CharT in_char) noexcept
     {
         clear();
         ActualPtr()->__append__(in_char);
     }
-    void operator=(const CharT* in_str)
+    void operator=(const CharT* in_str) noexcept
     {
         clear();
         ActualPtr()->__append__(in_str);
@@ -333,7 +333,7 @@ protected:
 
     CharT* peek() {return ActualPtr()->m_insides.m_str; }
 
-    constexpr void __append__(const CharT* in_str)
+    constexpr void __append__(const CharT* in_str)  noexcept
     {
         if (nullptr == in_str) {
             this->clear();
@@ -352,12 +352,12 @@ protected:
         *copy_to = '\0';
         p->m_insides.m_size = copy_to - p->m_insides.m_str;
     }
-    constexpr void __append__(const CharT in_char)
+    constexpr void __append__(const CharT in_char) noexcept
     {
         auto p = ActualPtr();
         p->__append__(&in_char, 1);
     }
-    constexpr void __append__(const CharT* in_str, const size_type in_size)
+    constexpr void __append__(const CharT* in_str, const size_type in_size) noexcept
     {
         if (0 == in_size) {
             return;
@@ -448,7 +448,7 @@ public:
     }
 
     template<size_t TOtherSize>
-    constexpr fstring_base& operator=(const fstring_base<TOtherSize, CharT>& in_fixed)
+    constexpr fstring_base& operator=(const fstring_base<TOtherSize, CharT>& in_fixed) noexcept
     {
         this->clear();
         __append__(in_fixed.c_str(), in_fixed.size());
@@ -456,7 +456,7 @@ public:
     }
 
     template<size_t TOtherSize>
-    constexpr fstring_base& operator=(fstring_base<TOtherSize, CharT>&& in_fixed)
+    constexpr fstring_base& operator=(fstring_base<TOtherSize, CharT>&& in_fixed) noexcept
     {
         this->clear();
         __append__(in_fixed.c_str(), in_fixed.size());

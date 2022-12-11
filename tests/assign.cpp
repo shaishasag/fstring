@@ -178,3 +178,34 @@ TEST(AssignTests, RepeasedAssign)
         EXPECT_EQ(ms1.size(), 1);
     }
 }
+
+TEST(AssignTests, Swap)
+{
+    {   // swap same size fstring
+        fixed::fstring31 a("Herbivore");
+        fixed::fstring31 b("Carnivore");
+        std::swap(a, b);
+        EXPECT_STREQ(a.c_str(), "Carnivore");
+        EXPECT_STREQ(b.c_str(), "Herbivore");
+    }
+#if 0
+    {   // swap same size fstring_ref
+        fixed::fstring31 a("Herbivore");
+        fixed::fstring31 b("Carnivore");
+
+        fixed::fstring_ref a_ref(a);
+        fixed::fstring_ref b_ref(b);
+        std::swap(a_ref, b_ref);
+
+        EXPECT_STREQ(a_ref.c_str(), "Carnivore");
+        EXPECT_STREQ(b_ref.c_str(), "Herbivore");
+    }
+    {   // swap different size fstring
+        fixed::fstring31 a("Herbivore");
+        fixed::fstring15 b("Carnivore");
+        std::swap(a, b);
+        EXPECT_STREQ(a.c_str(), "Carnivore");
+        EXPECT_STREQ(b.c_str(), "Herbivore");
+    }
+#endif
+}

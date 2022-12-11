@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		F600971F293D0621006F1F35 /* tests_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F600971E293D0621006F1F35 /* tests_main.cpp */; };
+		F61AE77429465442002F9078 /* traits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F61AE77329465442002F9078 /* traits.cpp */; };
 		F62BDD09293E512F0000567A /* construct.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F62BDD08293E512F0000567A /* construct.cpp */; };
 		F62BDD0A293E57620000567A /* gtest.cc in Sources */ = {isa = PBXBuildFile; fileRef = F62BDCFC293E502A0000567A /* gtest.cc */; };
 		F62BDD0B293E57B30000567A /* gtest-test-part.cc in Sources */ = {isa = PBXBuildFile; fileRef = F62BDCFB293E502A0000567A /* gtest-test-part.cc */; };
@@ -57,6 +58,7 @@
 		F600971E293D0621006F1F35 /* tests_main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = tests_main.cpp; path = tests/tests_main.cpp; sourceTree = SOURCE_ROOT; };
 		F600976F293D0CBC006F1F35 /* fstring.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fstring.h; sourceTree = SOURCE_ROOT; };
 		F6009770293D12D4006F1F35 /* WCFixedString.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WCFixedString.h; path = ../../../../Volumes/p4client/ProAudio/dev_main/ProAudio/XPlatform/Utilities/MiscUtils/WCFixedString.h; sourceTree = "<group>"; };
+		F61AE77329465442002F9078 /* traits.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = traits.cpp; sourceTree = "<group>"; };
 		F62BDC6B293E502A0000567A /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		F62BDC6D293E502A0000567A /* googletest-message-test.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "googletest-message-test.cc"; sourceTree = "<group>"; };
 		F62BDC6E293E502A0000567A /* googletest-output-test_.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "googletest-output-test_.cc"; sourceTree = "<group>"; };
@@ -519,6 +521,7 @@
 				F6BC984829411AFA002CC268 /* trim.cpp */,
 				F6BC984A2941D94C002CC268 /* variadic.cpp */,
 				F6BC98C029423926002CC268 /* find.cpp */,
+				F61AE77329465442002F9078 /* traits.cpp */,
 			);
 			path = tests;
 			sourceTree = "<group>";
@@ -640,6 +643,7 @@
 				F6BC984729410D1C002CC268 /* constexpr.cpp in Sources */,
 				F6F31645293FAA98008D93CF /* compare.cpp in Sources */,
 				F6BC984929411AFA002CC268 /* trim.cpp in Sources */,
+				F61AE77429465442002F9078 /* traits.cpp in Sources */,
 				F62BDD10293E585A0000567A /* gtest-filepath.cc in Sources */,
 				F62BDD11293E586E0000567A /* gtest-printers.cc in Sources */,
 				F62BDD0B293E57B30000567A /* gtest-test-part.cc in Sources */,
