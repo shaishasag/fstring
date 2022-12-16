@@ -3,6 +3,53 @@
 
 using namespace fixed;
 
+TEST(AssignTests, AssignObjects)
+{
+    const std::string std_postfix("!?");
+    const std::string_view view_postfix("++");
+    {
+        fixed::fstring31 fs1("Julian Cope");
+        EXPECT_STREQ(fs1.c_str(), "Julian Cope");
+
+        std::string std_s("The Teardrop Explodes");
+        fs1 = std_s;
+        EXPECT_STREQ(fs1.c_str(), "The Teardrop Explodes");
+        fs1 += std_postfix;
+        EXPECT_STREQ(fs1.c_str(), "The Teardrop Explodes!?");
+        fs1 += view_postfix;
+        EXPECT_STREQ(fs1.c_str(), "The Teardrop Explodes!?++");
+
+        fs1 = "Julian Cope";
+        EXPECT_STREQ(fs1.c_str(), "Julian Cope");
+        std::string_view std_sv(std_s);
+        fs1 = std_sv;
+        EXPECT_STREQ(fs1.c_str(), "The Teardrop Explodes");
+    }
+    {
+        fixed::fstring31 fs1("Julian Cope");
+        EXPECT_STREQ(fs1.c_str(), "Julian Cope");
+        fixed::fstring63 fixed_63("The Teardrop Explodes");
+        EXPECT_STREQ(fixed_63.c_str(), "The Teardrop Explodes");
+
+        fs1 = fixed_63;
+        EXPECT_STREQ(fs1.c_str(), "The Teardrop Explodes");
+        fs1 += std_postfix;
+        EXPECT_STREQ(fs1.c_str(), "The Teardrop Explodes!?");
+        fs1 += view_postfix;
+        EXPECT_STREQ(fs1.c_str(), "The Teardrop Explodes!?++");
+
+        fs1 = "Julian Cope";
+        EXPECT_STREQ(fs1.c_str(), "Julian Cope");
+        fixed::fstring_ref fixed_ref(fixed_63);
+        fs1 = fixed_ref;
+        EXPECT_STREQ(fs1.c_str(), "The Teardrop Explodes");
+        fs1 += std_postfix;
+        EXPECT_STREQ(fs1.c_str(), "The Teardrop Explodes!?");
+        fs1 += view_postfix;
+        EXPECT_STREQ(fs1.c_str(), "The Teardrop Explodes!?++");
+    }
+}
+
 TEST(AssignTests, ConstructAssign)
 {
     {

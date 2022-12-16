@@ -1,6 +1,8 @@
 #ifndef fstring_h
 #define fstring_h
 
+#include <stdexcept>
+#include <cstring>
 #include <string>
 #include <string_view>
 
@@ -34,7 +36,8 @@ public:
     }
 
     void operator+=(const CharT in_char) {ActualPtr()->__append__(in_char);}
-    void operator+=(const CharT* in_str) {ActualPtr()->__append__(in_str);}
+    //void operator+=(const CharT* in_str) {ActualPtr()->__append__(in_str);}
+    void operator+=(const std::string_view in_str) {ActualPtr()->__append__(in_str.data(), in_str.size());}
 
     void operator=(const CharT in_char) noexcept
     {
@@ -45,6 +48,11 @@ public:
     {
         clear();
         ActualPtr()->__append__(in_str);
+    }
+    void operator=(const std::string_view in_str) noexcept
+    {
+        clear();
+        ActualPtr()->__append__(in_str.data(), in_str.size());
     }
 
     constexpr CharT& operator[](const size_type pos)       { return peek()[pos]; }
@@ -195,10 +203,10 @@ public:
     {
         return find(c) != npos;
     }
-    constexpr bool contains( const CharT* s ) const
-    {
-        return find(s) != npos;
-    }
+//    constexpr bool contains( const CharT* s ) const
+//    {
+//        return find(s) != npos;
+//    }
 
     constexpr size_type find(const std::string_view v, const size_type pos=0) const noexcept
     {
@@ -413,6 +421,10 @@ public:
         m_insides.m_str[0] = '\0';
     }
 
+    constexpr fstring_base(const fstring_ref_base<CharT> in_my_str)
+    : fstring_base(in_my_str.c_str(), in_my_str.size())
+    {}
+
     template<size_t TOtherSize>
     constexpr fstring_base(const fstring_base<TOtherSize, CharT>& in_my_str)
     : fstring_base(in_my_str.c_str(), in_my_str.size())
@@ -451,7 +463,7 @@ public:
     constexpr fstring_base& operator=(const fstring_base<TOtherSize, CharT>& in_fixed) noexcept
     {
         this->clear();
-        __append__(in_fixed.c_str(), in_fixed.size());
+        meta_fstring<fstring_base<TSize, CharT>, CharT>::__append__(in_fixed.c_str(), in_fixed.size());
         return *this;
     }
 
