@@ -378,6 +378,17 @@ protected:
         *(copy_to+num_chars_to_copy) = '\0';
         p->m_insides.m_size += num_chars_to_copy;
     }
+    constexpr void __append__(const std::string_view in_sv) noexcept
+    {
+        __append__(in_sv.data(), in_sv.size());
+    }
+
+    template<class TActualOther>
+    constexpr void __append__(const meta_fstring<TActualOther, CharT>& in_ms) noexcept
+    {
+        __append__(in_ms.data(), in_ms.size());
+    }
+
 };
 
 template<class CharT> class fstring_ref_base;
@@ -445,8 +456,8 @@ public:
 
     template<class TFfirst, class... TRest>
     constexpr fstring_base(const TFfirst in_1, const TRest& ...in_rest)
+    : fstring_base(in_1)
     {
-        meta_fstring<fstring_base<TSize, CharT>, CharT>::__append__(in_1);
         recursive_helper_to_variadic_constructor(in_rest...);
     }
 
