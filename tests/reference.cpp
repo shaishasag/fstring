@@ -55,6 +55,7 @@ static fixed::fstring_ref Passover(fixed::fstring_ref in_ref)
     return in_ref;
 }
 
+
 TEST(RefTests, PassToFunc)
 {
     {

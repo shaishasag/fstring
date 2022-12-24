@@ -22,6 +22,7 @@
 		F62BDD18293E80B60000567A /* change.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F62BDD17293E80B60000567A /* change.cpp */; };
 		F62BDD1A293F01860000567A /* access.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F62BDD19293F01860000567A /* access.cpp */; };
 		F62BDD1C293F111C0000567A /* memcpy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F62BDD1B293F111C0000567A /* memcpy.cpp */; };
+		F63F11E52957548E00CAE219 /* stream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F63F11E42957548E00CAE219 /* stream.cpp */; };
 		F6A680492942867800D9CE7A /* hello_fstring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6A680482942867800D9CE7A /* hello_fstring.cpp */; };
 		F6B2F88B2943486100A4443B /* os.cc in Sources */ = {isa = PBXBuildFile; fileRef = F6B2F8882943486100A4443B /* os.cc */; };
 		F6B2F88C2943486100A4443B /* format.cc in Sources */ = {isa = PBXBuildFile; fileRef = F6B2F8892943486100A4443B /* format.cc */; };
@@ -212,6 +213,8 @@
 		F62BDD17293E80B60000567A /* change.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = change.cpp; sourceTree = "<group>"; };
 		F62BDD19293F01860000567A /* access.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = access.cpp; sourceTree = "<group>"; };
 		F62BDD1B293F111C0000567A /* memcpy.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = memcpy.cpp; sourceTree = "<group>"; };
+		F63F11E32957530B00CAE219 /* fstringstream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fstringstream.h; sourceTree = "<group>"; };
+		F63F11E42957548E00CAE219 /* stream.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = stream.cpp; sourceTree = "<group>"; };
 		F6A680412942864D00D9CE7A /* hello_fstring */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = hello_fstring; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6A680482942867800D9CE7A /* hello_fstring.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = hello_fstring.cpp; sourceTree = "<group>"; };
 		F6B2F8882943486100A4443B /* os.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = os.cc; path = fmt/src/os.cc; sourceTree = "<group>"; };
@@ -258,6 +261,7 @@
 		F6009712293D0621006F1F35 = {
 			isa = PBXGroup;
 			children = (
+				F63F11E32957530B00CAE219 /* fstringstream.h */,
 				F6A680482942867800D9CE7A /* hello_fstring.cpp */,
 				F600976F293D0CBC006F1F35 /* fstring.h */,
 				F6B2F8872943484500A4443B /* fmt */,
@@ -520,6 +524,7 @@
 				F6BC984A2941D94C002CC268 /* variadic.cpp */,
 				F6BC98C029423926002CC268 /* find.cpp */,
 				F61AE77329465442002F9078 /* traits.cpp */,
+				F63F11E42957548E00CAE219 /* stream.cpp */,
 			);
 			path = tests;
 			sourceTree = "<group>";
@@ -626,6 +631,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F600971F293D0621006F1F35 /* tests_main.cpp in Sources */,
+				F63F11E52957548E00CAE219 /* stream.cpp in Sources */,
 				F62BDD09293E512F0000567A /* construct.cpp in Sources */,
 				F62BDD1C293F111C0000567A /* memcpy.cpp in Sources */,
 				F62BDD18293E80B60000567A /* change.cpp in Sources */,

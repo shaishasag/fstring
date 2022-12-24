@@ -1,5 +1,5 @@
-#ifndef fstring_h
-#define fstring_h
+#ifndef __fstring_h__
+#define __fstring_h__
 
 #include <stdexcept>
 #include <cstring>
@@ -15,7 +15,7 @@ template<class TActual, class CharT>
 class meta_fstring
 {
 public:
-
+    using char_type = CharT;
 
     constexpr size_type size() const {return ActualPtr()->m_insides.m_size;}
     constexpr size_type length() const {return size();}
@@ -495,6 +495,11 @@ public:
         return std::string(this->c_str(), this->size());
     }
 
+//    operator fstring_ref_base<CharT>()
+//    {
+//        return fstring_ref_base<CharT>(*this);
+//    }
+
 private:
 };
 
@@ -566,4 +571,4 @@ inline bool operator==(fixed::fstring_ref lhs, fixed::fstring_ref rhs) noexcept
 }
 
 
-#endif /* fstring_h */
+#endif // __fstring_h__
