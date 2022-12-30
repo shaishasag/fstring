@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		F600971F293D0621006F1F35 /* tests_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F600971E293D0621006F1F35 /* tests_main.cpp */; };
+		F60C98C9295F336F00760EB6 /* substr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F60C98C8295F336F00760EB6 /* substr.cpp */; };
+		F60C98CB295F3DCF00760EB6 /* insert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F60C98CA295F3DCF00760EB6 /* insert.cpp */; };
 		F61AE77429465442002F9078 /* traits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F61AE77329465442002F9078 /* traits.cpp */; };
 		F62BDD09293E512F0000567A /* construct.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F62BDD08293E512F0000567A /* construct.cpp */; };
 		F62BDD0A293E57620000567A /* gtest.cc in Sources */ = {isa = PBXBuildFile; fileRef = F62BDCFC293E502A0000567A /* gtest.cc */; };
@@ -59,6 +61,8 @@
 		F600971E293D0621006F1F35 /* tests_main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = tests_main.cpp; path = tests/tests_main.cpp; sourceTree = SOURCE_ROOT; };
 		F600976F293D0CBC006F1F35 /* fstring.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fstring.h; sourceTree = SOURCE_ROOT; };
 		F6009770293D12D4006F1F35 /* WCFixedString.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WCFixedString.h; path = ../../../../Volumes/p4client/ProAudio/dev_main/ProAudio/XPlatform/Utilities/MiscUtils/WCFixedString.h; sourceTree = "<group>"; };
+		F60C98C8295F336F00760EB6 /* substr.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = substr.cpp; sourceTree = "<group>"; };
+		F60C98CA295F3DCF00760EB6 /* insert.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = insert.cpp; sourceTree = "<group>"; };
 		F61AE77329465442002F9078 /* traits.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = traits.cpp; sourceTree = "<group>"; };
 		F62BDC6B293E502A0000567A /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		F62BDC6D293E502A0000567A /* googletest-message-test.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "googletest-message-test.cc"; sourceTree = "<group>"; };
@@ -525,6 +529,8 @@
 				F6BC98C029423926002CC268 /* find.cpp */,
 				F61AE77329465442002F9078 /* traits.cpp */,
 				F63F11E42957548E00CAE219 /* stream.cpp */,
+				F60C98C8295F336F00760EB6 /* substr.cpp */,
+				F60C98CA295F3DCF00760EB6 /* insert.cpp */,
 			);
 			path = tests;
 			sourceTree = "<group>";
@@ -649,9 +655,11 @@
 				F62BDD0A293E57620000567A /* gtest.cc in Sources */,
 				F6BC98C129423926002CC268 /* find.cpp in Sources */,
 				F62BDD16293E78C00000567A /* reference.cpp in Sources */,
+				F60C98CB295F3DCF00760EB6 /* insert.cpp in Sources */,
 				F62BDD0F293E58480000567A /* gtest-death-test.cc in Sources */,
 				F62BDD13293E67180000567A /* assign.cpp in Sources */,
 				F62BDD1A293F01860000567A /* access.cpp in Sources */,
+				F60C98C9295F336F00760EB6 /* substr.cpp in Sources */,
 				F62BDD0D293E57F90000567A /* gtest-assertion-result.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

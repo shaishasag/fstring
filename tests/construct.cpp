@@ -33,6 +33,16 @@ TEST(ConstructionTests, char_ptr_Construction)
         EXPECT_EQ(ms2.size(), 0);
     }
     {
+        // char construction
+        fixed::fstring15 ms2('X');
+        EXPECT_EQ(ms2.capacity(), 15);
+        EXPECT_STREQ(ms2.c_str(), "X");
+        EXPECT_STRNE(ms2.c_str(), "x");
+        EXPECT_FALSE(ms2.empty());
+        EXPECT_FALSE(ms2.full());
+        EXPECT_EQ(ms2.size(), 1);
+    }
+    {
         // default construction
         fixed::fstring15 ms3;
         EXPECT_EQ(ms3.capacity(), 15);
@@ -62,32 +72,9 @@ TEST(ConstructionTests, char_ptr_Construction)
         EXPECT_TRUE(ms5.full());
         EXPECT_EQ(ms5.size(), 15);
     }
-#if 0
-    {
-        // by size construction - exact
-        fixed::fstring15 ms6("umaguma is actually spelled Ummagumma", 7);
-        EXPECT_EQ(ms6.capacity(), 15);
-        EXPECT_STREQ(ms6.c_str(), "umaguma");
-        EXPECT_STRNE(ms6.c_str(), "umaguma is actually spelled Ummagumma");
-        EXPECT_FALSE(ms6.empty());
-        EXPECT_FALSE(ms6.full());
-        EXPECT_EQ(ms6.size(), 7);
-    }
-    {
-        // by size construction - too short
-        fixed::fstring15 ms7("umaguma", 3);
-        EXPECT_EQ(ms7.capacity(), 15);
-        EXPECT_STREQ(ms7.c_str(), "uma");
-        EXPECT_STRNE(ms7.c_str(), "umaguma");
-        EXPECT_FALSE(ms7.empty());
-        EXPECT_FALSE(ms7.full());
-        EXPECT_EQ(ms7.size(), 3);
-    }
-#endif
 }
 
-
-TEST(ConstructionTests, CopyConstruction1)
+TEST(ConstructionTests, fstring_Construction1)
 {
     {
         // simple construction
@@ -145,34 +132,35 @@ TEST(ConstructionTests, CopyConstruction1)
         EXPECT_TRUE(copyms5.full());
         EXPECT_EQ(copyms5.size(), 15);
     }
-#if 0
-    {
-        // by size construction - exact
-        fixed::fstring15 ms6("umaguma is actually spelled Ummagumma", 7);
-        fixed::fstring15 copyms6(ms6);
-        EXPECT_EQ(copyms6.capacity(), 15);
-        EXPECT_STREQ(copyms6.c_str(), "umaguma");
-        EXPECT_STRNE(copyms6.c_str(), "umaguma is actually spelled Ummagumma");
-        EXPECT_FALSE(copyms6.empty());
-        EXPECT_FALSE(copyms6.full());
-        EXPECT_EQ(copyms6.size(), 7);
-    }
-    {
-        // by size construction - too short
-        fixed::fstring15 ms7("umaguma", 3);
-        fixed::fstring15 copyms7(ms7);
-        EXPECT_EQ(copyms7.capacity(), 15);
-        EXPECT_STREQ(copyms7.c_str(), "uma");
-        EXPECT_STRNE(copyms7.c_str(), "umaguma");
-        EXPECT_FALSE(copyms7.empty());
-        EXPECT_FALSE(copyms7.full());
-        EXPECT_EQ(copyms7.size(), 3);
-    }
-#endif
 }
 
+TEST(ConstructionTests, fstring_Construction2)
+{
+    {
+        // copy construction from smaller size
+        fixed::fstring15 ms("umaguma");
+        fixed::fstring31 ms1(ms);
+        EXPECT_EQ(ms1.capacity(), 31);
+        EXPECT_STREQ(ms1.c_str(), "umaguma");
+        EXPECT_STRNE(ms1.c_str(), "umaguma?");
+        EXPECT_FALSE(ms1.empty());
+        EXPECT_FALSE(ms1.full());
+        EXPECT_EQ(ms1.size(), 7);
+    }
+    {
+        // cop construction from bigger size
+        fixed::fstring15 ms("Ummagumma");
+        fixed::fstring7 ms1(ms);
+        EXPECT_EQ(ms1.capacity(), 7);
+        EXPECT_STREQ(ms1.c_str(), "Ummagum");
+        EXPECT_STRNE(ms1.c_str(), "Ummagumma");
+        EXPECT_FALSE(ms1.empty());
+        EXPECT_TRUE(ms1.full());
+        EXPECT_EQ(ms1.size(), 7);
+    }
+}
 
-TEST(ConstructionTests, RefConstruction)
+TEST(ConstructionTests, fstringref_Construction)
 {
     {
         // simple construction
@@ -229,39 +217,15 @@ TEST(ConstructionTests, RefConstruction)
         EXPECT_TRUE(refms5.full());
         EXPECT_EQ(refms5.size(), 15);
     }
-#if 0
-    {
-        // by size construction - exact
-        fixed::fstring15 ms6("umaguma is actually spelled Ummagumma", 7);
-        fixed::fstring_ref refms6(ms6);
-        EXPECT_EQ(refms6.capacity(), 15);
-        EXPECT_STREQ(refms6.c_str(), "umaguma");
-        EXPECT_STRNE(refms6.c_str(), "umaguma is actually spelled Ummagumma");
-        EXPECT_FALSE(refms6.empty());
-        EXPECT_FALSE(refms6.full());
-        EXPECT_EQ(refms6.size(), 7);
-    }
-    {
-        // by size construction - too short
-        fixed::fstring15 ms7("umaguma", 3);
-        fixed::fstring_ref refms7(ms7);
-        EXPECT_EQ(refms7.capacity(), 15);
-        EXPECT_STREQ(refms7.c_str(), "uma");
-        EXPECT_STRNE(refms7.c_str(), "umaguma");
-        EXPECT_FALSE(refms7.empty());
-        EXPECT_FALSE(refms7.full());
-        EXPECT_EQ(refms7.size(), 3);
-    }
-#endif
 }
 
-TEST(ConstructionTests, CopyConstruction2)
+TEST(ConstructionTests, string_view_Construction)
 {
     {
-        // cop construction from smaller size
-        fixed::fstring15 ms("umaguma");
-        fixed::fstring31 ms1(ms);
-        EXPECT_EQ(ms1.capacity(), 31);
+        // simple construction
+        std::string_view sv_uma("umaguma");
+        fixed::fstring15 ms1(sv_uma);
+        EXPECT_EQ(ms1.capacity(), 15);
         EXPECT_STREQ(ms1.c_str(), "umaguma");
         EXPECT_STRNE(ms1.c_str(), "umaguma?");
         EXPECT_FALSE(ms1.empty());
@@ -269,14 +233,85 @@ TEST(ConstructionTests, CopyConstruction2)
         EXPECT_EQ(ms1.size(), 7);
     }
     {
-        // cop construction from bigger size
-        fixed::fstring15 ms("Ummagumma");
-        fixed::fstring7 ms1(ms);
-        EXPECT_EQ(ms1.capacity(), 7);
-        EXPECT_STREQ(ms1.c_str(), "Ummagum");
-        EXPECT_STRNE(ms1.c_str(), "Ummagumma");
+        // empty construction
+        std::string_view sv_empty;
+        fixed::fstring15 ms2(sv_empty);
+        EXPECT_EQ(ms2.capacity(), 15);
+        EXPECT_STREQ(ms2.c_str(), "");
+        EXPECT_STRNE(ms2.c_str(), "?");
+        EXPECT_TRUE(ms2.empty());
+        EXPECT_FALSE(ms2.full());
+        EXPECT_EQ(ms2.size(), 0);
+    }
+    {
+        // exact capacity construction
+        std::string_view sv_uma("umaguma is actu");
+        fixed::fstring15 ms4(sv_uma);
+        EXPECT_EQ(ms4.capacity(), 15);
+        EXPECT_STREQ(ms4.c_str(), "umaguma is actu");
+        EXPECT_STRNE(ms4.c_str(), "umaguma is actually spelled Ummagumma");
+        EXPECT_FALSE(ms4.empty());
+        EXPECT_TRUE(ms4.full());
+        EXPECT_EQ(ms4.size(), 15);
+    }
+    {
+        // over capacity construction
+        std::string_view sv_uma("umaguma is actually spelled Ummagumma");
+        fixed::fstring15 ms5(sv_uma);
+        EXPECT_EQ(ms5.capacity(), 15);
+        EXPECT_STREQ(ms5.c_str(), "umaguma is actu");
+        EXPECT_STRNE(ms5.c_str(), "umaguma is actually spelled Ummagumma");
+        EXPECT_FALSE(ms5.empty());
+        EXPECT_TRUE(ms5.full());
+        EXPECT_EQ(ms5.size(), 15);
+    }
+}
+
+
+TEST(ConstructionTests, string_Construction)
+{
+    {
+        // simple construction
+        std::string sv_uma("umaguma");
+        fixed::fstring15 ms1(sv_uma);
+        EXPECT_EQ(ms1.capacity(), 15);
+        EXPECT_STREQ(ms1.c_str(), "umaguma");
+        EXPECT_STRNE(ms1.c_str(), "umaguma?");
         EXPECT_FALSE(ms1.empty());
-        EXPECT_TRUE(ms1.full());
+        EXPECT_FALSE(ms1.full());
         EXPECT_EQ(ms1.size(), 7);
+    }
+    {
+        // empty construction
+        std::string sv_empty;
+        fixed::fstring15 ms2(sv_empty);
+        EXPECT_EQ(ms2.capacity(), 15);
+        EXPECT_STREQ(ms2.c_str(), "");
+        EXPECT_STRNE(ms2.c_str(), "?");
+        EXPECT_TRUE(ms2.empty());
+        EXPECT_FALSE(ms2.full());
+        EXPECT_EQ(ms2.size(), 0);
+    }
+    {
+        // exact capacity construction
+        std::string sv_uma("umaguma is actu");
+        fixed::fstring15 ms4(sv_uma);
+        EXPECT_EQ(ms4.capacity(), 15);
+        EXPECT_STREQ(ms4.c_str(), "umaguma is actu");
+        EXPECT_STRNE(ms4.c_str(), "umaguma is actually spelled Ummagumma");
+        EXPECT_FALSE(ms4.empty());
+        EXPECT_TRUE(ms4.full());
+        EXPECT_EQ(ms4.size(), 15);
+    }
+    {
+        // over capacity construction
+        std::string sv_uma("umaguma is actually spelled Ummagumma");
+        fixed::fstring15 ms5(sv_uma);
+        EXPECT_EQ(ms5.capacity(), 15);
+        EXPECT_STREQ(ms5.c_str(), "umaguma is actu");
+        EXPECT_STRNE(ms5.c_str(), "umaguma is actually spelled Ummagumma");
+        EXPECT_FALSE(ms5.empty());
+        EXPECT_TRUE(ms5.full());
+        EXPECT_EQ(ms5.size(), 15);
     }
 }

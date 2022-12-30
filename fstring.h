@@ -15,12 +15,14 @@ template<class TActual, class CharT>
 class meta_fstring
 {
 public:
+    //friend TActual;
     using char_type = CharT;
 
     constexpr size_type size() const {return ActualPtr()->m_insides.m_size;}
     constexpr size_type length() const {return size();}
     constexpr size_type capacity() const {return ActualPtr()->m_insides.m_capacity;}
     constexpr size_type max_size() const {return capacity();}
+    constexpr size_type vacancy() const {return ActualPtr()->capacity() - ActualPtr()->size();}
     constexpr size_type full() const {return size() == capacity();}
     constexpr size_type empty() const {return 0 == size();}
     constexpr const CharT* c_str() const {return ActualPtr()->m_insides.m_str; }
@@ -107,6 +109,45 @@ public:
         }
     }
 
+    constexpr TActual& insert(size_type index, size_type count, CharT ch)
+    {
+        if (index > size()) {
+            throw std::out_of_range("index out of range");
+        }
+        if (count > vacancy()) {
+            throw std::length_error("too many chars to insert");
+        }
+
+        memmove(peek()+index+count, peek()+index, size()-index);
+        memset(peek()+index, ch, count);
+        ActualPtr()->m_insides.m_size += count;
+        *end() = '\0';
+
+        return *static_cast<TActual*>(this);
+    }
+
+    constexpr TActual& insert(size_type index, const std::string_view sv, size_type count)
+    {
+        if (index > size()) {
+            throw std::out_of_range("index out of range");
+        }
+        if (count > vacancy()) {
+            throw std::length_error("too many chars to insert");
+        }
+
+        memmove(peek()+index+count, peek()+index, size()-index);
+        memmove(peek()+index, sv.data(), count);
+        ActualPtr()->m_insides.m_size += count;
+        *end() = '\0';
+
+        return *static_cast<TActual*>(this);
+    }
+
+    constexpr TActual& insert(size_type index, const std::string_view sv)
+    {
+        return insert(index, sv, sv.size());
+    }
+
     constexpr void remove_prefix( size_type n )
     {
         if (n == size())
@@ -138,9 +179,6 @@ public:
         return std::string_view(c_str(), size()).copy(dest, count, pos);
     }
 
-    //constexpr basic_string_view substr( size_type pos = 0, size_type count = npos ) const;
-
-
     constexpr int compare( std::string_view v ) const noexcept
     {
         return std::string_view(c_str(), size()).compare(v);
@@ -154,19 +192,6 @@ public:
     {
         return std::string_view(c_str(), size()).compare(pos1, count1, v, pos2, count2);
     }
-    constexpr int compare( const CharT* s ) const
-    {
-        return std::string_view(c_str(), size()).compare(s);
-    }
-    constexpr int compare( size_type pos1, size_type count1, const CharT* s ) const
-    {
-        return std::string_view(c_str(), size()).compare(pos1, count1, s);
-    }
-    constexpr int compare( size_type pos1, size_type count1,
-                           const CharT* s, size_type count2 ) const
-    {
-        return std::string_view(c_str(), size()).compare(pos1, count1, s, count2);
-    }
 
 
     constexpr bool starts_with( std::string_view sv ) const noexcept
@@ -177,10 +202,6 @@ public:
     {
         return !empty() && front() == ch;
     }
-    constexpr bool starts_with( const CharT* s ) const
-    {
-        return starts_with(std::string_view(s));
-    }
 
     constexpr bool ends_with( std::string_view sv ) const noexcept
     {
@@ -189,10 +210,6 @@ public:
     constexpr bool ends_with( CharT ch ) const noexcept
     {
         return !empty() && back() == ch;
-    }
-    constexpr bool ends_with( const CharT* s ) const
-    {
-        return ends_with(std::string_view(s));
     }
 
     constexpr bool contains( std::string_view sv ) const noexcept
@@ -203,10 +220,6 @@ public:
     {
         return find(c) != npos;
     }
-//    constexpr bool contains( const CharT* s ) const
-//    {
-//        return find(s) != npos;
-//    }
 
     constexpr size_type find(const std::string_view v, const size_type pos=0) const noexcept
     {
@@ -344,7 +357,6 @@ protected:
     constexpr void __append__(const CharT* in_str)  noexcept
     {
         if (nullptr == in_str) {
-            this->clear();
             return;
         }
 
@@ -362,17 +374,23 @@ protected:
     }
     constexpr void __append__(const CharT in_char) noexcept
     {
+        //ActualPtr()->__append__(&in_char, 1);
         auto p = ActualPtr();
-        p->__append__(&in_char, 1);
+        if (p->capacity() > p->size())
+        {
+            *(p->m_insides.m_str+p->size()) = in_char;
+            p->m_insides.m_size += 1;
+            *(p->m_insides.m_str+p->size()) = '\0';
+        }
     }
     constexpr void __append__(const CharT* in_str, const size_type in_size) noexcept
     {
-        if (0 == in_size) {
+        if (nullptr == in_str || 0 == in_size) {
             return;
         }
 
         auto p = ActualPtr();
-        size_type num_chars_to_copy = std::min(in_size, p->capacity() - p->size());
+        size_type num_chars_to_copy = std::min(in_size, p->vacancy());
         CharT* copy_to = p->m_insides.m_str + p->m_insides.m_size;
         memcpy(copy_to, in_str, num_chars_to_copy);
         *(copy_to+num_chars_to_copy) = '\0';
@@ -408,56 +426,14 @@ protected:
 
 public:
 
-    constexpr fstring_base(const CharT in_char)
-    : fstring_base()
-    {
-        meta_fstring<fstring_base<TSize, CharT>, CharT>::__append__(in_char);
-    }
 
-    constexpr fstring_base(const CharT* in_str)
-    : fstring_base()
-    {
-        meta_fstring<fstring_base<TSize, CharT>, CharT>::__append__(in_str);
-    }
-
-    constexpr fstring_base(const CharT* in_str, const size_t in_size)
-    : fstring_base()
-    {
-        meta_fstring<fstring_base<TSize, CharT>, CharT>::__append__(in_str, in_size);
-    }
-
-    constexpr fstring_base()
-    : m_insides({TSize, 0})
-    {
-        m_insides.m_str[0] = '\0';
-    }
-
-    constexpr fstring_base(const fstring_ref_base<CharT> in_my_str)
-    : fstring_base(in_my_str.c_str(), in_my_str.size())
-    {}
-
-    template<size_t TOtherSize>
-    constexpr fstring_base(const fstring_base<TOtherSize, CharT>& in_my_str)
-    : fstring_base(in_my_str.c_str(), in_my_str.size())
-    {}
-
-    template<size_t TOtherSize>
-    constexpr fstring_base(fstring_base<TOtherSize, CharT>&& in_my_str)
-    : fstring_base(in_my_str.c_str(), in_my_str.size())
-    {}
-
-    constexpr fstring_base(const std::string& in_std_str)
-    : fstring_base(in_std_str.c_str(), in_std_str.size())
-    {}
-
-    constexpr fstring_base(const std::string_view in_std_strv)
-    : fstring_base(in_std_strv.data(), in_std_strv.size())
-    {}
+    constexpr fstring_base() {}
 
     template<class TFfirst, class... TRest>
     constexpr fstring_base(const TFfirst in_1, const TRest& ...in_rest)
-    : fstring_base(in_1)
+    : fstring_base()
     {
+        this->__append__(in_1);
         recursive_helper_to_variadic_constructor(in_rest...);
     }
 
@@ -466,7 +442,7 @@ public:
     template<class TFfirst, class... TRest>
     constexpr void recursive_helper_to_variadic_constructor(const TFfirst in_1, const TRest& ...in_rest)
     {
-        meta_fstring<fstring_base<TSize, CharT>, CharT>::__append__(in_1);
+        this->__append__(in_1);
         recursive_helper_to_variadic_constructor(in_rest...);
     }
 
@@ -474,15 +450,7 @@ public:
     constexpr fstring_base& operator=(const fstring_base<TOtherSize, CharT>& in_fixed) noexcept
     {
         this->clear();
-        meta_fstring<fstring_base<TSize, CharT>, CharT>::__append__(in_fixed.c_str(), in_fixed.size());
-        return *this;
-    }
-
-    template<size_t TOtherSize>
-    constexpr fstring_base& operator=(fstring_base<TOtherSize, CharT>&& in_fixed) noexcept
-    {
-        this->clear();
-        __append__(in_fixed.c_str(), in_fixed.size());
+        this->__append__(in_fixed.c_str(), in_fixed.size());
         return *this;
     }
 
@@ -495,12 +463,23 @@ public:
         return std::string(this->c_str(), this->size());
     }
 
-//    operator fstring_ref_base<CharT>()
-//    {
-//        return fstring_ref_base<CharT>(*this);
-//    }
+    constexpr fstring_base substr(size_type pos = 0, size_type count = npos) const
+    {
+        fstring_base the_substr;
+        if (pos < this->size())
+        {
+            size_type num_chars_to_copy{0};
+            if (npos == count) {
+                num_chars_to_copy = std::min(this->size()-pos, the_substr.capacity());
+            }
+            else {
+                num_chars_to_copy = std::min(count, this->size()-pos);
+            }
 
-private:
+            the_substr.__append__(this->c_str()+pos, num_chars_to_copy);
+        }
+        return the_substr;
+    }
 };
 
 template<class CharT>
