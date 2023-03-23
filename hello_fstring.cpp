@@ -10,7 +10,7 @@ int main(int argc, char** argv)
     std::cout << "sizeof(fixed::fstring63) = " << sizeof(fixed::fstring63)  << std::endl;
     std::cout << "sizeof(fixed::fstring_ref) = " << sizeof(fixed::fstring_ref)  << std::endl;
 
-    fixed::fstring31 fstr("Hello fstring");
+    constexpr fixed::fstring31 fstr("Hello fstring");
     std::cout << fstr << std::endl;
 
 

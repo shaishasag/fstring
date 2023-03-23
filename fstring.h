@@ -86,6 +86,8 @@ public:
 
     constexpr void push_back(const CharT in_char)
     {
+        if (full())
+            throw std::length_error("fstring is full");
         ActualPtr()->__append__(in_char);
     }
 
@@ -146,6 +148,41 @@ public:
     constexpr TActual& insert(size_type index, const std::string_view sv)
     {
         return insert(index, sv, sv.size());
+    }
+
+    constexpr TActual& erase(size_type index = 0, size_type count=npos)
+    {
+        if (index > size()) {
+            throw std::out_of_range("index out of range");
+        }
+
+        if (count >= size() - index) {
+            ActualPtr()->m_insides.m_size = index;
+        }
+        else
+        {
+            size_type num_chars_to_remove = std::min(count, size() - index);
+            memmove(peek()+index, peek()+index+num_chars_to_remove, size() - index - count);
+            ActualPtr()->m_insides.m_size -= count;
+        }
+        *end() = '\0';
+
+        return *static_cast<TActual*>(this);
+    }
+
+    const CharT* erase(const CharT* position)
+    {
+        erase(position, position+1);
+        return position;
+    }
+
+    const CharT* erase(const CharT* first, const CharT* last)
+    {
+        size_type index = first - peek();
+        size_type count = last - first;
+        erase(index, count);
+
+        return first;
     }
 
     constexpr void remove_prefix( size_type n )
@@ -544,7 +581,18 @@ operator<<(std::basic_ostream<CharT, Traits>& os, fixed::fstring_ref v)
     return os;
 }
 
+template<fixed::size_type LHSTSize, fixed::size_type RHSTSize, class CharT>
+inline bool operator==(fixed::fstring_base<LHSTSize,CharT>  lhs, fixed::fstring_base<RHSTSize,CharT>  rhs) noexcept
+{
+    return 0 == lhs.compare(rhs);
+}
+
 inline bool operator==(fixed::fstring_ref lhs, fixed::fstring_ref rhs) noexcept
+{
+    return 0 == lhs.compare(rhs);
+}
+
+inline bool operator==(fixed::fstring_ref lhs, std::string_view rhs) noexcept
 {
     return 0 == lhs.compare(rhs);
 }

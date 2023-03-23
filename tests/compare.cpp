@@ -36,6 +36,9 @@ TEST(CompareTests, full_compare)
     {
         fixed::fstring31 kc(the_band);
         EXPECT_EQ(kc.compare(the_band), 0);
+        EXPECT_TRUE(kc == the_band);
+        EXPECT_TRUE(kc == std::string(the_band));
+        EXPECT_TRUE(kc == std::string_view(the_band));
 
         fixed::fstring31 kc2(the_band);
         EXPECT_EQ(kc.compare(kc2), 0);
