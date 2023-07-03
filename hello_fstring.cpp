@@ -1,6 +1,5 @@
-#include <iostream>
+#include <stdlib.h>
 
-#include "fstring.h"
 
 int main(int argc, char** argv)
 {
@@ -12,8 +11,6 @@ int main(int argc, char** argv)
 
     constexpr fixed::fstring31 fstr("Hello fstring");
     std::cout << fstr << std::endl;
-
-
 
     return 0;
 }

@@ -13,6 +13,8 @@ int main(int argc, char** argv)
     std::cout << "sizeof(fixed::fstring_ref) = " << sizeof(fixed::fstring_ref)  << std::endl;
 
     testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+
+    int retVal = RUN_ALL_TESTS();
+    return retVal;
 }
 
