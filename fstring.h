@@ -3,8 +3,10 @@
 
 #include <stdexcept>
 #include <cstring>
+#include <cctype>
 #include <string>
 #include <string_view>
+#include <type_traits>
 
 namespace fixed
 {
@@ -52,6 +54,11 @@ public:
         ActualPtr()->__append__(in_str);
     }
     void operator=(const std::string_view in_str) noexcept
+    {
+        clear();
+        ActualPtr()->__append__(in_str.data(), in_str.size());
+    }
+    void operator=(const meta_fstring in_str) noexcept
     {
         clear();
         ActualPtr()->__append__(in_str.data(), in_str.size());
@@ -208,6 +215,14 @@ public:
         else if (n < size())
         {
             resize(size()-n);
+        }
+    }
+
+    void to_lower()
+    {
+        for (CharT* pc = begin(); pc != end(); ++pc)
+        {
+            *pc = std::tolower(static_cast<unsigned char>(*pc));
         }
     }
 
@@ -384,6 +399,74 @@ public:
         trim_front(t);
     }
 
+    constexpr TActual& operator<<(const CharT* in_str)  noexcept
+    {
+        __append__(in_str);
+        return *static_cast<TActual*>(this);
+    }
+
+    constexpr TActual& operator<<(const CharT in_char)  noexcept
+    {
+        __append__(in_char);
+        return *static_cast<TActual*>(this);
+    }
+
+    constexpr TActual& operator<<(const std::string_view in_sv) noexcept
+    {
+        __append__(in_sv);
+        return *static_cast<TActual*>(this);
+   }
+
+    constexpr TActual& append(size_type count, CharT in_char) noexcept
+    {
+        for (size_type i=0; i < count; ++i) {
+            __append__(in_char);
+        }
+        return *static_cast<TActual*>(this);
+    }
+
+    template<class TActualOther>
+    constexpr TActual& append(const meta_fstring<TActualOther, CharT>& fstr)
+    {
+        __append__(fstr);
+        return *static_cast<TActual*>(this);
+    }
+
+    constexpr TActual& append(const CharT* s, size_type count)
+    {
+        __append__(std::string_view(s, count));
+        return *static_cast<TActual*>(this);
+    }
+
+    constexpr TActual& append(const CharT* s)
+    {
+        __append__(s);
+        return *static_cast<TActual*>(this);
+    }
+
+    template<typename TToPrintf>
+    constexpr TActual& printf(const TToPrintf in_to_print, const char* printf_format=nullptr)
+    {
+        if (nullptr == printf_format)
+        {
+            if constexpr (std::is_floating_point_v<TToPrintf>) {
+                printf_format = "%.f";
+            }
+            else if constexpr (std::is_integral_v<TToPrintf> && std::is_signed_v<TToPrintf>) {
+                printf_format = "%.i";
+            }
+            else if constexpr (std::is_integral_v<TToPrintf> && std::is_unsigned_v<TToPrintf>) {
+                printf_format = "%.u";
+            }
+        }
+
+
+        int num_chars = std::snprintf(end(), vacancy(), printf_format, in_to_print);
+        reposition(size()+num_chars);
+
+        return *static_cast<TActual*>(this);
+    }
+
 protected:
 
     constexpr const TActual* ActualPtr() const { return static_cast<const TActual*>(this); }
@@ -442,6 +525,21 @@ protected:
     constexpr void __append__(const meta_fstring<TActualOther, CharT>& in_ms) noexcept
     {
         __append__(in_ms.data(), in_ms.size());
+    }
+
+    // like resize but does not fill with '\0' characters if new size > current size
+    void reposition(const size_type count)
+    {
+        if (size() >= count)
+        {
+            ActualPtr()->m_insides.m_size = count;
+            ActualPtr()->m_insides.m_str[count] = '\0';
+        }
+        else
+        {
+            const size_type new_size = std::min(capacity(), count);
+            ActualPtr()->m_insides.m_size = new_size;
+        }
     }
 
 };
@@ -570,6 +668,9 @@ typedef  fstring_base<15, char> fstring15;
 typedef  fstring_base<31, char> fstring31;
 typedef  fstring_base<63, char> fstring63;
 typedef  fstring_base<127,char> fstring127;
+typedef  fstring_base<255,char> fstring255;
+typedef  fstring_base<511,char> fstring511;
+typedef  fstring_base<1023, char> fstring1023;
 
 }
 
@@ -579,6 +680,20 @@ operator<<(std::basic_ostream<CharT, Traits>& os, fixed::fstring_ref v)
 {
     os << std::string_view(v);
     return os;
+}
+
+template<class CharT>
+fixed::fstring_ref_base<CharT> operator<<(fixed::fstring_ref_base<CharT> in_ref, const char* in_text)
+{
+    in_ref += in_text;
+    return in_ref;
+}
+
+template<class CharT>
+fixed::fstring_ref_base<CharT> operator<<(fixed::fstring_ref_base<CharT> in_ref, std::string_view in_text)
+{
+    in_ref += in_text;
+    return in_ref;
 }
 
 template<fixed::size_type LHSTSize, fixed::size_type RHSTSize, class CharT>

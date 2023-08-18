@@ -45,17 +45,12 @@ TEST(variadic, variadic_more_types)
         EXPECT_EQ(vari.size(), 7);
     }
     {   // variadic mixed basic types
-        std::string_view a_sv("aa");
-        std::string b_s("bb");
-        fixed::fstring15 c_fs("cc");
-        const char* d_chp{"dd"};
-
-        fixed::fstring31 vari1(a_sv, b_s, c_fs, d_chp);
+        fixed::fstring31 vari1(std::string_view("aa"), std::string("bb"), fixed::fstring15("cc"), "dd");
         EXPECT_STREQ(vari1.c_str(), "aabbccdd");
         EXPECT_EQ(vari1.size(), 8);
 
         // different order...
-        fixed::fstring31 vari2(d_chp, a_sv, c_fs, b_s);
+        fixed::fstring31 vari2("dd", std::string_view("aa"), fixed::fstring15("cc"), std::string("bb"));
         EXPECT_STREQ(vari2.c_str(), "ddaaccbb");
         EXPECT_EQ(vari2.size(), 8);
     }

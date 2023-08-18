@@ -211,7 +211,7 @@ TEST(AssignTests, ClearAndEmptyAssign)
     }
 }
 
-TEST(AssignTests, RepeasedAssign)
+TEST(AssignTests, RepeatedAssign)
 {
     {
         // assignment empty to empty
