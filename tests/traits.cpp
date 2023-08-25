@@ -15,10 +15,8 @@ TEST(TypeTraits, traits_to_fix)
     EXPECT_FALSE((std::is_trivially_assignable_v<fixed::fstring31, fixed::fstring_ref>));
 
     EXPECT_FALSE((std::is_nothrow_assignable_v<fixed::fstring31, char>));
-    EXPECT_FALSE((std::is_nothrow_assignable_v<fixed::fstring31, char*>));
-    EXPECT_FALSE((std::is_nothrow_assignable_v<fixed::fstring31, std::string_view>));
     EXPECT_FALSE((std::is_nothrow_assignable_v<fixed::fstring31, std::string>));
-    EXPECT_FALSE((std::is_nothrow_assignable_v<fixed::fstring31, fixed::fstring_ref>));
+    EXPECT_FALSE((std::is_convertible_v<fixed::fstring31, std::string>));
 }
 
 
@@ -53,9 +51,7 @@ TEST(TypeTraits, some_traits)
     EXPECT_FALSE(std::is_signed_v<fixed::fstring31>);
     EXPECT_FALSE(std::is_unsigned_v<fixed::fstring31>);
     EXPECT_FALSE(std::is_trivially_constructible_v<fixed::fstring31>);
-    EXPECT_FALSE(std::is_nothrow_constructible_v<fixed::fstring31>);
     EXPECT_FALSE(std::is_trivially_default_constructible_v<fixed::fstring31>);
-    EXPECT_FALSE(std::is_nothrow_default_constructible_v<fixed::fstring31>);
 
     EXPECT_FALSE((std::has_virtual_destructor_v<fixed::fstring31>));
 
@@ -98,17 +94,21 @@ TEST(TypeTraits, some_traits)
     EXPECT_TRUE((std::is_assignable_v<fixed::fstring31, char>));
     EXPECT_TRUE((std::is_assignable_v<fixed::fstring31, char*>));
     EXPECT_TRUE((std::is_assignable_v<fixed::fstring31, std::string_view>));
-    EXPECT_TRUE((std::is_assignable_v<fixed::fstring31, std::string>));
     EXPECT_TRUE((std::is_assignable_v<fixed::fstring31, fixed::fstring_ref>));
+    EXPECT_FALSE((std::is_assignable_v<fixed::fstring31, std::string>));
 
     EXPECT_TRUE((std::is_swappable_v<fixed::fstring31>));
     EXPECT_TRUE((std::is_nothrow_swappable_v<fixed::fstring31>));
 
     EXPECT_TRUE((std::is_convertible_v<fixed::fstring31, std::string_view>));
-    EXPECT_TRUE((std::is_convertible_v<fixed::fstring31, std::string>));
     EXPECT_TRUE((std::is_convertible_v<fixed::fstring31, fixed::fstring_ref>));
     EXPECT_TRUE((std::is_convertible_v<fixed::fstring31, fixed::fstring31>));
     EXPECT_TRUE((std::is_convertible_v<fixed::fstring31, fixed::fstring15>));
 
+    EXPECT_TRUE((std::is_nothrow_assignable_v<fixed::fstring31, char*>));
+    EXPECT_TRUE((std::is_nothrow_assignable_v<fixed::fstring31, std::string_view>));
+    EXPECT_TRUE(std::is_nothrow_constructible_v<fixed::fstring31>);
+    EXPECT_TRUE(std::is_nothrow_default_constructible_v<fixed::fstring31>);
+    EXPECT_TRUE((std::is_nothrow_assignable_v<fixed::fstring31, fixed::fstring_ref>));
 
 }

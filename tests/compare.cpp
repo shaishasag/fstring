@@ -72,3 +72,27 @@ TEST(CompareTests, partial_compare)
         EXPECT_EQ(kc.compare(13, 8, ss_str), 0);
     }
 }
+
+TEST(CompareTests, case_insensitive)
+{
+    const char* the_band = "K.C. and the sunshine band";
+    const char* the_sunshine = "k.c. and the sunshine BAND";
+    {
+        fixed::fstring31 kc(the_band);
+        fixed::fstring31 ss(the_sunshine);
+        EXPECT_EQ(kc.icompare(ss), 0);
+        EXPECT_EQ(ss.icompare(kc), 0);
+
+        kc += "A"; // now kc is "bigger"
+        EXPECT_GT(kc.icompare(ss), 0);
+        EXPECT_LT(ss.icompare(kc), 0);
+
+        ss += "a"; // no they are equal again
+        EXPECT_EQ(kc.icompare(ss), 0);
+        EXPECT_EQ(ss.icompare(kc), 0);
+
+        ss += "b"; // now ss is "bigger"
+        EXPECT_LT(kc.icompare(ss), 0);
+        EXPECT_GT(ss.icompare(kc), 0);
+    }
+}

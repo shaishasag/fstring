@@ -235,24 +235,30 @@ TEST(AssignTests, Swap)
         EXPECT_STREQ(a.c_str(), "Carnivore");
         EXPECT_STREQ(b.c_str(), "Herbivore");
     }
-#if 0
-    {   // swap same size fstring_ref
-        fixed::fstring31 a("Herbivore");
-        fixed::fstring31 b("Carnivore");
+}
 
-        fixed::fstring_ref a_ref(a);
-        fixed::fstring_ref b_ref(b);
-        std::swap(a_ref, b_ref);
+TEST(AssignTests, AssignToRef)
+{
+    {   // swap same size fstring
+        fixed::fstring31 a;
+        fixed::fstring_ref b(a);
 
-        EXPECT_STREQ(a_ref.c_str(), "Carnivore");
-        EXPECT_STREQ(b_ref.c_str(), "Herbivore");
-    }
-    {   // swap different size fstring
-        fixed::fstring31 a("Herbivore");
-        fixed::fstring15 b("Carnivore");
-        std::swap(a, b);
-        EXPECT_STREQ(a.c_str(), "Carnivore");
+        b = "Herbivore";
+        EXPECT_STREQ(a.c_str(), "Herbivore");
         EXPECT_STREQ(b.c_str(), "Herbivore");
+
+        b = "Carnivore";
+        EXPECT_STREQ(a.c_str(), "Carnivore");
+        EXPECT_STREQ(b.c_str(), "Carnivore");
+
+        fixed::fstring31 c{"Barbivore"};
+        b = c;
+        EXPECT_STREQ(a.c_str(), "Barbivore");
+        EXPECT_STREQ(b.c_str(), "Barbivore");
+
+        std::string_view d{"Felicity"};
+        b = d;
+        EXPECT_STREQ(a.c_str(), "Felicity");
+        EXPECT_STREQ(b.c_str(), "Felicity");
     }
-#endif
 }

@@ -79,6 +79,6 @@ TEST(Constexpr, call_constexpr)
     constexpr bool b = con1.ends_with("googoo");
     EXPECT_TRUE(b);
 
-    constexpr fixed::size_type pos = con1.find_last_of('g');
+    constexpr fixed::size_type pos = con1.sv().find_last_of('g');
     EXPECT_EQ(pos, 7);
 }

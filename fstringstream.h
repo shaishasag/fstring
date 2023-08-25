@@ -8,7 +8,7 @@
 
 // compiler does not know how to convert from fstring_base<CharT> to  fstring_ref_base<CharT>;
 //template<typename CharT, typename OutT>
-template<typename OutT>
+template<typename OutT, typename = std::enable_if_t<!std::is_convertible_v<OutT, std::string_view>>>
 fixed::fstring_ref operator<< (fixed::fstring_ref fref, OutT to_out)
 {
     if constexpr (std::is_same<OutT, bool>())
@@ -21,24 +21,11 @@ fixed::fstring_ref operator<< (fixed::fstring_ref fref, OutT to_out)
     }
     else if constexpr (std::is_integral_v<OutT>)
     {
-        constexpr size_t num_integral_digits = 20;
-        char buff[num_integral_digits+1];
-        std::to_chars_result tcr = std::to_chars(buff,
-                                                 buff+num_integral_digits,
-                                                 to_out);
-        *tcr.ptr = '\0';
-        fref += buff;
+        fref.printf(to_out);
     }
     else if constexpr (std::is_floating_point_v<OutT>)
     {
-        constexpr size_t num_float_digits = 3 + DBL_MANT_DIG - DBL_MIN_EXP;
-        char buff[num_float_digits+1];
-        std::to_chars_result tcr = std::to_chars(buff,
-                                                 buff+num_float_digits,
-                                                 to_out,
-                                                 std::chars_format::fixed);
-        *tcr.ptr = '\0';
-        fref += buff;
+        fref.printf(to_out);
     }
     else
     {

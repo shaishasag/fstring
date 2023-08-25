@@ -26,7 +26,9 @@
 		F62BDD1A293F01860000567A /* access.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F62BDD19293F01860000567A /* access.cpp */; };
 		F62BDD1C293F111C0000567A /* memcpy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F62BDD1B293F111C0000567A /* memcpy.cpp */; };
 		F63F11E52957548E00CAE219 /* stream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F63F11E42957548E00CAE219 /* stream.cpp */; };
+		F669396C2A8FBD03007E68A7 /* conversions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F669396B2A8FBD03007E68A7 /* conversions.cpp */; };
 		F66DF9A529CCA40A007B2032 /* empty.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F66DF9A429CCA40A007B2032 /* empty.cpp */; };
+		F6A56B152A976378002BAEFD /* printf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6A56B142A976378002BAEFD /* printf.cpp */; };
 		F6A680492942867800D9CE7A /* hello_fstring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6A680482942867800D9CE7A /* hello_fstring.cpp */; };
 		F6B2F88B2943486100A4443B /* os.cc in Sources */ = {isa = PBXBuildFile; fileRef = F6B2F8882943486100A4443B /* os.cc */; };
 		F6B2F88C2943486100A4443B /* format.cc in Sources */ = {isa = PBXBuildFile; fileRef = F6B2F8892943486100A4443B /* format.cc */; };
@@ -34,6 +36,7 @@
 		F6BC984929411AFA002CC268 /* trim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6BC984829411AFA002CC268 /* trim.cpp */; };
 		F6BC984B2941D94C002CC268 /* variadic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6BC984A2941D94C002CC268 /* variadic.cpp */; };
 		F6BC98C129423926002CC268 /* find.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6BC98C029423926002CC268 /* find.cpp */; };
+		F6CEEF9E2A97864500DB97B3 /* containers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6CEEF9D2A97864400DB97B3 /* containers.cpp */; };
 		F6F31645293FAA98008D93CF /* compare.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6F31644293FAA98008D93CF /* compare.cpp */; };
 /* End PBXBuildFile section */
 
@@ -61,7 +64,7 @@
 /* Begin PBXFileReference section */
 		F600971B293D0621006F1F35 /* fstring_tests */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = fstring_tests; sourceTree = BUILT_PRODUCTS_DIR; };
 		F600971E293D0621006F1F35 /* tests_main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = tests_main.cpp; path = tests/tests_main.cpp; sourceTree = SOURCE_ROOT; };
-		F600976F293D0CBC006F1F35 /* fstring.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fstring.h; sourceTree = SOURCE_ROOT; };
+		F600976F293D0CBC006F1F35 /* old_fstring.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = old_fstring.h; sourceTree = SOURCE_ROOT; };
 		F6009770293D12D4006F1F35 /* WCFixedString.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WCFixedString.h; path = ../../../../Volumes/p4client/ProAudio/dev_main/ProAudio/XPlatform/Utilities/MiscUtils/WCFixedString.h; sourceTree = "<group>"; };
 		F6077C1B2960738A00C019C4 /* erase.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = erase.cpp; sourceTree = "<group>"; };
 		F60C98C8295F336F00760EB6 /* substr.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = substr.cpp; sourceTree = "<group>"; };
@@ -222,7 +225,9 @@
 		F62BDD1B293F111C0000567A /* memcpy.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = memcpy.cpp; sourceTree = "<group>"; };
 		F63F11E32957530B00CAE219 /* fstringstream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fstringstream.h; sourceTree = "<group>"; };
 		F63F11E42957548E00CAE219 /* stream.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = stream.cpp; sourceTree = "<group>"; };
+		F669396B2A8FBD03007E68A7 /* conversions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = conversions.cpp; sourceTree = "<group>"; };
 		F66DF9A429CCA40A007B2032 /* empty.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = empty.cpp; sourceTree = "<group>"; };
+		F6A56B142A976378002BAEFD /* printf.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = printf.cpp; sourceTree = "<group>"; };
 		F6A680412942864D00D9CE7A /* hello_fstring */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = hello_fstring; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6A680482942867800D9CE7A /* hello_fstring.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = hello_fstring.cpp; sourceTree = "<group>"; };
 		F6B2F8882943486100A4443B /* os.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = os.cc; path = fmt/src/os.cc; sourceTree = "<group>"; };
@@ -245,7 +250,10 @@
 		F6BC984829411AFA002CC268 /* trim.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = trim.cpp; sourceTree = "<group>"; };
 		F6BC984A2941D94C002CC268 /* variadic.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = variadic.cpp; sourceTree = "<group>"; };
 		F6BC98C029423926002CC268 /* find.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = find.cpp; sourceTree = "<group>"; };
+		F6CEEF9D2A97864400DB97B3 /* containers.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = containers.cpp; sourceTree = "<group>"; };
 		F6F31644293FAA98008D93CF /* compare.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = compare.cpp; sourceTree = "<group>"; };
+		F6F549092A97B633000B95FC /* gstring.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gstring.h; sourceTree = "<group>"; };
+		F6F5490A2A98A546000B95FC /* fstring.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fstring.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -269,9 +277,11 @@
 		F6009712293D0621006F1F35 = {
 			isa = PBXGroup;
 			children = (
+				F6F5490A2A98A546000B95FC /* fstring.h */,
+				F6F549092A97B633000B95FC /* gstring.h */,
 				F63F11E32957530B00CAE219 /* fstringstream.h */,
 				F6A680482942867800D9CE7A /* hello_fstring.cpp */,
-				F600976F293D0CBC006F1F35 /* fstring.h */,
+				F600976F293D0CBC006F1F35 /* old_fstring.h */,
 				F6B2F8872943484500A4443B /* fmt */,
 				F62BDD07293E511C0000567A /* tests */,
 				F62BDC6A293E502A0000567A /* googletest */,
@@ -537,6 +547,9 @@
 				F60C98CA295F3DCF00760EB6 /* insert.cpp */,
 				F6077C1B2960738A00C019C4 /* erase.cpp */,
 				F66DF9A429CCA40A007B2032 /* empty.cpp */,
+				F669396B2A8FBD03007E68A7 /* conversions.cpp */,
+				F6A56B142A976378002BAEFD /* printf.cpp */,
+				F6CEEF9D2A97864400DB97B3 /* containers.cpp */,
 			);
 			path = tests;
 			sourceTree = "<group>";
@@ -643,6 +656,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F66DF9A529CCA40A007B2032 /* empty.cpp in Sources */,
+				F6CEEF9E2A97864500DB97B3 /* containers.cpp in Sources */,
 				F600971F293D0621006F1F35 /* tests_main.cpp in Sources */,
 				F63F11E52957548E00CAE219 /* stream.cpp in Sources */,
 				F6077C1C2960738A00C019C4 /* erase.cpp in Sources */,
@@ -652,6 +666,7 @@
 				F6BC984B2941D94C002CC268 /* variadic.cpp in Sources */,
 				F6BC984729410D1C002CC268 /* constexpr.cpp in Sources */,
 				F6F31645293FAA98008D93CF /* compare.cpp in Sources */,
+				F6A56B152A976378002BAEFD /* printf.cpp in Sources */,
 				F6BC984929411AFA002CC268 /* trim.cpp in Sources */,
 				F61AE77429465442002F9078 /* traits.cpp in Sources */,
 				F62BDD10293E585A0000567A /* gtest-filepath.cc in Sources */,
@@ -667,6 +682,7 @@
 				F62BDD0F293E58480000567A /* gtest-death-test.cc in Sources */,
 				F62BDD13293E67180000567A /* assign.cpp in Sources */,
 				F62BDD1A293F01860000567A /* access.cpp in Sources */,
+				F669396C2A8FBD03007E68A7 /* conversions.cpp in Sources */,
 				F60C98C9295F336F00760EB6 /* substr.cpp in Sources */,
 				F62BDD0D293E57F90000567A /* gtest-assertion-result.cc in Sources */,
 			);

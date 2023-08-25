@@ -5,22 +5,22 @@ TEST(Find, find_plain_text)
 {
     {   // find plain text in fstring
         constexpr fixed::fstring31 con("Kajagoogoo");
-        auto pos = con.find('g');
+        auto pos = con.sv().find('g');
         EXPECT_EQ(pos, 4);
 
-        pos = con.find('z');
+        pos = con.sv().find('z');
         EXPECT_EQ(pos, fixed::npos);
 
-        pos = con.find("goo");
+        pos = con.sv().find("goo");
         EXPECT_EQ(pos, 4);
 
-        pos = con.find("zoo");
+        pos = con.sv().find("zoo");
         EXPECT_EQ(pos, fixed::npos);
 
-        pos = con.find(std::string_view("goo"));
+        pos = con.sv().find(std::string_view("goo"));
         EXPECT_EQ(pos, 4);
 
-        pos = con.find(std::string_view("zoo"));
+        pos = con.sv().find(std::string_view("zoo"));
         EXPECT_EQ(pos, fixed::npos);
     }
 
@@ -28,22 +28,22 @@ TEST(Find, find_plain_text)
         constexpr fixed::fstring31 con("Kajagoogoo");
         fixed::fstring_ref con_ref(con);
 
-        auto pos = con_ref.find('g');
+        auto pos = con_ref.sv().find('g');
         EXPECT_EQ(pos, 4);
 
-        pos = con_ref.find('z');
+        pos = con_ref.sv().find('z');
         EXPECT_EQ(pos, fixed::npos);
 
-        pos = con_ref.find("goo");
+        pos = con_ref.sv().find("goo");
         EXPECT_EQ(pos, 4);
 
-        pos = con_ref.find("zoo");
+        pos = con_ref.sv().find("zoo");
         EXPECT_EQ(pos, fixed::npos);
 
-        pos = con_ref.find(std::string_view("goo"));
+        pos = con_ref.sv().find(std::string_view("goo"));
         EXPECT_EQ(pos, 4);
 
-        pos = con_ref.find(std::string_view("zoo"));
+        pos = con_ref.sv().find(std::string_view("zoo"));
         EXPECT_EQ(pos, fixed::npos);
    }
 }
@@ -54,16 +54,16 @@ TEST(Find, find_fstring)
     {   // find fstring in fstring
         constexpr fixed::fstring31 con("Kajagoogoo");
         
-        auto pos = con.find(fixed::fstring7('g'));
+        auto pos = con.sv().find(fixed::fstring7('g'));
         EXPECT_EQ(pos, 4);
 
-        pos = con.find(fixed::fstring7('z'));
+        pos = con.sv().find(fixed::fstring7('z'));
         EXPECT_EQ(pos, fixed::npos);
 
-        pos = con.find(fixed::fstring7("goo"));
+        pos = con.sv().find(fixed::fstring7("goo"));
         EXPECT_EQ(pos, 4);
 
-        pos = con.find(fixed::fstring7("zoo"));
+        pos = con.sv().find(fixed::fstring7("zoo"));
         EXPECT_EQ(pos, fixed::npos);
     }
 
@@ -71,16 +71,16 @@ TEST(Find, find_fstring)
         constexpr fixed::fstring31 con("Kajagoogoo");
         fixed::fstring_ref con_ref(con);
 
-        auto pos = con_ref.find(fixed::fstring7('g'));
+        auto pos = con_ref.sv().find(fixed::fstring7('g'));
         EXPECT_EQ(pos, 4);
 
-        pos = con_ref.find(fixed::fstring7('z'));
+        pos = con_ref.sv().find(fixed::fstring7('z'));
         EXPECT_EQ(pos, fixed::npos);
 
-        pos = con_ref.find(fixed::fstring7("goo"));
+        pos = con_ref.sv().find(fixed::fstring7("goo"));
         EXPECT_EQ(pos, 4);
 
-        pos = con_ref.find(fixed::fstring7("zoo"));
+        pos = con_ref.sv().find(fixed::fstring7("zoo"));
         EXPECT_EQ(pos, fixed::npos);
    }
 }
@@ -94,25 +94,25 @@ TEST(Find, find_fstring_ref)
         {
             fixed::fstring7 g('g');
             fixed::fstring_ref g_ref(g);
-            auto pos = con.find(g_ref);
+            auto pos = con.sv().find(g_ref);
             EXPECT_EQ(pos, 4);
         }
         {
             fixed::fstring7 z('z');
             fixed::fstring_ref z_ref(z);
-            auto pos = con.find(z_ref);
+            auto pos = con.sv().find(z_ref);
             EXPECT_EQ(pos, fixed::npos);
         }
         {
             fixed::fstring7 goo("goo");
             fixed::fstring_ref goo_ref(goo);
-            auto pos = con.find(goo_ref);
+            auto pos = con.sv().find(goo_ref);
             EXPECT_EQ(pos, 4);
         }
         {
             fixed::fstring7 zoo("zoo");
             fixed::fstring_ref zoo_ref(zoo);
-            auto pos = con.find(zoo_ref);
+            auto pos = con.sv().find(zoo_ref);
             EXPECT_EQ(pos, fixed::npos);
         }
     }
@@ -122,25 +122,25 @@ TEST(Find, find_fstring_ref)
         {
             fixed::fstring7 g('g');
             fixed::fstring_ref g_ref(g);
-            auto pos = con_ref.find(g_ref);
+            auto pos = con_ref.sv().find(g_ref);
             EXPECT_EQ(pos, 4);
         }
         {
             fixed::fstring7 z('z');
             fixed::fstring_ref z_ref(z);
-            auto pos = con_ref.find(z_ref);
+            auto pos = con_ref.sv().find(z_ref);
             EXPECT_EQ(pos, fixed::npos);
         }
         {
             fixed::fstring7 goo("goo");
             fixed::fstring_ref goo_ref(goo);
-            auto pos = con_ref.find(goo_ref);
+            auto pos = con_ref.sv().find(goo_ref);
             EXPECT_EQ(pos, 4);
         }
         {
             fixed::fstring7 zoo("zoo");
             fixed::fstring_ref zoo_ref(zoo);
-            auto pos = con_ref.find(zoo_ref);
+            auto pos = con_ref.sv().find(zoo_ref);
             EXPECT_EQ(pos, fixed::npos);
         }
     }
