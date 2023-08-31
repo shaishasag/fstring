@@ -98,35 +98,52 @@ public:
     {
         return std::string_view(c_str(), size());
     }
-    constexpr fstring_base& operator=(const CharT* cstr) noexcept
+
+    fstring_base& operator=(const CharT in_char) noexcept
     {
         clear();
-        __append__(cstr);
-        return *this;
-    }
-    constexpr fstring_base& operator=(std::string_view sv) noexcept
-    {
-        clear();
-        __append__(sv.data(), sv.size());
+        __append__(in_char);
         return *this;
     }
 
-    constexpr fstring_base& operator=(fstring_ref_base<CharT> f_ref) noexcept
+    template <class TConverible, class = std::enable_if<std::is_convertible_v<TConverible, std::string_view> > >
+    fstring_base& operator=(const TConverible& in_converti) noexcept
     {
         clear();
-        __append__(f_ref.data(), f_ref.size());
+        std::string_view as_sv = std::string_view(in_converti);
+        __append__(as_sv.data(), as_sv.size());
         return *this;
     }
+//
+//    constexpr fstring_base& operator=(const CharT* cstr) noexcept
+//    {
+//        clear();
+//        __append__(cstr);
+//        return *this;
+//    }
+//    constexpr fstring_base& operator=(std::string_view sv) noexcept
+//    {
+//        clear();
+//        __append__(sv.data(), sv.size());
+//        return *this;
+//    }
+//
+//    constexpr fstring_base& operator=(fstring_ref_base<CharT> f_ref) noexcept
+//    {
+//        clear();
+//        __append__(f_ref.data(), f_ref.size());
+//        return *this;
+//    }
 
     // when assigning one fstring_base to another, clang refuses to convert to std::string_view
     // so I had to implement operator= below
-    template<size_t TOtherSize>
-    constexpr fstring_base& operator=(const fstring_base<TOtherSize, CharT>& in_fixed) noexcept
-    {
-        clear();
-        __append__(in_fixed.c_str(), in_fixed.size());
-        return *this;
-    }
+//    template<size_t TOtherSize>
+//    constexpr fstring_base& operator=(const fstring_base<TOtherSize, CharT>& in_fixed) noexcept
+//    {
+//        clear();
+//        __append__(in_fixed.c_str(), in_fixed.size());
+//        return *this;
+//    }
 
     constexpr fstring_base& assign(std::string_view sv) noexcept
     {
@@ -528,18 +545,16 @@ public:
     constexpr operator std::string_view() const  noexcept { return std::string_view(m_referee); }
     constexpr std::string_view sv() const  noexcept { return std::string_view(m_referee); }
 
-    constexpr fstring_ref_base& operator=(const CharT* cstr) noexcept {
-        m_referee = cstr;
-        return *this;
-    }
-    constexpr fstring_ref_base& operator=(std::string_view sv) noexcept {
-        m_referee = sv;
-        return *this;
-    }
-    template<size_t TOtherSize>
-    constexpr fstring_ref_base& operator=(const fstring_base<TOtherSize, CharT>& in_fixed) noexcept
+    template <class _Tp, class = std::enable_if<std::is_convertible_v<_Tp, std::string_view> > >
+    fstring_ref_base& operator=(const _Tp& __t) noexcept
     {
-        m_referee = in_fixed;
+        m_referee = __t;
+        return *this;
+    }
+
+    fstring_ref_base& operator=(const fstring_ref_base in_ref) noexcept
+    {
+        m_referee = in_ref;
         return *this;
     }
 

@@ -58,18 +58,18 @@ TEST(CompareTests, partial_compare)
     const char* the_sunshine = "sunshine";
     {
         fixed::fstring31 kc(the_band);
-        EXPECT_EQ(kc.compare(13, 8, the_sunshine), 0);
-        EXPECT_EQ(kc.compare(13, 8, the_band, 13, 8), 0);
+        EXPECT_EQ(kc.sv().compare(13, 8, the_sunshine), 0);
+        EXPECT_EQ(kc.sv().compare(13, 8, the_band, 13, 8), 0);
 
         fixed::fstring31 ss2(the_sunshine);
-        EXPECT_EQ(kc.compare(13, 8, ss2), 0);
-        EXPECT_EQ(kc.compare(13, 8, fixed::fstring_ref(ss2)), 0);
+        EXPECT_EQ(kc.sv().compare(13, 8, ss2), 0);
+        EXPECT_EQ(kc.sv().compare(13, 8, fixed::fstring_ref(ss2)), 0);
 
         std::string_view ss_view(the_sunshine);
-        EXPECT_EQ(kc.compare(13, 8, ss_view), 0);
+        EXPECT_EQ(kc.sv().compare(13, 8, ss_view), 0);
 
         std::string ss_str(the_sunshine);
-        EXPECT_EQ(kc.compare(13, 8, ss_str), 0);
+        EXPECT_EQ(kc.sv().compare(13, 8, ss_str), 0);
     }
 }
 
