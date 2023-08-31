@@ -240,25 +240,36 @@ TEST(AssignTests, Swap)
 TEST(AssignTests, AssignToRef)
 {
     {   // swap same size fstring
-        fixed::fstring31 a;
-        fixed::fstring_ref b(a);
+        fixed::fstring31 the_referred;
+        fixed::fstring_ref the_ref(the_referred);
 
-        b = "Herbivore";
-        EXPECT_STREQ(a.c_str(), "Herbivore");
-        EXPECT_STREQ(b.c_str(), "Herbivore");
+        the_ref = 'O';  // assign single char
+        EXPECT_STREQ(the_referred.c_str(), "O");
+        EXPECT_STREQ(the_ref.c_str(), "O");
 
-        b = "Carnivore";
-        EXPECT_STREQ(a.c_str(), "Carnivore");
-        EXPECT_STREQ(b.c_str(), "Carnivore");
+        the_ref = "Herbivore";  // assign char*
+        EXPECT_STREQ(the_referred.c_str(), "Herbivore");
+        EXPECT_STREQ(the_ref.c_str(), "Herbivore");
 
-        fixed::fstring31 c{"Barbivore"};
-        b = c;
-        EXPECT_STREQ(a.c_str(), "Barbivore");
-        EXPECT_STREQ(b.c_str(), "Barbivore");
+        fixed::fstring15 f15{"Carnivore"};
+        the_ref = f15;   // assign fstring
+        EXPECT_STREQ(the_referred.c_str(), "Carnivore");
+        EXPECT_STREQ(the_ref.c_str(), "Carnivore");
+
+        fixed::fstring63 f63{"Omnivore"};
+        fixed::fstring_ref f63_ref(f63);
+        the_ref = f63_ref;   // assign fstring_ref
+        EXPECT_STREQ(the_referred.c_str(), "Omnivore");
+        EXPECT_STREQ(the_ref.c_str(), "Omnivore");
 
         std::string_view d{"Felicity"};
-        b = d;
-        EXPECT_STREQ(a.c_str(), "Felicity");
-        EXPECT_STREQ(b.c_str(), "Felicity");
+        the_ref = d;  // assign std::string_view
+        EXPECT_STREQ(the_referred.c_str(), "Felicity");
+        EXPECT_STREQ(the_ref.c_str(), "Felicity");
+
+        std::string e{"Porter"};
+        the_ref = e;  // assign std::string
+        EXPECT_STREQ(the_referred.c_str(), "Porter");
+        EXPECT_STREQ(the_ref.c_str(), "Porter");
     }
 }

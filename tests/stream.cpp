@@ -4,7 +4,7 @@
 
 TEST(Stream, stream_numbers)
 {
-if 0
+#if 0
     {
         fixed::fstring127 fs;
         fs << true;

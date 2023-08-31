@@ -32,6 +32,7 @@
 		F6A680492942867800D9CE7A /* hello_fstring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6A680482942867800D9CE7A /* hello_fstring.cpp */; };
 		F6B2F88B2943486100A4443B /* os.cc in Sources */ = {isa = PBXBuildFile; fileRef = F6B2F8882943486100A4443B /* os.cc */; };
 		F6B2F88C2943486100A4443B /* format.cc in Sources */ = {isa = PBXBuildFile; fileRef = F6B2F8892943486100A4443B /* format.cc */; };
+		F6B3F3492AA0DD7B001E30AC /* size_of.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6B3F3482AA0DD7B001E30AC /* size_of.cpp */; };
 		F6BC984729410D1C002CC268 /* constexpr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6BC984629410D1C002CC268 /* constexpr.cpp */; };
 		F6BC984929411AFA002CC268 /* trim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6BC984829411AFA002CC268 /* trim.cpp */; };
 		F6BC984B2941D94C002CC268 /* variadic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6BC984A2941D94C002CC268 /* variadic.cpp */; };
@@ -246,6 +247,7 @@
 		F6B2F8982943487000A4443B /* os.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = os.h; path = fmt/include/fmt/os.h; sourceTree = "<group>"; };
 		F6B2F8992943487000A4443B /* chrono.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = chrono.h; path = fmt/include/fmt/chrono.h; sourceTree = "<group>"; };
 		F6B2F89A2943487000A4443B /* format-inl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "format-inl.h"; path = "fmt/include/fmt/format-inl.h"; sourceTree = "<group>"; };
+		F6B3F3482AA0DD7B001E30AC /* size_of.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = size_of.cpp; sourceTree = "<group>"; };
 		F6BC984629410D1C002CC268 /* constexpr.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = constexpr.cpp; sourceTree = "<group>"; };
 		F6BC984829411AFA002CC268 /* trim.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = trim.cpp; sourceTree = "<group>"; };
 		F6BC984A2941D94C002CC268 /* variadic.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = variadic.cpp; sourceTree = "<group>"; };
@@ -550,6 +552,7 @@
 				F669396B2A8FBD03007E68A7 /* conversions.cpp */,
 				F6A56B142A976378002BAEFD /* printf.cpp */,
 				F6CEEF9D2A97864400DB97B3 /* containers.cpp */,
+				F6B3F3482AA0DD7B001E30AC /* size_of.cpp */,
 			);
 			path = tests;
 			sourceTree = "<group>";
@@ -660,6 +663,7 @@
 				F600971F293D0621006F1F35 /* tests_main.cpp in Sources */,
 				F63F11E52957548E00CAE219 /* stream.cpp in Sources */,
 				F6077C1C2960738A00C019C4 /* erase.cpp in Sources */,
+				F6B3F3492AA0DD7B001E30AC /* size_of.cpp in Sources */,
 				F62BDD09293E512F0000567A /* construct.cpp in Sources */,
 				F62BDD1C293F111C0000567A /* memcpy.cpp in Sources */,
 				F62BDD18293E80B60000567A /* change.cpp in Sources */,
