@@ -52,7 +52,7 @@ TEST(AccessTests, iterators)
         std::string std_str("my bologna");
         fixed::fstring15 ms1(std_str);
         EXPECT_NE(ms1.begin(), ms1.end());
-        EXPECT_EQ(std::distance(ms1.begin(), ms1.end()), ms1.size());
+        EXPECT_EQ(std::distance(ms1.begin(), ms1.end()), (ptrdiff_t)ms1.size());
 
         for (auto i = ms1.begin(); i != ms1.end(); ++i) {
             EXPECT_EQ(*i, std_str[std::distance(ms1.begin(), i)]);
@@ -65,7 +65,7 @@ TEST(AccessTests, iterators)
     {   // for empty string ms1.begin() == ms1.end()
         fixed::fstring15 ms1("");
         EXPECT_EQ(ms1.begin(), ms1.end());
-        EXPECT_EQ(std::distance(ms1.begin(), ms1.end()), ms1.size());
+        EXPECT_EQ(std::distance(ms1.begin(), ms1.end()), (ptrdiff_t)ms1.size());
 
         bool in_loop = false;
         for (auto i = ms1.begin(); i != ms1.end(); ++i){
@@ -88,7 +88,7 @@ TEST(AccessTests, const_iterators)
         std::string std_str("my bologna");
         const fixed::fstring15 ms1(std_str);
         EXPECT_NE(ms1.cbegin(), ms1.cend());
-        EXPECT_EQ(std::distance(ms1.cbegin(), ms1.cend()), ms1.size());
+        EXPECT_EQ(std::distance(ms1.cbegin(), ms1.cend()), (ptrdiff_t)ms1.size());
 
         for (auto i = ms1.cbegin(); i != ms1.cend(); ++i) {
             EXPECT_EQ(*i, std_str[std::distance(ms1.cbegin(), i)]);
@@ -97,7 +97,7 @@ TEST(AccessTests, const_iterators)
     {   // for empty string ms1.begin() == ms1.end()
         fixed::fstring15 ms1("");
         EXPECT_EQ(ms1.cbegin(), ms1.cend());
-        EXPECT_EQ(std::distance(ms1.cbegin(), ms1.cend()), ms1.size());
+        EXPECT_EQ(std::distance(ms1.cbegin(), ms1.cend()), (ptrdiff_t)ms1.size());
 
         bool in_loop = false;
         for (auto i = ms1.cbegin(); i != ms1.cend(); ++i){

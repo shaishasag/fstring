@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="gtest">
+      <UniqueIdentifier>{564dc244-adad-4e0c-a3b7-50f12bf2bd44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tests">
+      <UniqueIdentifier>{a7bef72a-ff5a-4cce-a2df-ba8b1e7ffaa2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="fstring.h">
@@ -24,70 +30,70 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="tests\access.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>tests</Filter>
     </ClCompile>
     <ClCompile Include="tests\assign.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>tests</Filter>
     </ClCompile>
     <ClCompile Include="tests\change.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>tests</Filter>
     </ClCompile>
     <ClCompile Include="tests\compare.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>tests</Filter>
     </ClCompile>
     <ClCompile Include="tests\constexpr.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>tests</Filter>
     </ClCompile>
     <ClCompile Include="tests\construct.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>tests</Filter>
     </ClCompile>
     <ClCompile Include="tests\containers.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>tests</Filter>
     </ClCompile>
     <ClCompile Include="tests\conversions.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>tests</Filter>
     </ClCompile>
     <ClCompile Include="tests\empty.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>tests</Filter>
     </ClCompile>
     <ClCompile Include="tests\erase.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>tests</Filter>
     </ClCompile>
     <ClCompile Include="tests\find.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>tests</Filter>
     </ClCompile>
     <ClCompile Include="tests\insert.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>tests</Filter>
     </ClCompile>
     <ClCompile Include="tests\memcpy.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>tests</Filter>
     </ClCompile>
     <ClCompile Include="tests\printf.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>tests</Filter>
     </ClCompile>
     <ClCompile Include="tests\reference.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>tests</Filter>
     </ClCompile>
     <ClCompile Include="tests\stream.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>tests</Filter>
     </ClCompile>
     <ClCompile Include="tests\substr.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>tests</Filter>
     </ClCompile>
     <ClCompile Include="tests\tests_main.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>tests</Filter>
     </ClCompile>
     <ClCompile Include="tests\traits.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>tests</Filter>
     </ClCompile>
     <ClCompile Include="tests\trim.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>tests</Filter>
     </ClCompile>
     <ClCompile Include="tests\variadic.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>tests</Filter>
     </ClCompile>
-    <ClCompile Include="googletest\googletest\src\gtest.cc">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="googletest\googletest\src\gtest-all.cc">
+      <Filter>gtest</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

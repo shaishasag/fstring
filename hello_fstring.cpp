@@ -1,5 +1,8 @@
 #include <stdlib.h>
+#include <iostream>
 
+#include "fstring.h"
+#include "fstringstream.h"
 
 int main(int argc, char** argv)
 {
@@ -10,7 +13,7 @@ int main(int argc, char** argv)
     std::cout << "sizeof(fixed::fstring_ref) = " << sizeof(fixed::fstring_ref)  << std::endl;
 
     constexpr fixed::fstring31 fstr("Hello fstring");
-    std::cout << fstr << std::endl;
+    std::cout << std::string_view(fstr) << std::endl;
 
     return 0;
 }

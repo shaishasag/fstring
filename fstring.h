@@ -114,36 +114,6 @@ public:
         __append__(as_sv.data(), as_sv.size());
         return *this;
     }
-//
-//    constexpr fstring_base& operator=(const CharT* cstr) noexcept
-//    {
-//        clear();
-//        __append__(cstr);
-//        return *this;
-//    }
-//    constexpr fstring_base& operator=(std::string_view sv) noexcept
-//    {
-//        clear();
-//        __append__(sv.data(), sv.size());
-//        return *this;
-//    }
-//
-//    constexpr fstring_base& operator=(fstring_ref_base<CharT> f_ref) noexcept
-//    {
-//        clear();
-//        __append__(f_ref.data(), f_ref.size());
-//        return *this;
-//    }
-
-    // when assigning one fstring_base to another, clang refuses to convert to std::string_view
-    // so I had to implement operator= below
-//    template<size_t TOtherSize>
-//    constexpr fstring_base& operator=(const fstring_base<TOtherSize, CharT>& in_fixed) noexcept
-//    {
-//        clear();
-//        __append__(in_fixed.c_str(), in_fixed.size());
-//        return *this;
-//    }
 
     constexpr fstring_base& assign(std::string_view sv) noexcept
     {
@@ -198,6 +168,9 @@ public:
         set_new_size(0);
     }
 
+
+#pragma warning( push )
+#pragma warning( disable : 4789 )
     constexpr fstring_base& insert(size_type index, size_type count, CharT ch)
     {
         if (index > size()) {
@@ -229,6 +202,8 @@ public:
 
         return *this;
     }
+
+#pragma warning( pop )
 
     constexpr fstring_base& insert(size_type index, const std::string_view sv)
     {

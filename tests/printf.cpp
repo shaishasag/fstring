@@ -63,7 +63,7 @@ TEST(Printf, simple)
     }
     {   // Hex format
         fstring31 fs;
-        fs.printf(int64_t{9876543210}, "0x%lX");
+        fs.printf(int64_t{9876543210}, "0x%llX");
         EXPECT_STREQ(fs.c_str(), "0x24CB016EA");
     }
 }

@@ -4,3 +4,4 @@ fmt
 googletest
 *.vcxproj.user
 .vs
+x64
