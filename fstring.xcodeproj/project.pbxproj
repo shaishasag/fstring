@@ -28,6 +28,7 @@
 		F63F11E52957548E00CAE219 /* stream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F63F11E42957548E00CAE219 /* stream.cpp */; };
 		F669396C2A8FBD03007E68A7 /* conversions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F669396B2A8FBD03007E68A7 /* conversions.cpp */; };
 		F66DF9A529CCA40A007B2032 /* empty.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F66DF9A429CCA40A007B2032 /* empty.cpp */; };
+		F69EF04B2AAA371F0033190A /* replace.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F69EF04A2AAA371F0033190A /* replace.cpp */; };
 		F6A56B152A976378002BAEFD /* printf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6A56B142A976378002BAEFD /* printf.cpp */; };
 		F6A680492942867800D9CE7A /* hello_fstring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6A680482942867800D9CE7A /* hello_fstring.cpp */; };
 		F6B2F88B2943486100A4443B /* os.cc in Sources */ = {isa = PBXBuildFile; fileRef = F6B2F8882943486100A4443B /* os.cc */; };
@@ -228,6 +229,7 @@
 		F63F11E42957548E00CAE219 /* stream.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = stream.cpp; sourceTree = "<group>"; };
 		F669396B2A8FBD03007E68A7 /* conversions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = conversions.cpp; sourceTree = "<group>"; };
 		F66DF9A429CCA40A007B2032 /* empty.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = empty.cpp; sourceTree = "<group>"; };
+		F69EF04A2AAA371F0033190A /* replace.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = replace.cpp; sourceTree = "<group>"; };
 		F6A56B142A976378002BAEFD /* printf.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = printf.cpp; sourceTree = "<group>"; };
 		F6A680412942864D00D9CE7A /* hello_fstring */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = hello_fstring; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6A680482942867800D9CE7A /* hello_fstring.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = hello_fstring.cpp; sourceTree = "<group>"; };
@@ -531,28 +533,29 @@
 		F62BDD07293E511C0000567A /* tests */ = {
 			isa = PBXGroup;
 			children = (
-				F600971E293D0621006F1F35 /* tests_main.cpp */,
-				F62BDD08293E512F0000567A /* construct.cpp */,
-				F62BDD12293E67180000567A /* assign.cpp */,
-				F62BDD14293E78C00000567A /* reference.cpp */,
-				F62BDD17293E80B60000567A /* change.cpp */,
 				F62BDD19293F01860000567A /* access.cpp */,
-				F62BDD1B293F111C0000567A /* memcpy.cpp */,
+				F62BDD12293E67180000567A /* assign.cpp */,
+				F62BDD17293E80B60000567A /* change.cpp */,
 				F6F31644293FAA98008D93CF /* compare.cpp */,
 				F6BC984629410D1C002CC268 /* constexpr.cpp */,
-				F6BC984829411AFA002CC268 /* trim.cpp */,
-				F6BC984A2941D94C002CC268 /* variadic.cpp */,
+				F62BDD08293E512F0000567A /* construct.cpp */,
+				F6CEEF9D2A97864400DB97B3 /* containers.cpp */,
+				F669396B2A8FBD03007E68A7 /* conversions.cpp */,
+				F66DF9A429CCA40A007B2032 /* empty.cpp */,
+				F6077C1B2960738A00C019C4 /* erase.cpp */,
 				F6BC98C029423926002CC268 /* find.cpp */,
-				F61AE77329465442002F9078 /* traits.cpp */,
+				F60C98CA295F3DCF00760EB6 /* insert.cpp */,
+				F62BDD1B293F111C0000567A /* memcpy.cpp */,
+				F6A56B142A976378002BAEFD /* printf.cpp */,
+				F62BDD14293E78C00000567A /* reference.cpp */,
+				F69EF04A2AAA371F0033190A /* replace.cpp */,
+				F6B3F3482AA0DD7B001E30AC /* size_of.cpp */,
 				F63F11E42957548E00CAE219 /* stream.cpp */,
 				F60C98C8295F336F00760EB6 /* substr.cpp */,
-				F60C98CA295F3DCF00760EB6 /* insert.cpp */,
-				F6077C1B2960738A00C019C4 /* erase.cpp */,
-				F66DF9A429CCA40A007B2032 /* empty.cpp */,
-				F669396B2A8FBD03007E68A7 /* conversions.cpp */,
-				F6A56B142A976378002BAEFD /* printf.cpp */,
-				F6CEEF9D2A97864400DB97B3 /* containers.cpp */,
-				F6B3F3482AA0DD7B001E30AC /* size_of.cpp */,
+				F600971E293D0621006F1F35 /* tests_main.cpp */,
+				F61AE77329465442002F9078 /* traits.cpp */,
+				F6BC984829411AFA002CC268 /* trim.cpp */,
+				F6BC984A2941D94C002CC268 /* variadic.cpp */,
 			);
 			path = tests;
 			sourceTree = "<group>";
@@ -682,6 +685,7 @@
 				F62BDD0A293E57620000567A /* gtest.cc in Sources */,
 				F6BC98C129423926002CC268 /* find.cpp in Sources */,
 				F62BDD16293E78C00000567A /* reference.cpp in Sources */,
+				F69EF04B2AAA371F0033190A /* replace.cpp in Sources */,
 				F60C98CB295F3DCF00760EB6 /* insert.cpp in Sources */,
 				F62BDD0F293E58480000567A /* gtest-death-test.cc in Sources */,
 				F62BDD13293E67180000567A /* assign.cpp in Sources */,

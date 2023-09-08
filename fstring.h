@@ -9,6 +9,9 @@
 #include <type_traits>
 #include <iterator>
 
+#ifdef __clang_major__
+#pragma clang diagnostic ignored "-Wunknown-pragmas"
+#endif
 
 namespace fixed
 {
@@ -168,7 +171,6 @@ public:
         set_new_size(0);
     }
 
-
 #pragma warning( push )
 #pragma warning( disable : 4789 )
     constexpr fstring_base& insert(size_type index, size_type count, CharT ch)
@@ -258,12 +260,10 @@ public:
     }
     constexpr void append(size_type count, const CharT in_char) noexcept
     {
-        while (m_capacity > m_size)
-        {
-            m_str[m_size++] = in_char;
-        }
-        m_str[m_size] = '\0';
-    }
+        size_type actual_count = std::min(vacancy(),count);
+        memset(m_str+size(), in_char, actual_count);
+        set_new_size(size()+actual_count);
+     }
     constexpr void append(const CharT* in_str)  noexcept
     {
         __append__(in_str);
@@ -293,11 +293,15 @@ public:
         return *this;
     }
 
-    bool operator==(std::string_view sv) const  noexcept
+    bool operator==(const std::string_view sv) const  noexcept
     {
         return 0 == sv.compare(std::string_view(*this));
     }
-    bool operator<(std::string_view sv) const  noexcept
+    bool operator!=(const std::string_view sv) const  noexcept
+    {
+        return 0 != sv.compare(std::string_view(*this));
+    }
+    bool operator<(const std::string_view sv) const  noexcept
     {
         return std::string_view(*this) < sv;
     }
@@ -317,7 +321,7 @@ public:
             return 1;
         return 0;
     }
-    constexpr int icompare(std::string_view sv) noexcept
+    constexpr int icompare(const std::string_view sv) const noexcept
     {
         int retVal = 0;
         const CharT* lhs = c_str();
@@ -336,15 +340,35 @@ public:
         return retVal;
     }
 
-    // starts_with:  use string_view.starts_with
-    // ends_with:  use string_view.ends_with
-    // contains: use string_view.contains
-    // replace: ToDo
+
     // substr: use string_view.substr
     // copy: use string_view.copy
 
-    void resize(const size_type count, CharT ch='\0')  noexcept
+    constexpr fstring_base& replace(size_type pos, size_type count,
+                                    const std::string_view replacement_str)
     {
+        if (pos >= size())
+            throw std::out_of_range("index out of range");
+
+        size_type actual_count = std::min(count, capacity()-pos);
+        size_type new_size = size() - actual_count + replacement_str.size();
+        if (new_size > capacity())
+            throw std::length_error("replacement too long");
+
+        std::memmove(m_str+pos+replacement_str.size(), m_str+pos+actual_count, size()-pos-actual_count);
+        std::memmove(m_str+pos, replacement_str.data(), replacement_str.size());
+
+        set_new_size(new_size);
+
+        return *this;
+    }
+
+
+    void resize(const size_type count, CharT ch='\0')
+    {
+        if (count > capacity()) {
+            throw std::length_error("cannot resize count too long");
+        }
         const size_type new_size = std::min(capacity(), count);
         if (size() < new_size)
         {
@@ -439,17 +463,54 @@ public:
         trim_front(t);
     }
 
+    constexpr void tolower() noexcept
+    {
+        std::transform(begin(), end(), begin(),
+                         [](unsigned char c){ return std::tolower(c); });
+    }
+
+    constexpr void toupper() noexcept
+    {
+        std::transform(begin(), end(), begin(),
+                         [](unsigned char c){ return std::toupper(c); });
+    }
+
+    inline void reposition_end(size_type _new_size=npos)
+    // Resize the string with current contents intact
+    // usefull when the string was changed from the outside and
+    // if _new_size <= capacity, size will be ste to new_size
+    // if _new_size > capacity (i.e. _new_size==npos), attempt will be made
+    //  to find terminating '\0' and set size accordingly.
+    // if '\0' character was not found it will be placed in the beginning
+    // making the string an empty string
+    {
+        if (_new_size <= capacity())
+        {
+            set_new_size(_new_size);
+        }
+        else
+        {
+            size_type i = 0;
+            for (; i < m_capacity+1; ++i)
+            {
+                if (m_str[i] == '\0')
+                {
+                    break;
+                }
+            }
+            if (m_str[i] != '\0') {
+                i = 0;
+            }
+            set_new_size(i);
+        }
+    }
+
     fstring_base& operator<<(std::string_view sv) noexcept
     {
         __append__(sv.data(), sv.size());
         return *this;
     }
 
-    fstring_base& operator<<(const char c) noexcept
-    {
-        __append__(c);
-        return *this;
-    }
     template<typename TToPrintf>
     constexpr fstring_base& printf(const TToPrintf in_to_print, const char* printf_format=nullptr) noexcept
     {
@@ -457,14 +518,14 @@ public:
         if (nullptr == printf_format)
         {
             if constexpr (std::is_floating_point_v<TToPrintf>) {
-                printf_format = "%lf";
+                printf_format = "%llf";
                 remove_zeros = true;
             }
             else if constexpr (std::is_integral_v<TToPrintf> && std::is_signed_v<TToPrintf>) {
-                printf_format = "%li";
+                printf_format = "%lli";
             }
             else if constexpr (std::is_integral_v<TToPrintf> && std::is_unsigned_v<TToPrintf>) {
-                printf_format = "%lu";
+                printf_format = "%llu";
             }
         }
 
@@ -617,12 +678,23 @@ public:
         m_referee += sv;
         return *this;
     }
-    constexpr int icompare(std::string_view sv) noexcept {return m_referee.icompare(sv);}
-    void resize(const size_type count, CharT ch='\0') noexcept {return m_referee.resize(count, ch);}
-    // starts_with:  use string_view.starts_with
-    // ends_with:  use string_view.ends_with
-    // contains: use string_view.contains
-    // replace: ToDo
+
+    bool operator==(const std::string_view sv) const noexcept {return m_referee == sv;}
+    bool operator!=(const std::string_view sv) const noexcept {return m_referee != sv;}
+    bool operator<(const std::string_view sv) const noexcept {return m_referee < sv;}
+
+    constexpr int compare(const std::string_view sv) const noexcept {return m_referee.compare(sv);}
+    constexpr int icompare(const std::string_view sv) const noexcept {return m_referee.icompare(sv);}
+
+    constexpr fstring_ref_base& replace(size_type pos, size_type count,
+                                    const std::string_view replacement_str)
+    {
+        m_referee.replace(pos, count, replacement_str);
+        return *this;
+    }
+
+    void resize(const size_type count, CharT ch='\0') { m_referee.resize(count, ch);}
+    
     // substr: use string_view.substr
     // copy: use string_view.copy
     // swap does not make sence for fixed-size string, use std::exchange
@@ -640,27 +712,38 @@ public:
     void trim_front(const CharT* t = " \f\n\r\t\v") noexcept { return m_referee.trim_front(t); }
     void trim_back(const CharT* t = " \f\n\r\t\v") noexcept { return m_referee.trim_back(t); }
     void trim(const CharT* t = " \f\n\r\t\v") noexcept { return m_referee.trim(t); }
+    constexpr bool starts_with( std::string_view sv ) const noexcept { return m_referee.starts_with(sv); }
+    constexpr bool starts_with( CharT ch )  const noexcept { return m_referee.starts_with(ch); }
+    constexpr bool ends_with( std::string_view in_sv) const noexcept { return m_referee.ends_with(in_sv); }
+    constexpr bool ends_with( CharT ch ) const noexcept { return m_referee.ends_with(ch); }
+    constexpr bool contains( std::string_view in_sv )  const noexcept { return m_referee.contains(in_sv); }
+    constexpr bool contains( CharT c )  const noexcept { return m_referee.contains(c); }
+    constexpr void tolower() noexcept { return m_referee.tolower(); }
+    constexpr void toupper() noexcept { return m_referee.toupper(); }
+    inline void reposition_end() noexcept { return m_referee.reposition_end(); }
 
     fstring_ref_base& operator<<(std::string_view sv) noexcept
     {
         m_referee << sv;
         return *this;
     }
-
-    fstring_ref_base& operator<<(const char c) noexcept
-    {
-        m_referee << c;
-        return *this;
-    }
+//
+//    fstring_ref_base& operator<<(const char c) noexcept
+//    {
+//        m_referee << c;
+//        return *this;
+//    }
     template<typename TToPrintf>
     constexpr fstring_ref_base& printf(const TToPrintf in_to_print, const char* printf_format=nullptr) noexcept
     {
         m_referee.printf(in_to_print, printf_format);
+        return *this;
     }
 
 };
 
 typedef  fstring_ref_base<char> fstring_ref;
+typedef  fstring_base<4,  char> fstring4;
 typedef  fstring_base<7,  char> fstring7;
 typedef  fstring_base<15, char> fstring15;
 typedef  fstring_base<31, char> fstring31;
@@ -669,6 +752,7 @@ typedef  fstring_base<127,char> fstring127;
 typedef  fstring_base<255,char> fstring255;
 typedef  fstring_base<511,char> fstring511;
 typedef  fstring_base<1023, char> fstring1023;
+typedef  fstring_base<2047, char> fstring2047;
 
 }
 #endif // __fstring_h__
