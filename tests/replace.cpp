@@ -84,6 +84,52 @@ TEST(Replace, replace_few_chars)
     }
 }
 
+TEST(Replace, some_examples)
+{
+    std::string_view origi{"0123456789"};
+    EXPECT_STREQ(std::string(origi).replace(2, 5, "").c_str(), "01789");
+    EXPECT_STREQ(std::string(origi).replace(2, 5, "abc").c_str(), "01abc789");
+    EXPECT_STREQ(std::string(origi).replace(2, 5, "abcdefg").c_str(), "01abcdefg789");
+    EXPECT_STREQ(std::string(origi).replace(2, 8, "").c_str(), "01");
+    EXPECT_STREQ(std::string(origi).replace(2, 8, "abc").c_str(), "01abc");
+    EXPECT_STREQ(std::string(origi).replace(2, 8, "abcdefg").c_str(), "01abcdefg");
+    EXPECT_STREQ(std::string(origi).replace(2, 19, "").c_str(), "01");
+    EXPECT_STREQ(std::string(origi).replace(2, 19, "abc").c_str(), "01abc");
+    EXPECT_STREQ(std::string(origi).replace(2, 19, "abcdefg").c_str(), "01abcdefg");
+
+    EXPECT_STREQ(fixed::fstring63(origi).replace(2, 5, "").c_str(), "01789");
+    EXPECT_STREQ(fixed::fstring63(origi).replace(2, 5, "abc").c_str(), "01abc789");
+    EXPECT_STREQ(fixed::fstring63(origi).replace(2, 5, "abcdefg").c_str(), "01abcdefg789");
+    EXPECT_STREQ(fixed::fstring63(origi).replace(2, 8, "").c_str(), "01");
+    EXPECT_STREQ(fixed::fstring63(origi).replace(2, 8, "abc").c_str(), "01abc");
+    EXPECT_STREQ(fixed::fstring63(origi).replace(2, 8, "abcdefg").c_str(), "01abcdefg");
+    EXPECT_STREQ(fixed::fstring63(origi).replace(2, 19, "").c_str(), "01");
+    EXPECT_STREQ(fixed::fstring63(origi).replace(2, 19, "abc").c_str(), "01abc");
+    EXPECT_STREQ(fixed::fstring63(origi).replace(2, 19, "abcdefg").c_str(), "01abcdefg");
+
+    using f10 = fixed::fstring_base<10, char>;
+    EXPECT_STREQ(f10(origi).replace(2, 5, "").c_str(), "01789");
+    EXPECT_STREQ(f10(origi).replace(2, 5, "abc").c_str(), "01abc789");
+    EXPECT_STREQ(f10(origi).replace(2, 5, "abcdefg").c_str(), "01abcdefg7");
+    EXPECT_STREQ(f10(origi).replace(2, 8, "").c_str(), "01");
+    EXPECT_STREQ(f10(origi).replace(2, 8, "abc").c_str(), "01abc");
+    EXPECT_STREQ(f10(origi).replace(2, 8, "abcdefg").c_str(), "01abcdefg");
+    EXPECT_STREQ(f10(origi).replace(2, 19, "").c_str(), "01");
+    EXPECT_STREQ(f10(origi).replace(2, 19, "abc").c_str(), "01abc");
+    EXPECT_STREQ(f10(origi).replace(2, 19, "abcdefg").c_str(), "01abcdefg");
+
+    using f8 = fixed::fstring_base<8, char>;
+    EXPECT_STREQ(f8(origi).replace(2, 5, "").c_str(), "017");
+    EXPECT_STREQ(f8(origi).replace(2, 5, "abc").c_str(), "01abc7");
+    EXPECT_STREQ(f8(origi).replace(2, 5, "abcdefg").c_str(), "01abcdef");
+    EXPECT_STREQ(f8(origi).replace(2, 8, "").c_str(), "01");
+    EXPECT_STREQ(f8(origi).replace(2, 8, "abc").c_str(), "01abc");
+    EXPECT_STREQ(f8(origi).replace(2, 8, "abcdefg").c_str(), "01abcdef");
+    EXPECT_STREQ(f8(origi).replace(2, 19, "").c_str(), "01");
+    EXPECT_STREQ(f8(origi).replace(2, 19, "abc").c_str(), "01abc");
+    EXPECT_STREQ(f8(origi).replace(2, 19, "abcdefg").c_str(), "01abcdef");
+}
+
 TEST(Replace, replace_many_chars)
 {
     std::string_view origi{"SuperCaliFragilisticExpialiDocious"};
@@ -133,11 +179,13 @@ TEST(Replace, replace_and_throw)
     }
 
     {
+        std::string_view very_long_replacement("KALLISTRY/KALLISTRY/KALLISTRY/KALLISTRY/KALLISTRY/KALLISTRY");
         fixed::fstring63 super_fixed(origi);
-        EXPECT_THROW({
-            super_fixed.replace(6, 7, "KALLISTRY/KALLISTRY/KALLISTRY/KALLISTRY/KALLISTRY/KALLISTRY");
-        }, std::length_error );
-        EXPECT_STREQ(super_fixed.c_str(), origi.data());  // string should not change after throwing
+        std::string ss(origi);
+        ss.replace(6, 7, very_long_replacement);
+        ss.resize(super_fixed.capacity());
+        super_fixed.replace(6, 7, very_long_replacement);
+        EXPECT_STREQ(super_fixed.c_str(), ss.c_str());
     }
 
 }

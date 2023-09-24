@@ -16,6 +16,7 @@
 namespace fixed
 {
 using size_type = std::size_t;
+using ssize_type = ssize_t;
 static constexpr size_type npos = size_type(-1);
 
 template<class CharT>
@@ -350,13 +351,17 @@ public:
         if (pos >= size())
             throw std::out_of_range("index out of range");
 
-        size_type actual_count = std::min(count, capacity()-pos);
-        size_type new_size = size() - actual_count + replacement_str.size();
-        if (new_size > capacity())
-            throw std::length_error("replacement too long");
+        size_type actual_count = std::min(count, size()-pos);
+        size_type actual_replacement_size = std::min(replacement_str.size(), capacity()-pos);
+        size_type leftover_pos = pos + actual_count;
+        ssize_type leftover_size = std::min(size() - leftover_pos, capacity()-pos-actual_replacement_size);
+        size_type new_size = std::min(pos + actual_replacement_size + leftover_size, capacity());
 
-        std::memmove(m_str+pos+replacement_str.size(), m_str+pos+actual_count, size()-pos-actual_count);
-        std::memmove(m_str+pos, replacement_str.data(), replacement_str.size());
+        if (actual_count != actual_replacement_size && leftover_size > 0) {
+            std::memmove(m_str+pos+actual_replacement_size, m_str+leftover_pos, leftover_size);
+        }
+
+        std::memmove(m_str+pos, replacement_str.data(), actual_replacement_size);
 
         set_new_size(new_size);
 
