@@ -9,6 +9,8 @@
 #include <type_traits>
 #include <iterator>
 
+// functions marked non-standard have no equivalent in std::string or std::string_view
+
 #ifdef __clang_major__
 #pragma clang diagnostic ignored "-Wunknown-pragmas"
 #endif
@@ -244,6 +246,24 @@ public:
         erase(index, count);
 
         return m_str+index;
+    }
+
+    // non-standard
+    void erase_all_of(const std::string_view _sv)
+    {
+        for (std::string_view::size_type i = sv().find_first_of(_sv, 0);
+                i != std::string_view::npos;
+                i = sv().find_first_of(_sv, i))
+                erase(i, 1);
+    }
+
+    // non-standard
+    constexpr void erase_all_not_of(const std::string_view _sv)
+    {
+        for (std::string_view::size_type i = sv().find_first_not_of(_sv, 0);
+                i != std::string_view::npos;
+                i = sv().find_first_not_of(_sv, i))
+                erase(i, 1);
     }
 
     constexpr void push_back(const CharT in_char)
@@ -662,6 +682,18 @@ public:
     {
         return m_referee.erase(first, last);
     }
+
+    // non-standard
+    void erase_all_of(const std::string_view _sv)
+    {
+        m_referee.erase_all_of(_sv);
+    }
+    // non-standard
+    constexpr void erase_all_not_of(const std::string_view _sv)
+    {
+        m_referee.erase_all_not_of(_sv);
+    }
+
     constexpr void push_back(const CharT in_char)  {return m_referee.push_back(in_char);}
     constexpr void pop_back() noexcept {return m_referee.pop_back();}
     constexpr void append(size_type count, const CharT in_char) noexcept {return m_referee.append(count, in_char);}
