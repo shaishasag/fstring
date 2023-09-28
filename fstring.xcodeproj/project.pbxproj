@@ -26,6 +26,7 @@
 		F62BDD1A293F01860000567A /* access.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F62BDD19293F01860000567A /* access.cpp */; };
 		F62BDD1C293F111C0000567A /* memcpy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F62BDD1B293F111C0000567A /* memcpy.cpp */; };
 		F63F11E52957548E00CAE219 /* stream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F63F11E42957548E00CAE219 /* stream.cpp */; };
+		F6652D0F2AC48D0D00F932A4 /* scanf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6652D0E2AC48D0D00F932A4 /* scanf.cpp */; };
 		F669396C2A8FBD03007E68A7 /* conversions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F669396B2A8FBD03007E68A7 /* conversions.cpp */; };
 		F66DF9A529CCA40A007B2032 /* empty.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F66DF9A429CCA40A007B2032 /* empty.cpp */; };
 		F69EF04B2AAA371F0033190A /* replace.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F69EF04A2AAA371F0033190A /* replace.cpp */; };
@@ -228,6 +229,7 @@
 		F62BDD1B293F111C0000567A /* memcpy.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = memcpy.cpp; sourceTree = "<group>"; };
 		F63F11E32957530B00CAE219 /* fstringstream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fstringstream.h; sourceTree = "<group>"; };
 		F63F11E42957548E00CAE219 /* stream.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = stream.cpp; sourceTree = "<group>"; };
+		F6652D0E2AC48D0D00F932A4 /* scanf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scanf.cpp; sourceTree = "<group>"; };
 		F669396B2A8FBD03007E68A7 /* conversions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = conversions.cpp; sourceTree = "<group>"; };
 		F66DF9A429CCA40A007B2032 /* empty.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = empty.cpp; sourceTree = "<group>"; };
 		F69EF04A2AAA371F0033190A /* replace.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = replace.cpp; sourceTree = "<group>"; };
@@ -549,6 +551,7 @@
 				F60C98CA295F3DCF00760EB6 /* insert.cpp */,
 				F62BDD1B293F111C0000567A /* memcpy.cpp */,
 				F6A56B142A976378002BAEFD /* printf.cpp */,
+				F6652D0E2AC48D0D00F932A4 /* scanf.cpp */,
 				F62BDD14293E78C00000567A /* reference.cpp */,
 				F69EF04A2AAA371F0033190A /* replace.cpp */,
 				F6B3F3482AA0DD7B001E30AC /* size_of.cpp */,
@@ -689,6 +692,7 @@
 				F62BDD0A293E57620000567A /* gtest.cc in Sources */,
 				F6BC98C129423926002CC268 /* find.cpp in Sources */,
 				F62BDD16293E78C00000567A /* reference.cpp in Sources */,
+				F6652D0F2AC48D0D00F932A4 /* scanf.cpp in Sources */,
 				F69EF04B2AAA371F0033190A /* replace.cpp in Sources */,
 				F60C98CB295F3DCF00760EB6 /* insert.cpp in Sources */,
 				F62BDD0F293E58480000567A /* gtest-death-test.cc in Sources */,

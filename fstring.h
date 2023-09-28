@@ -342,6 +342,8 @@ public:
             return 1;
         return 0;
     }
+
+    // non-standard
     constexpr int icompare(const std::string_view sv) const noexcept
     {
         int retVal = 0;
@@ -410,6 +412,8 @@ public:
     // find_last_of: use string_view.find_last_of
     // find_first_not_of: use string_view.find_first_not_of
     // find_last_not_of: use string_view.find_last_not_of
+
+    // non-standard
     constexpr void remove_prefix( size_type n )  noexcept
     {
         const size_type new_size = size()-n;
@@ -420,6 +424,7 @@ public:
         set_new_size(new_size);
     }
 
+    // non-standard
     constexpr void remove_suffix( size_type n )  noexcept
     {
         if (n == size())
@@ -464,6 +469,7 @@ public:
     constexpr size_type vacancy() const  noexcept {return capacity() - size();}
     constexpr size_type full() const  noexcept {return size() == capacity();}
 
+    // non-standard
     void trim_front(const CharT* t = " \f\n\r\t\v") noexcept
     {
         size_type pos = sv().find_first_not_of(t);
@@ -473,6 +479,7 @@ public:
         }
 
     }
+    // non-standard
     void trim_back(const CharT* t = " \f\n\r\t\v") noexcept
     {
         size_type pos = sv().find_last_not_of(t);
@@ -482,24 +489,28 @@ public:
         }
 
     }
+    // non-standard
     void trim(const CharT* t = " \f\n\r\t\v") noexcept
     {
         trim_back(t);
         trim_front(t);
     }
 
+    // non-standard
     constexpr void tolower() noexcept
     {
         std::transform(begin(), end(), begin(),
                          [](unsigned char c){ return std::tolower(c); });
     }
 
+    // non-standard
     constexpr void toupper() noexcept
     {
         std::transform(begin(), end(), begin(),
                          [](unsigned char c){ return std::toupper(c); });
     }
 
+    // non-standard
     inline void reposition_end(size_type _new_size=npos)
     // Resize the string with current contents intact
     // usefull when the string was changed from the outside and
@@ -578,6 +589,59 @@ public:
 
         set_new_size(size()+num_chars);
 
+        return *this;
+    }
+
+    template<typename TToScanf>
+    constexpr fstring_base& scanf(TToScanf& in_to_scan, const char* scanf_format=nullptr)
+    {
+        if (nullptr==scanf_format)
+        {
+            if constexpr (std::is_floating_point_v<TToScanf>) {
+                if constexpr (std::is_same_v<TToScanf, float>) {
+                    scanf_format = "%f";
+                }
+                else if constexpr (std::is_same_v<TToScanf, double>) {
+                    scanf_format = "%lf";
+                }
+                else if constexpr (std::is_same_v<TToScanf, long double>) {
+                    scanf_format = "%Lf";
+                }
+            }
+            else if constexpr (std::is_integral_v<TToScanf> && std::is_signed_v<TToScanf>) {
+                if constexpr (std::is_same_v<TToScanf, short>) {
+                    scanf_format = "%hd";
+                }
+                else if constexpr (std::is_same_v<TToScanf, int>) {
+                    scanf_format = "%d";
+                }
+                else if constexpr (std::is_same_v<TToScanf, long>) {
+                    scanf_format = "%ld";
+                }
+                else if constexpr (std::is_same_v<TToScanf, long long>) {
+                    scanf_format = "%lld";
+                }
+            }
+            else if constexpr (std::is_integral_v<TToScanf> && std::is_unsigned_v<TToScanf>) {
+                if constexpr (std::is_same_v<TToScanf, unsigned short>) {
+                    scanf_format = "%hu";
+                }
+                else if constexpr (std::is_same_v<TToScanf, unsigned int>) {
+                    scanf_format = "%u";
+                }
+                else if constexpr (std::is_same_v<TToScanf, unsigned long>) {
+                    scanf_format = "%lu";
+                }
+                else if constexpr (std::is_same_v<TToScanf, unsigned long long>) {
+                    scanf_format = "%llu";
+                }
+            }
+        }
+        
+        if (nullptr != scanf_format)
+        {
+            sscanf(data(), scanf_format, &in_to_scan);
+        }
         return *this;
     }
 };
@@ -776,6 +840,13 @@ public:
         m_referee.printf(in_to_print, printf_format);
         return *this;
     }
+    template<typename TToScanf>
+    constexpr fstring_ref_base& scanf(TToScanf& in_to_scan, const char* scanf_format=nullptr)
+    {
+        m_referee.scanf(in_to_scan, scanf_format);
+        return *this;
+    }
+
 
 };
 
