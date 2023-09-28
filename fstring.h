@@ -828,12 +828,8 @@ public:
         m_referee << sv;
         return *this;
     }
-//
-//    fstring_ref_base& operator<<(const char c) noexcept
-//    {
-//        m_referee << c;
-//        return *this;
-//    }
+
+
     template<typename TToPrintf>
     constexpr fstring_ref_base& printf(const TToPrintf in_to_print, const char* printf_format=nullptr) noexcept
     {

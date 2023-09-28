@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 #include "fstring.h"
+#include "fstringstream.h"
 
 using namespace fixed;
 
@@ -60,4 +61,56 @@ TEST(Scanf, simple)
         scanf_by_type<double>(fs, -1.0);
         scanf_by_type<long double>(fs, -1.0);
     }
+}
+
+
+template<typename ToTest>
+void round_trip_test(const ToTest value)
+{
+    {
+        const ToTest d{value};
+        fstring31 fs;
+        fs.printf(d);
+        ToTest dd{static_cast<ToTest>(value/2 + 1)};
+        fs.scanf(dd);
+        EXPECT_EQ(d, dd);
+    }
+
+    {
+        const ToTest d{value};
+        fstring31 fs;
+        fs << d;
+        ToTest dd{static_cast<ToTest>(value/2 + 1)};
+        fs >> dd;
+        EXPECT_EQ(d, dd);
+    }
+}
+
+template<typename ToTest>
+void round_trip_test_many_values(ToTest jump=1)
+{
+    size_t num_tests{0};
+
+    ToTest stop_at{static_cast<ToTest>(std::numeric_limits<ToTest>::max()-jump-1)};
+    for (ToTest i = std::numeric_limits<ToTest>::min(); i < stop_at; i += jump)
+    {
+        round_trip_test<ToTest>(i);
+        ++num_tests;
+        //std::cout << num_tests << ") " << i << std::endl;
+    }
+    std::cout << "tested " << num_tests << " values of "<< typeid(ToTest).name() << std::endl;
+}
+
+TEST(Scanf, round_trip)
+{
+    round_trip_test_many_values<short>();
+    round_trip_test_many_values<unsigned short>();
+    round_trip_test_many_values<long>(9222537906415);
+    round_trip_test_many_values<unsigned long>(9222537906415);
+    round_trip_test_many_values<long long>(9222537906415);
+    round_trip_test_many_values<unsigned long long>(9222537906415);
+
+    round_trip_test<float>(-1.0f);
+    round_trip_test<double>(-1.0);
+    round_trip_test<long double>(-1.0);
 }
