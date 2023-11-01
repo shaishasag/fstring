@@ -32,8 +32,6 @@
 		F69EF04B2AAA371F0033190A /* replace.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F69EF04A2AAA371F0033190A /* replace.cpp */; };
 		F6A56B152A976378002BAEFD /* printf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6A56B142A976378002BAEFD /* printf.cpp */; };
 		F6A680492942867800D9CE7A /* hello_fstring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6A680482942867800D9CE7A /* hello_fstring.cpp */; };
-		F6B2F88B2943486100A4443B /* os.cc in Sources */ = {isa = PBXBuildFile; fileRef = F6B2F8882943486100A4443B /* os.cc */; };
-		F6B2F88C2943486100A4443B /* format.cc in Sources */ = {isa = PBXBuildFile; fileRef = F6B2F8892943486100A4443B /* format.cc */; };
 		F6B3F3492AA0DD7B001E30AC /* size_of.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6B3F3482AA0DD7B001E30AC /* size_of.cpp */; };
 		F6BC984729410D1C002CC268 /* constexpr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6BC984629410D1C002CC268 /* constexpr.cpp */; };
 		F6BC984929411AFA002CC268 /* trim.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6BC984829411AFA002CC268 /* trim.cpp */; };
@@ -68,13 +66,12 @@
 /* Begin PBXFileReference section */
 		F600971B293D0621006F1F35 /* fstring_tests */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = fstring_tests; sourceTree = BUILT_PRODUCTS_DIR; };
 		F600971E293D0621006F1F35 /* tests_main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = tests_main.cpp; path = tests/tests_main.cpp; sourceTree = SOURCE_ROOT; };
-		F600976F293D0CBC006F1F35 /* old_fstring.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = old_fstring.h; sourceTree = SOURCE_ROOT; };
 		F6009770293D12D4006F1F35 /* WCFixedString.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = WCFixedString.h; path = ../../../../Volumes/p4client/ProAudio/dev_main/ProAudio/XPlatform/Utilities/MiscUtils/WCFixedString.h; sourceTree = "<group>"; };
 		F6077C1B2960738A00C019C4 /* erase.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = erase.cpp; sourceTree = "<group>"; };
 		F60C98C8295F336F00760EB6 /* substr.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = substr.cpp; sourceTree = "<group>"; };
 		F60C98CA295F3DCF00760EB6 /* insert.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = insert.cpp; sourceTree = "<group>"; };
 		F61AE77329465442002F9078 /* traits.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = traits.cpp; sourceTree = "<group>"; };
-		F62BDC6B293E502A0000567A /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		F62BDC6B293E502A0000567A /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = CMakeLists.txt; path = googletest/googletest/CMakeLists.txt; sourceTree = SOURCE_ROOT; };
 		F62BDC6D293E502A0000567A /* googletest-message-test.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "googletest-message-test.cc"; sourceTree = "<group>"; };
 		F62BDC6E293E502A0000567A /* googletest-output-test_.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "googletest-output-test_.cc"; sourceTree = "<group>"; };
 		F62BDC6F293E502A0000567A /* gtest_pred_impl_unittest.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = gtest_pred_impl_unittest.cc; sourceTree = "<group>"; };
@@ -260,7 +257,6 @@
 		F6CEEF9D2A97864400DB97B3 /* containers.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = containers.cpp; sourceTree = "<group>"; };
 		F6E83F7F2AC1DD2100656B85 /* erase_all.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = erase_all.cpp; sourceTree = "<group>"; };
 		F6F31644293FAA98008D93CF /* compare.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = compare.cpp; sourceTree = "<group>"; };
-		F6F549092A97B633000B95FC /* gstring.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gstring.h; sourceTree = "<group>"; };
 		F6F5490A2A98A546000B95FC /* fstring.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fstring.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -286,10 +282,8 @@
 			isa = PBXGroup;
 			children = (
 				F6F5490A2A98A546000B95FC /* fstring.h */,
-				F6F549092A97B633000B95FC /* gstring.h */,
 				F63F11E32957530B00CAE219 /* fstringstream.h */,
 				F6A680482942867800D9CE7A /* hello_fstring.cpp */,
-				F600976F293D0CBC006F1F35 /* old_fstring.h */,
 				F6B2F8872943484500A4443B /* fmt */,
 				F62BDD07293E511C0000567A /* tests */,
 				F62BDC6A293E502A0000567A /* googletest */,
@@ -412,8 +406,9 @@
 				F62BDCC0293E502A0000567A /* googletest-options-test.cc */,
 				F62BDCC1293E502A0000567A /* gtest_throw_on_failure_ex_test.cc */,
 			);
-			path = test;
-			sourceTree = "<group>";
+			name = test;
+			path = googletest/googletest/test;
+			sourceTree = SOURCE_ROOT;
 		};
 		F62BDCC2293E502A0000567A /* cmake */ = {
 			isa = PBXGroup;
@@ -424,8 +419,9 @@
 				F62BDCC6293E502A0000567A /* Config.cmake.in */,
 				F62BDCC7293E502A0000567A /* libgtest.la.in */,
 			);
-			path = cmake;
-			sourceTree = "<group>";
+			name = cmake;
+			path = googletest/googletest/cmake;
+			sourceTree = SOURCE_ROOT;
 		};
 		F62BDCC8293E502A0000567A /* include */ = {
 			isa = PBXGroup;
@@ -452,8 +448,9 @@
 				F62BDCE2293E502A0000567A /* gtest.h */,
 				F62BDCE3293E502A0000567A /* gtest-printers.h */,
 			);
-			path = gtest;
-			sourceTree = "<group>";
+			name = gtest;
+			path = googletest/googletest/include/gtest;
+			sourceTree = SOURCE_ROOT;
 		};
 		F62BDCCE293E502A0000567A /* internal */ = {
 			isa = PBXGroup;
@@ -531,8 +528,9 @@
 				F62BDD05293E502A0000567A /* gtest-filepath.cc */,
 				F62BDD06293E502A0000567A /* gtest-matchers.cc */,
 			);
-			path = src;
-			sourceTree = "<group>";
+			name = src;
+			path = googletest/googletest/src;
+			sourceTree = SOURCE_ROOT;
 		};
 		F62BDD07293E511C0000567A /* tests */ = {
 			isa = PBXGroup;
@@ -686,8 +684,6 @@
 				F62BDD10293E585A0000567A /* gtest-filepath.cc in Sources */,
 				F62BDD11293E586E0000567A /* gtest-printers.cc in Sources */,
 				F62BDD0B293E57B30000567A /* gtest-test-part.cc in Sources */,
-				F6B2F88B2943486100A4443B /* os.cc in Sources */,
-				F6B2F88C2943486100A4443B /* format.cc in Sources */,
 				F62BDD0E293E58370000567A /* gtest-port.cc in Sources */,
 				F62BDD0A293E57620000567A /* gtest.cc in Sources */,
 				F6BC98C129423926002CC268 /* find.cpp in Sources */,
