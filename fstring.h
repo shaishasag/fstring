@@ -8,17 +8,22 @@
 #include <string_view>
 #include <type_traits>
 #include <iterator>
+#include <algorithm>
 
 // functions marked non-standard have no equivalent in std::string or std::string_view
 
 #ifdef __clang_major__
 #pragma clang diagnostic ignored "-Wunknown-pragmas"
 #endif
+#if defined(_MSC_VER) // VisualStudio does not define ssise_t
+#include <BaseTsd.h>
+typedef SSIZE_T ssize_t;
+#endif
 
 namespace fixed
 {
 using size_type = std::size_t;
-using ssize_type = ssize_t;
+using ssize_type = size_t;
 static constexpr size_type npos = size_type(-1);
 
 template<class CharT>
