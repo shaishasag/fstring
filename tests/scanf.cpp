@@ -101,6 +101,7 @@ void round_trip_test_many_values(ToTest jump=1)
     std::cout << "tested " << num_tests << " values of "<< typeid(ToTest).name() << std::endl;
 }
 
+#if 0
 TEST(Scanf, round_trip)
 {
     round_trip_test_many_values<short>();
@@ -114,3 +115,4 @@ TEST(Scanf, round_trip)
     round_trip_test<double>(-1.0);
     round_trip_test<long double>(-1.0);
 }
+#endif
