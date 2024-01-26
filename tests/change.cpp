@@ -2,40 +2,42 @@
 #include "fstring.h"
 
 
+/// A helper function to verify that a fixed::fstring and it's reference are the same
 template<class TOriginal>
 static void IsRefAndOriginalTheSame(fixed::fstring_ref in_ref, TOriginal& in_origi)
 {
+    EXPECT_EQ(in_origi.c_str(), in_ref.c_str());    // pointers should be the same
+    EXPECT_STREQ(in_origi.c_str(), in_ref.c_str()); // contents should be the same
     EXPECT_EQ(in_origi.capacity(), in_ref.capacity());
-    EXPECT_EQ(in_origi.c_str(), in_ref.c_str());
-    EXPECT_STREQ(in_origi.c_str(), in_ref.c_str());
     EXPECT_EQ(in_origi.empty(), in_ref.empty());
     EXPECT_EQ(in_origi.full(), in_ref.full());
     EXPECT_EQ(in_origi.size(), in_ref.size());
 }
 
-TEST(ChangesTests, AsArray)
+TEST(ChangesTests, OriginalVsReference)
 {
     {
-        fixed::fstring31 ms1 = "umaguma";
-        fixed::fstring_ref ref1(ms1);
-        IsRefAndOriginalTheSame(ref1, ms1);
+        fixed::fstring31 original = "umaguma";
+        fixed::fstring_ref reference(original);
+        IsRefAndOriginalTheSame(reference, original);
 
-        // change the ref, should also change the original
-        ref1[1] = 'M';
-        EXPECT_STREQ(ms1.c_str(), "uMaguma");
-        EXPECT_STRNE(ms1.c_str(), "umaguma");
-        EXPECT_EQ(ms1.size(), 7);
-        IsRefAndOriginalTheSame(ref1, ms1);
+        // changing the ref, should also change the original
+        reference[1] = 'M';
+        EXPECT_STREQ(original.c_str(), "uMaguma");
+        EXPECT_STRNE(original.c_str(), "umaguma");
+        EXPECT_EQ(original.size(), 7);
+        IsRefAndOriginalTheSame(reference, original);
 
-        // change the original, does it change the ref?
-        ms1[6] = 'A';
-        EXPECT_STREQ(ref1.c_str(), "uMagumA");
-        EXPECT_STRNE(ref1.c_str(), "uMaguma");
-        EXPECT_EQ(ref1.size(), 7);
-        IsRefAndOriginalTheSame(ref1, ms1);
+        // change the original, should also change the ref
+        original[6] = 'A';
+        EXPECT_STREQ(reference.c_str(), "uMagumA");
+        EXPECT_STRNE(reference.c_str(), "uMaguma");
+        EXPECT_EQ(reference.size(), 7);
+        IsRefAndOriginalTheSame(reference, original);
     }
 }
 
+/// Verify fixed::fstring::remove_prefix, fixed::fstring::remove_suffix
 TEST(ChangesTests, PresfixDuffix)
 {
     {

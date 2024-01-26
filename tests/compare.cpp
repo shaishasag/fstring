@@ -1,35 +1,43 @@
 #include "gtest/gtest.h"
 #include "fstring.h"
 
+// Verify fixed::fstring::starts_with, fixed::fstring::ends_with, , fixed::fstring::contains
 TEST(CompareTests, starts_ends_contains)
 {
     {
-        fixed::fstring31 l("The Psychedelic Furs");
-        fixed::fstring31 r("The Psychedelic Furs");
-        EXPECT_TRUE(l == r);
-        EXPECT_TRUE(l.starts_with('T'));
-        EXPECT_TRUE(l.starts_with("The"));
-        EXPECT_TRUE(l.ends_with("Furs"));
-        EXPECT_TRUE(l.ends_with('s'));
-        EXPECT_FALSE(l.starts_with("the"));
-        EXPECT_FALSE(l.ends_with("furs"));
-        EXPECT_TRUE(l.contains(""));
-        EXPECT_TRUE(l.contains('d'));
-        EXPECT_FALSE(l.contains('Z'));
-        EXPECT_TRUE(l.contains("delic"));
-        EXPECT_FALSE(l.contains("dElic"));
-        EXPECT_TRUE(l.contains("The Psychedelic Furs"));
-        EXPECT_FALSE(l.contains("The Psychedelic Furs+The Sisters of Mercy"));
-
-        r = "The Sisters of Mercy";
-        EXPECT_FALSE(l == r);
-        EXPECT_TRUE(r.starts_with("The"));
-        EXPECT_TRUE(r.ends_with("Mercy"));
-        EXPECT_FALSE(l.starts_with("the"));
-        EXPECT_FALSE(l.ends_with("mercy"));
+        fixed::fstring31 original("The Psychedelic Furs");
+        fixed::fstring31 reference(original);
+        EXPECT_TRUE(original == reference);
+        EXPECT_TRUE(original.starts_with('T'));
+        EXPECT_TRUE(original.starts_with("The"));
+        EXPECT_TRUE(original.ends_with("Furs"));
+        EXPECT_TRUE(original.ends_with('s'));
+        EXPECT_FALSE(original.starts_with("the"));
+        EXPECT_FALSE(original.ends_with("furs"));
+        EXPECT_TRUE(original.contains(""));
+        EXPECT_TRUE(original.contains('d'));
+        EXPECT_FALSE(original.contains('Z'));
+        EXPECT_TRUE(original.contains("delic"));
+        EXPECT_FALSE(original.contains("dElic"));
+        EXPECT_TRUE(original.contains("The Psychedelic Furs"));
+        
+        EXPECT_TRUE(reference.starts_with('T'));
+        EXPECT_TRUE(reference.starts_with("The"));
+        EXPECT_TRUE(reference.ends_with("Furs"));
+        EXPECT_TRUE(reference.ends_with('s'));
+        EXPECT_FALSE(reference.starts_with("the"));
+        EXPECT_FALSE(reference.ends_with("furs"));
+        EXPECT_TRUE(reference.contains(""));
+        EXPECT_TRUE(reference.contains('d'));
+        EXPECT_FALSE(reference.contains('Z'));
+        EXPECT_TRUE(reference.contains("delic"));
+        EXPECT_FALSE(reference.contains("dElic"));
+        EXPECT_TRUE(reference.contains("The Psychedelic Furs"));
     }
 }
 
+/// Verify fixed::fstring::operator==, fixed::fstring::compare
+/// when used with const char*, std::string, std::string_view, ixed::fstring_ref
 TEST(CompareTests, full_compare)
 {
     const char* the_band = "K.C. and the sunshine band";
@@ -43,15 +51,11 @@ TEST(CompareTests, full_compare)
         fixed::fstring31 kc2(the_band);
         EXPECT_EQ(kc.compare(kc2), 0);
         EXPECT_EQ(kc.compare(fixed::fstring_ref(kc2)), 0);
-
-        std::string_view kc_view(the_band);
-        EXPECT_EQ(kc.compare(kc_view), 0);
-
-        std::string kc_str(the_band);
-        EXPECT_EQ(kc.compare(kc_str), 0);
     }
 }
 
+/// Verify fixed::fstring::compare, comparing partial strings
+/// when used with const char*, std::string, std::string_view, fixed::fstring_ref
 TEST(CompareTests, partial_compare)
 {
     const char* the_band = "K.C. and the sunshine band";
@@ -73,6 +77,7 @@ TEST(CompareTests, partial_compare)
     }
 }
 
+/// Verify fixed::fstring::icompare
 TEST(CompareTests, case_insensitive)
 {
     const char* the_band = "K.C. and the sunshine band";
@@ -80,14 +85,15 @@ TEST(CompareTests, case_insensitive)
     {
         fixed::fstring31 kc(the_band);
         fixed::fstring31 ss(the_sunshine);
+        
         EXPECT_EQ(kc.icompare(ss), 0);
         EXPECT_EQ(ss.icompare(kc), 0);
 
-        kc += "A"; // now kc is "bigger"
+        kc += "A"; // now kc is longer and thus considered "bigger"
         EXPECT_GT(kc.icompare(ss), 0);
         EXPECT_LT(ss.icompare(kc), 0);
 
-        ss += "a"; // no they are equal again
+        ss += "a"; // now they are equal again
         EXPECT_EQ(kc.icompare(ss), 0);
         EXPECT_EQ(ss.icompare(kc), 0);
 

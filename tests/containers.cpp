@@ -18,7 +18,7 @@ struct fstring_ref_hasher
     }
 };
 
-
+/// fixed::fstring as key and value in std::unordered_map
 TEST(Containers, UnorderedMap)
 {
     std::unordered_map<fixed::fstring31, fixed::fstring31, fstring_ref_hasher> uom;
@@ -42,6 +42,7 @@ TEST(Containers, UnorderedMap)
     EXPECT_STREQ(uom[s32].c_str(), "2nd");
 }
 
+/// fixed::fstring as key and value in std::map
 TEST(Containers, Map)
 {
     std::map<fixed::fstring31, fixed::fstring31> m;
@@ -65,6 +66,7 @@ TEST(Containers, Map)
     EXPECT_STREQ(m[s32].c_str(), "2nd");
 }
 
+/// fixed::fstring as value in std::set
 TEST(Containers, Set)
 {
     std::set<fixed::fstring31> s;
@@ -82,6 +84,7 @@ TEST(Containers, Set)
     EXPECT_EQ(s.count("3rd"), 1);
 }
 
+/// fixed::fstring as value in std::vector
 TEST(Containers, Vector)
 {
     std::vector<fixed::fstring31> v;
