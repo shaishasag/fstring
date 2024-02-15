@@ -333,7 +333,7 @@ public:
     }
 
     // compare: use string_view.compare when available in c++20
-    // untill then only compare(const std::string_view) is provided
+    // until then, only compare(const std::string_view) is provided
     int compare(const std::string_view s) const noexcept
     {
         size_type lhs_sz = size();
