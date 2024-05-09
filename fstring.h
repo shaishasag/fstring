@@ -418,7 +418,6 @@ public:
     // find_first_not_of: use string_view.find_first_not_of
     // find_last_not_of: use string_view.find_last_not_of
 
-    // non-standard
     constexpr void remove_prefix( size_type n )  noexcept
     {
         const size_type new_size = size()-n;
@@ -429,7 +428,6 @@ public:
         set_new_size(new_size);
     }
 
-    // non-standard
     constexpr void remove_suffix( size_type n )  noexcept
     {
         if (n == size())

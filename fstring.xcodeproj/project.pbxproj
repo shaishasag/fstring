@@ -40,6 +40,7 @@
 		F6CEEF9E2A97864500DB97B3 /* containers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6CEEF9D2A97864400DB97B3 /* containers.cpp */; };
 		F6E83F802AC1DD2100656B85 /* erase_all.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6E83F7F2AC1DD2100656B85 /* erase_all.cpp */; };
 		F6F31645293FAA98008D93CF /* compare.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6F31644293FAA98008D93CF /* compare.cpp */; };
+		F6F376122BECC96100DC399D /* examples.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6F376112BECC70400DC399D /* examples.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -254,6 +255,7 @@
 		F6CEEF9D2A97864400DB97B3 /* containers.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = containers.cpp; sourceTree = "<group>"; };
 		F6E83F7F2AC1DD2100656B85 /* erase_all.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = erase_all.cpp; sourceTree = "<group>"; };
 		F6F31644293FAA98008D93CF /* compare.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = compare.cpp; sourceTree = "<group>"; };
+		F6F376112BECC70400DC399D /* examples.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = examples.cpp; path = examples/examples.cpp; sourceTree = "<group>"; };
 		F6F5490A2A98A546000B95FC /* fstring.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fstring.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -278,6 +280,7 @@
 		F6009712293D0621006F1F35 = {
 			isa = PBXGroup;
 			children = (
+				F6F376112BECC70400DC399D /* examples.cpp */,
 				F6F5490A2A98A546000B95FC /* fstring.h */,
 				F63F11E32957530B00CAE219 /* fstringstream.h */,
 				F6A680482942867800D9CE7A /* hello_fstring.cpp */,
@@ -691,6 +694,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6F376122BECC96100DC399D /* examples.cpp in Sources */,
 				F6A680492942867800D9CE7A /* hello_fstring.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

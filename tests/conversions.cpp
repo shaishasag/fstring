@@ -3,6 +3,24 @@
 
 using namespace fixed;
 
+size_t get_size_sv(std::string_view in_sv)
+{
+    return in_sv.size();
+}
+
+TEST(Conversions, string_view)
+{
+    std::string_view banana_sv{"bananarama"};
+    EXPECT_EQ(get_size_sv(banana_sv), banana_sv.size());
+    
+    fstring15 banana_fixed{banana_sv};  // fstring intialized from string_view
+    EXPECT_EQ(get_size_sv(banana_fixed), banana_fixed.size());
+    
+    std::string_view fruit_sv_1{banana_fixed};  // string_view initialized from fstring
+    std::string_view fruit_sv_2(banana_fixed);  // string_view initialized from fstring
+    std::string_view fruit_sv_3 = banana_fixed;  // string_view initialized from fstring
+}
+
 TEST(Conversions, minimal)
 {
     fstring7 f7;
