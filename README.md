@@ -34,7 +34,7 @@ For the most part **fstring** follows the std::string and std::string_view inter
 
 ### fstring_ref:
 
-Associated class **fstring_ref** allows passing/returning **fstring** of any size to a function so that the function does not need to be templated on the size of **fstring**.
+Associated class **fstring_ref** allows passing/returning **fstring** of any size to/from a function so that the function does not need to be templated on the size of **fstring**.
 
 
     #include <iostream>
@@ -50,7 +50,7 @@ Associated class **fstring_ref** allows passing/returning **fstring** of any siz
     fixed::fstring31 f31;
     fixed::fstring63 f63;
 
-    // any size fstring can be passed to func and fstring_ref is returned
+    // fstring of any size can be passed to func
     std::cout << func(f15) << std::endl;
     std::cout << func(f31) << std::endl;
     std::cout << func(f63) << std::endl;

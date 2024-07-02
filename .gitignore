@@ -5,3 +5,5 @@ googletest
 *.vcxproj.user
 .vs
 x64
+project.xcworkspace
+xcuserdata

@@ -26,6 +26,9 @@
 		F62BDD1A293F01860000567A /* access.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F62BDD19293F01860000567A /* access.cpp */; };
 		F62BDD1C293F111C0000567A /* memcpy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F62BDD1B293F111C0000567A /* memcpy.cpp */; };
 		F63F11E52957548E00CAE219 /* stream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F63F11E42957548E00CAE219 /* stream.cpp */; };
+		F646BBEE2C32BB13006475CA /* create_json.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F646BBED2C32BB13006475CA /* create_json.cpp */; };
+		F646BBEF2C32BC50006475CA /* json_creator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6507AF82C2F3049001A3B94 /* json_creator.cpp */; };
+		F6507AFA2C2F3049001A3B94 /* json_creator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6507AF82C2F3049001A3B94 /* json_creator.cpp */; };
 		F6652D0F2AC48D0D00F932A4 /* scanf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6652D0E2AC48D0D00F932A4 /* scanf.cpp */; };
 		F669396C2A8FBD03007E68A7 /* conversions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F669396B2A8FBD03007E68A7 /* conversions.cpp */; };
 		F66DF9A529CCA40A007B2032 /* empty.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F66DF9A429CCA40A007B2032 /* empty.cpp */; };
@@ -224,6 +227,9 @@
 		F62BDD1B293F111C0000567A /* memcpy.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = memcpy.cpp; sourceTree = "<group>"; };
 		F63F11E32957530B00CAE219 /* fstringstream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fstringstream.h; sourceTree = "<group>"; };
 		F63F11E42957548E00CAE219 /* stream.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = stream.cpp; sourceTree = "<group>"; };
+		F646BBED2C32BB13006475CA /* create_json.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = create_json.cpp; sourceTree = "<group>"; };
+		F6507AF82C2F3049001A3B94 /* json_creator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = json_creator.cpp; sourceTree = "<group>"; };
+		F6507AF92C2F3049001A3B94 /* json_creator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = json_creator.h; sourceTree = "<group>"; };
 		F6652D0E2AC48D0D00F932A4 /* scanf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scanf.cpp; sourceTree = "<group>"; };
 		F669396B2A8FBD03007E68A7 /* conversions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = conversions.cpp; sourceTree = "<group>"; };
 		F66DF9A429CCA40A007B2032 /* empty.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = empty.cpp; sourceTree = "<group>"; };
@@ -280,10 +286,12 @@
 		F6009712293D0621006F1F35 = {
 			isa = PBXGroup;
 			children = (
-				F6F376112BECC70400DC399D /* examples.cpp */,
 				F6F5490A2A98A546000B95FC /* fstring.h */,
 				F63F11E32957530B00CAE219 /* fstringstream.h */,
+				F6F376112BECC70400DC399D /* examples.cpp */,
 				F6A680482942867800D9CE7A /* hello_fstring.cpp */,
+				F6507AF82C2F3049001A3B94 /* json_creator.cpp */,
+				F6507AF92C2F3049001A3B94 /* json_creator.h */,
 				F62BDCD9293E502A0000567A /* README.md */,
 				F6B2F8872943484500A4443B /* fmt */,
 				F62BDD07293E511C0000567A /* tests */,
@@ -525,6 +533,7 @@
 		F62BDD07293E511C0000567A /* tests */ = {
 			isa = PBXGroup;
 			children = (
+				F646BBED2C32BB13006475CA /* create_json.cpp */,
 				F62BDD19293F01860000567A /* access.cpp */,
 				F62BDD12293E67180000567A /* assign.cpp */,
 				F62BDD17293E80B60000567A /* change.cpp */,
@@ -663,6 +672,7 @@
 				F6E83F802AC1DD2100656B85 /* erase_all.cpp in Sources */,
 				F6B3F3492AA0DD7B001E30AC /* size_of.cpp in Sources */,
 				F62BDD09293E512F0000567A /* construct.cpp in Sources */,
+				F646BBEE2C32BB13006475CA /* create_json.cpp in Sources */,
 				F62BDD1C293F111C0000567A /* memcpy.cpp in Sources */,
 				F62BDD18293E80B60000567A /* change.cpp in Sources */,
 				F6BC984B2941D94C002CC268 /* variadic.cpp in Sources */,
@@ -682,6 +692,7 @@
 				F69EF04B2AAA371F0033190A /* replace.cpp in Sources */,
 				F60C98CB295F3DCF00760EB6 /* insert.cpp in Sources */,
 				F62BDD0F293E58480000567A /* gtest-death-test.cc in Sources */,
+				F646BBEF2C32BC50006475CA /* json_creator.cpp in Sources */,
 				F62BDD13293E67180000567A /* assign.cpp in Sources */,
 				F62BDD1A293F01860000567A /* access.cpp in Sources */,
 				F669396C2A8FBD03007E68A7 /* conversions.cpp in Sources */,
@@ -694,6 +705,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6507AFA2C2F3049001A3B94 /* json_creator.cpp in Sources */,
 				F6F376122BECC96100DC399D /* examples.cpp in Sources */,
 				F6A680492942867800D9CE7A /* hello_fstring.cpp in Sources */,
 			);

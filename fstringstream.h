@@ -5,6 +5,7 @@
 
 #include <limits.h>
 #include <charconv>
+#include <iostream>
 
 // compiler does not know how to convert from fstring_base<CharT> to  fstring_ref_base<CharT>;
 
@@ -57,6 +58,12 @@ void operator>>(fixed::fstring_ref fref, ToChange& thing_to_change)
     {
         fref.scanf(thing_to_change);
     }
+}
+
+inline std::ostream& operator<<(std::ostream& os, const fixed::fstring_ref myStr)
+{
+    os << std::string_view(myStr);
+    return os;
 }
 
 #endif // __fstringstream_h__

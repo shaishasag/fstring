@@ -280,3 +280,57 @@ TEST(AssignTests, AssignToRef)
         EXPECT_STREQ(the_ref.c_str(), "Porter");
     }
 }
+
+fixed::fstring_ref return_me_the_ref(fixed::fstring_ref the_ref)
+{
+    return the_ref;
+}
+
+/// Verify assign of reference to fstring_ref to fstring_ref
+/// including through function calls, still refers to the original string
+TEST(AssignTests, Ref2Ref2Ref)
+{
+    fixed::fstring31 original_str{"Detritivore"};
+    fixed::fstring_ref ref1{original_str};
+    EXPECT_STREQ(ref1.c_str(), "Detritivore");
+    
+    fixed::fstring_ref ref2{ref1};
+    
+    fixed::fstring_ref ref3 = return_me_the_ref(ref2);
+    original_str += "1";  // change the original string directly
+    ref2 += "2"; // change the through ref2
+    ref3 += "3"; // change the through ref3
+    
+    // all refer to str so should have the same value
+    EXPECT_STREQ(original_str.c_str(), "Detritivore123");
+    EXPECT_STREQ(ref1.c_str(), "Detritivore123");
+    EXPECT_STREQ(ref2.c_str(), "Detritivore123");
+    EXPECT_STREQ(ref3.c_str(), "Detritivore123");
+}
+
+#if 0
+TEST(AssignTests, RepeatedAssignToRef)
+{
+    fixed::fstring15 f1{"Insectivore"};
+    fixed::fstring15 f2{"Frugivore"};
+    fixed::fstring15 f3{"Granivore"};
+    
+    fixed::fstring_ref the_ref{f1};
+    EXPECT_STREQ(the_ref.c_str(), "Insectivore");
+    EXPECT_STREQ(f1.c_str(), "Insectivore");
+    EXPECT_STREQ(f2.c_str(), "Frugivore");
+    EXPECT_STREQ(f2.c_str(), "Granivore");
+
+    the_ref = f2;
+    EXPECT_STREQ(the_ref.c_str(), "Frugivore");
+    EXPECT_STREQ(f1.c_str(), "Frugivore");
+    EXPECT_STREQ(f2.c_str(), "Frugivore");
+    EXPECT_STREQ(f2.c_str(), "Granivore");
+
+    the_ref = f3;
+    EXPECT_STREQ(the_ref.c_str(), "Granivore");
+    EXPECT_STREQ(f1.c_str(), "Frugivore");
+    EXPECT_STREQ(f2.c_str(), "Frugivore");
+    EXPECT_STREQ(f2.c_str(), "Frugivore");
+}
+#endif
