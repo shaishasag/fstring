@@ -38,7 +38,7 @@ void sub_object_creator::prepare_for_additional_value(const std::string_view in_
 {
     if (0 < m_num_subs) {  // not first, need to add ','
         m_json_fstring_ref += internal::_COMMA;
-        m_json_fstring_ref += m_object_whitespace_after_comma;
+        m_json_fstring_ref += ___object_whitespace_after_comma;
     }
     ++m_num_subs;
 
@@ -53,8 +53,6 @@ sub_object_creator sub_object_creator::append_object(std::string_view in_key)
     typename sub_array_creator::save_restore_end sv(*this);
     prepare_for_additional_value(in_key);
     sub_object_creator retVal(m_json_fstring_ref, m_level+1);
-    retVal.set_array_whitespace_after_comma(m_array_whitespace_after_comma);
-    retVal.set_object_whitespace_after_comma(m_object_whitespace_after_comma);
 
     return retVal;
 }
@@ -64,19 +62,51 @@ sub_array_creator sub_object_creator::append_array(std::string_view in_key)
     typename sub_array_creator::save_restore_end sv(*this);
     prepare_for_additional_value(in_key);
     sub_array_creator retVal(m_json_fstring_ref, m_level+1);
-    retVal.set_array_whitespace_after_comma(m_array_whitespace_after_comma);
-    retVal.set_object_whitespace_after_comma(m_object_whitespace_after_comma);
 
     return retVal;
 }
 
 // add a value that is already formated as json
-
-void sub_object_creator::push_json_str(const std::string_view in_key, const std::string_view in_value)
+void sub_object_creator::append_json_str(const std::string_view in_key, const std::string_view in_value)
 {
     typename sub_array_creator::save_restore_end sv(*this);
     prepare_for_additional_value(in_key);
     m_json_fstring_ref += in_value;
+}
+
+// add a value that is already formated as json to the begening of the object
+// Warning: less efficient than append_json_str!
+void sub_object_creator::prepend_json_str(const std::string_view in_key, const std::string_view in_value)
+{
+    size_t num_additional_chars{0};
+    num_additional_chars += 1;  // '"'
+    num_additional_chars += in_key.size();
+    num_additional_chars += internal::_KEY_VAL_SEP.size();
+    num_additional_chars += in_value.size();
+    if (0 < m_num_subs) {  // not first, need to add ','
+        num_additional_chars += internal::_COMMA.size();
+        num_additional_chars += ___object_whitespace_after_comma.size();
+    }
+    m_json_fstring_ref.insert(1, num_additional_chars, '*');
+    
+    size_t replacement_location{1};
+    m_json_fstring_ref[replacement_location] = '"';
+    ++replacement_location;
+    m_json_fstring_ref.replace(replacement_location, in_key);
+    replacement_location += in_key.size();
+    
+    m_json_fstring_ref.replace(replacement_location, internal::_KEY_VAL_SEP);
+    replacement_location += internal::_KEY_VAL_SEP.size();
+    
+    m_json_fstring_ref.replace(replacement_location, in_value);
+    replacement_location += in_value.size();
+    
+    if (0 < m_num_subs) {  // not first, need to add ','
+        m_json_fstring_ref.replace(replacement_location, internal::_COMMA);
+        replacement_location += internal::_COMMA.size();
+        m_json_fstring_ref.replace(replacement_location, ___object_whitespace_after_comma);
+    }
+    ++m_num_subs;
 }
 
 
@@ -84,7 +114,7 @@ void sub_array_creator::prepare_for_additional_value()
 {
     if (0 < m_num_subs) {  // not first, need to add ','
         m_json_fstring_ref += internal::_COMMA;
-        m_json_fstring_ref += m_array_whitespace_after_comma;
+        m_json_fstring_ref += ___array_whitespace_after_comma;
     }
     ++m_num_subs;
 }
@@ -94,8 +124,6 @@ sub_array_creator sub_array_creator::append_array()
     typename sub_array_creator::save_restore_end sv(*this);
     prepare_for_additional_value();
     sub_array_creator retVal(m_json_fstring_ref, m_level+1);
-    retVal.set_array_whitespace_after_comma(m_array_whitespace_after_comma);
-    retVal.set_object_whitespace_after_comma(m_object_whitespace_after_comma);
 
     return retVal;
 }
@@ -105,8 +133,6 @@ sub_object_creator sub_array_creator::append_object()
     typename sub_array_creator::save_restore_end sv(*this);
     prepare_for_additional_value();
     sub_object_creator retVal(m_json_fstring_ref, m_level+1);
-    retVal.set_array_whitespace_after_comma(m_array_whitespace_after_comma);
-    retVal.set_object_whitespace_after_comma(m_object_whitespace_after_comma);
 
     return retVal;
 }

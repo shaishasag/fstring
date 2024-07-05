@@ -71,6 +71,16 @@ namespace internal
     }
 }
 
+#ifdef OBJECT_WHITESPACE_AFTER_COMMA
+constexpr std::string_view ___object_whitespace_after_comma{OBJECT_WHITESPACE_AFTER_COMMA};
+#else
+constexpr std::string_view ___object_whitespace_after_comma{" "};
+#endif
+#ifdef ARRAY_WHITESPACE_AFTER_COMMA
+constexpr std::string_view ___array_whitespace_after_comma{ARRAY_WHITESPACE_AFTER_COMMA};
+#else
+constexpr std::string_view ___array_whitespace_after_comma{" "};
+#endif
 
 class json_creator_base
 {
@@ -95,8 +105,6 @@ protected:
 
     size_t m_num_subs{0};
     size_t m_level{0};
-    char m_object_whitespace_after_comma{'\n'};
-    char m_array_whitespace_after_comma{' '};
 
     std::string_view save_end();
     void restore_end(std::string_view in_end);
@@ -115,15 +123,6 @@ protected:
     };
 
 public:
-
-    void set_object_whitespace_after_comma(const char in_ws_char)
-    {
-        m_object_whitespace_after_comma = in_ws_char;
-    }
-    void set_array_whitespace_after_comma(const char in_ws_char)
-    {
-        m_array_whitespace_after_comma = in_ws_char;
-    }
 
     size_t size() const { return m_json_fstring_ref.size(); }
     size_t capacity() const { return m_json_fstring_ref.capacity(); }
@@ -167,8 +166,12 @@ public:
     sub_object_creator append_object(std::string_view in_key);
     sub_array_creator append_array(std::string_view in_key);
 
-    // add a value that is already formated as json
-    void push_json_str(const std::string_view in_key, const std::string_view in_value);
+    // add a value that is already formated as json to the end of the object
+    void append_json_str(const std::string_view in_key, const std::string_view in_value);
+    
+    // add a value that is already formated as json to the begening of the object
+    // Warning: less efficient than append_json_str!
+    void prepend_json_str(const std::string_view in_key, const std::string_view in_value);
 
     template <typename TValue>
     void append_value(const std::string_view in_key, const TValue& in_value)
@@ -183,7 +186,7 @@ public:
         std::string_view as_sv(in_value);
         append_value<std::string_view>(in_key, as_sv);
     }
-    
+
     template<typename TContainer>
     void extend(const TContainer& in_val_key_container)
     {
@@ -201,14 +204,14 @@ public:
             json_creator_base::save_restore_end sv(*this);
             if (0 < m_num_subs) {  // not first, need to add ','
                 m_json_fstring_ref += internal::_COMMA;
-                m_json_fstring_ref += m_object_whitespace_after_comma;
+                m_json_fstring_ref += ___object_whitespace_after_comma;
             }
             m_json_fstring_ref.insert(m_json_fstring_ref.size(), values_to_merge);
         }
     }
 
     bool empty() const { return m_json_fstring_ref[1] == empty_json_object[1]; }
-    void clear() { m_json_fstring_ref = empty_json_object; }
+    void clear() { m_json_fstring_ref = empty_json_object; m_num_subs = 0; }
 };
 
 
@@ -275,7 +278,7 @@ public:
     }
 
     bool empty() const { return m_json_fstring_ref[1] == empty_json_array[1]; }
-    void clear() { m_json_fstring_ref = empty_json_array; }
+    void clear() { m_json_fstring_ref = empty_json_array; m_num_subs = 0; }
 };
 
 

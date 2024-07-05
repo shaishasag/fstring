@@ -395,6 +395,10 @@ public:
         return *this;
     }
 
+    constexpr fstring_base& replace(size_type pos, const std::string_view replacement_str)
+    {
+        return replace(pos, replacement_str.size(), replacement_str);
+    }
 
     void resize(const size_type count, CharT ch='\0')
     {
@@ -794,6 +798,11 @@ public:
                                     const std::string_view replacement_str)
     {
         m_referee.replace(pos, count, replacement_str);
+        return *this;
+    }
+    constexpr fstring_ref_base& replace(size_type pos, const std::string_view replacement_str)
+    {
+        m_referee.replace(pos, replacement_str);
         return *this;
     }
 
