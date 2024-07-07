@@ -92,7 +92,7 @@ protected:
 
     // for use by sub-classes that provide their own fstring member
     class PreventAmbiguityOnConstructorCalls{}; // dummy class to help compiler to mark construction from inheriting classes json_object_creator, json_array_creator
-    
+
     template<size_t STRING_CAPACITY>
     json_creator_base(fstring_base<STRING_CAPACITY, char>& in_fstr_to_refer_to, PreventAmbiguityOnConstructorCalls) noexcept
     : m_json_fstring_ref(in_fstr_to_refer_to)
@@ -142,7 +142,7 @@ class sub_object_creator : public json_creator_base
     template<size_t> friend class json_object_creator;
 
 protected:
-    static inline std::string_view empty_json_object{"{}"};
+    constexpr static inline std::string_view empty_json_object{"{}"};
 
     void prepare_for_additional_value(const std::string_view in_key);
 
@@ -170,7 +170,7 @@ public:
 
     // add a value that is already formated as json to the end of the object
     void append_json_str(const std::string_view in_key, const std::string_view in_value);
-    
+
     // add a value that is already formated as json to the begening of the object
     // Warning: less efficient than append_json_str!
     void prepend_json_str(const std::string_view in_key, const std::string_view in_value);
@@ -213,7 +213,7 @@ class sub_array_creator : public json_creator_base
     template<size_t> friend class json_array_creator;
 
 protected:
-    static inline std::string_view empty_json_array{"[]"};
+    constexpr static inline std::string_view empty_json_array{"[]"};
 
     void prepare_for_additional_value();
 
@@ -240,7 +240,7 @@ public:
 
     // add a value that is already formated as json
     void append_json_str(const std::string_view in_value);
-    
+
     // add a value that is already formated as json to the begening of the array
     // Warning: less efficient than append_json_str!
     void prepend_json_str(const std::string_view in_value);

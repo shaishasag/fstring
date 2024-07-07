@@ -88,19 +88,19 @@ void sub_object_creator::prepend_json_str(const std::string_view in_key, const s
         num_additional_chars += ___object_whitespace_after_comma.size();
     }
     m_json_fstring_ref.insert(1, num_additional_chars, '*');
-    
+
     size_t replacement_location{1};
     m_json_fstring_ref[replacement_location] = '"';
     ++replacement_location;
     m_json_fstring_ref.replace(replacement_location, in_key);
     replacement_location += in_key.size();
-    
+
     m_json_fstring_ref.replace(replacement_location, internal::_KEY_VAL_SEP);
     replacement_location += internal::_KEY_VAL_SEP.size();
-    
+
     m_json_fstring_ref.replace(replacement_location, in_value);
     replacement_location += in_value.size();
-    
+
     if (0 < m_num_subs) {  // not first, need to add ','
         m_json_fstring_ref.replace(replacement_location, internal::_COMMA);
         replacement_location += internal::_COMMA.size();
@@ -194,12 +194,12 @@ void sub_array_creator::prepend_json_str(const std::string_view in_value)
         num_additional_chars += ___array_whitespace_after_comma.size();
     }
     m_json_fstring_ref.insert(1, num_additional_chars, '*');
-    
+
     size_t replacement_location{1};
-    
+
     m_json_fstring_ref.replace(replacement_location, in_value);
     replacement_location += in_value.size();
-    
+
     if (0 < m_num_subs) {  // not first, need to add ','
         m_json_fstring_ref.replace(replacement_location, internal::_COMMA);
         replacement_location += internal::_COMMA.size();

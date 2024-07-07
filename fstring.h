@@ -302,7 +302,7 @@ public:
     {
         __append__(sv.data(), sv.size());
     }
-    
+
     constexpr fstring_base& operator+=(const CharT in_char) noexcept
     {
         __append__(in_char);
@@ -644,7 +644,7 @@ public:
                 }
             }
         }
-        
+
         if (nullptr != scanf_format)
         {
             sscanf(data(), scanf_format, &in_to_scan);
@@ -807,7 +807,7 @@ public:
     }
 
     void resize(const size_type count, CharT ch='\0') { m_referee.resize(count, ch);}
-    
+
     // substr: use string_view.substr
     // copy: use string_view.copy
     // swap does not make sence for fixed-size string, use std::exchange
