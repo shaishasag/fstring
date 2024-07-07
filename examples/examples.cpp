@@ -58,9 +58,9 @@ void assigning()
 
 static void create_array()
 {
-    fixed::fixed_json_object_creator object;
+    fixed::json_object_creator object;
 
-    fixed::fixed_json_array_creator array;
+    fixed::json_array_creator array;
     array.append_value("Dancing Queen");
     array.append_value("Gimme", "Gimme", "Gimme");
     std::vector<float> f_vec{17.f, 18.f};
@@ -74,18 +74,17 @@ static void create_array()
 
 static void create_object()
 {
-    fixed::fstring511 actual;
-    fixed::json_object_creator object(actual);
+    fixed::json_object_creator object;
     object.append_value("People Need Love", 1972);
     object.append_value("Nina, Pretty Ballerina", 1973);
     object.append_value("Waterloo", 1974);
 
-    std::cout << actual << std::endl;
+    std::cout << object << std::endl;
 }
 
 static void create_object_and_array()
 {
-    fixed::fixed_json_object_creator<1023> album;
+    fixed::json_object_creator<1023> album;
     
     album.append_value("Artist", "ABBA");
     album.append_value("Name", "Arrival");
@@ -126,8 +125,7 @@ static void create()
 
 static void all_types()
 {
-    fixed::fstring511 actual;
-    fixed::json_object_creator object(actual);
+    fixed::json_object_creator object;
     
     object.append_value("True", true);
     object.append_value("False", false);
@@ -156,7 +154,7 @@ static void all_types()
     object.append_value("std::string", dsv);
     object.append_value("std::string_view", dsv);
 
-    std::cout << actual << std::endl;
+    std::cout << object << std::endl;
 }
 
 int main()

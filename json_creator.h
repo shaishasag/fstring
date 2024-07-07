@@ -16,6 +16,17 @@
 
 namespace fixed
 {
+
+#ifndef OBJECT_WHITESPACE_AFTER_COMMA
+    #define OBJECT_WHITESPACE_AFTER_COMMA " "
+#endif
+constexpr std::string_view ___object_whitespace_after_comma{OBJECT_WHITESPACE_AFTER_COMMA};
+
+#ifndef ARRAY_WHITESPACE_AFTER_COMMA
+    #define ARRAY_WHITESPACE_AFTER_COMMA " "
+#endif
+constexpr std::string_view ___array_whitespace_after_comma{ARRAY_WHITESPACE_AFTER_COMMA};
+
 namespace internal
 {
     constexpr fstring7 _TRUE{"true"};
@@ -71,16 +82,6 @@ namespace internal
     }
 }
 
-#ifdef OBJECT_WHITESPACE_AFTER_COMMA
-constexpr std::string_view ___object_whitespace_after_comma{OBJECT_WHITESPACE_AFTER_COMMA};
-#else
-constexpr std::string_view ___object_whitespace_after_comma{" "};
-#endif
-#ifdef ARRAY_WHITESPACE_AFTER_COMMA
-constexpr std::string_view ___array_whitespace_after_comma{ARRAY_WHITESPACE_AFTER_COMMA};
-#else
-constexpr std::string_view ___array_whitespace_after_comma{" "};
-#endif
 
 class json_creator_base
 {
@@ -90,7 +91,8 @@ private:
 protected:
 
     // for use by sub-classes that provide their own fstring member
-    class PreventAmbiguityOnConstructorCalls {}; // so compiler can distinguish calls from fixed_json_object_creator, fixed_json_array_creator
+    class PreventAmbiguityOnConstructorCalls{}; // dummy class to help compiler to mark construction from inheriting classes json_object_creator, json_array_creator
+    
     template<size_t STRING_CAPACITY>
     json_creator_base(fstring_base<STRING_CAPACITY, char>& in_fstr_to_refer_to, PreventAmbiguityOnConstructorCalls) noexcept
     : m_json_fstring_ref(in_fstr_to_refer_to)
@@ -124,11 +126,11 @@ protected:
 
 public:
 
-    size_t size() const { return m_json_fstring_ref.size(); }
-    size_t capacity() const { return m_json_fstring_ref.capacity(); }
-    size_t max_size() const { return m_json_fstring_ref.max_size(); }
-    const char* c_str() const { return m_json_fstring_ref.c_str(); }
-    operator std::string_view() const { return m_json_fstring_ref;}
+    [[nodiscard]] size_t size() const { return m_json_fstring_ref.size(); }
+    [[nodiscard]] size_t capacity() const { return m_json_fstring_ref.capacity(); }
+    [[nodiscard]] size_t max_size() const { return m_json_fstring_ref.max_size(); }
+    [[nodiscard]] const char* c_str() const { return m_json_fstring_ref.c_str(); }
+    [[nodiscard]] operator std::string_view() const { return m_json_fstring_ref;}
 };
 
 
@@ -140,7 +142,7 @@ class sub_object_creator : public json_creator_base
     template<size_t> friend class json_object_creator;
 
 protected:
-    constexpr static inline std::string_view empty_json_object{"{}"};
+    static inline std::string_view empty_json_object{"{}"};
 
     void prepare_for_additional_value(const std::string_view in_key);
 
@@ -151,9 +153,9 @@ protected:
         m_json_fstring_ref += empty_json_object;
     }
 
-    // this constructor should only be called from fixed_json_object_creator::fixed_json_object_creator
+    // this constructor should only be called from json_object_creator::json_object_creator
     // the purpose of this constructor is to avoid using m_json_fstring_ref before it was intialized
-    // by fixed_json_object_creator
+    // by json_object_creator
     // for use by sub-classes that provide their own fstring member
     template<size_t STRING_CAPACITY>
     sub_object_creator(fstring_base<STRING_CAPACITY, char>& in_fstr_to_refer_to,
@@ -163,8 +165,8 @@ protected:
 
 public:
 
-    sub_object_creator append_object(std::string_view in_key);
-    sub_array_creator append_array(std::string_view in_key);
+    [[nodiscard]] sub_object_creator append_object(std::string_view in_key);
+    [[nodiscard]] sub_array_creator append_array(std::string_view in_key);
 
     // add a value that is already formated as json to the end of the object
     void append_json_str(const std::string_view in_key, const std::string_view in_value);
@@ -196,21 +198,10 @@ public:
         }
     }
 
-    void merge_values_from(const sub_object_creator& in_to_merge_from)
-    {
-        std::string_view values_to_merge(in_to_merge_from.m_json_fstring_ref.data()+1,                                                  in_to_merge_from.m_json_fstring_ref.size()-2);
-        if (! values_to_merge.empty())
-        {
-            json_creator_base::save_restore_end sv(*this);
-            if (0 < m_num_subs) {  // not first, need to add ','
-                m_json_fstring_ref += internal::_COMMA;
-                m_json_fstring_ref += ___object_whitespace_after_comma;
-            }
-            m_json_fstring_ref.insert(m_json_fstring_ref.size(), values_to_merge);
-        }
-    }
+    void append_values_from(const sub_object_creator& in_to_merge_from);
+    void prepend_values_from(const sub_object_creator& in_to_merge_from);
 
-    bool empty() const { return m_json_fstring_ref[1] == empty_json_object[1]; }
+    [[nodiscard]] bool empty() const { return m_json_fstring_ref[1] == empty_json_object[1]; }
     void clear() { m_json_fstring_ref = empty_json_object; m_num_subs = 0; }
 };
 
@@ -222,7 +213,7 @@ class sub_array_creator : public json_creator_base
     template<size_t> friend class json_array_creator;
 
 protected:
-    constexpr static inline std::string_view empty_json_array{"[]"};
+    static inline std::string_view empty_json_array{"[]"};
 
     void prepare_for_additional_value();
 
@@ -232,9 +223,9 @@ protected:
         m_json_fstring_ref += empty_json_array;
     }
 
-    // this constructor should only be called from fixed_json_object_creator::fixed_json_object_creator
+    // this constructor should only be called from json_object_creator::json_object_creator
     // the purpose of this constructor is to avoid using m_json_fstring_ref before it was intialized
-    // by fixed_json_object_creator
+    // by json_object_creator
     // for use by sub-classes that provide their own fstring member
     template<size_t STRING_CAPACITY>
     sub_array_creator(fstring_base<STRING_CAPACITY, char>& in_fstr_to_refer_to,
@@ -244,11 +235,15 @@ protected:
 
 public:
 
-    sub_array_creator append_array();
-    sub_object_creator append_object();
+    [[nodiscard]] sub_array_creator append_array();
+    [[nodiscard]] sub_object_creator append_object();
 
     // add a value that is already formated as json
-    void push_json_str(const std::string_view in_value);
+    void append_json_str(const std::string_view in_value);
+    
+    // add a value that is already formated as json to the begening of the array
+    // Warning: less efficient than append_json_str!
+    void prepend_json_str(const std::string_view in_value);
 
     void append_value() {}
     void append_value(const char* in_value);
@@ -277,7 +272,10 @@ public:
         }
     }
 
-    bool empty() const { return m_json_fstring_ref[1] == empty_json_array[1]; }
+    void append_values_from(const sub_array_creator& in_to_merge_from);
+    void prepend_values_from(const sub_array_creator& in_to_merge_from);
+
+    [[nodiscard]] bool empty() const { return m_json_fstring_ref[1] == empty_json_array[1]; }
     void clear() { m_json_fstring_ref = empty_json_array; m_num_subs = 0; }
 };
 

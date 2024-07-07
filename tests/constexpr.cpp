@@ -13,7 +13,7 @@ TEST(Constexpr, expr_simple)
         EXPECT_FALSE(empty.full());
         EXPECT_EQ(empty.size(), 0);
 
-        fixed::fstring_ref empty_ref = empty;
+        fixed::fstring_ref empty_ref{empty};
         EXPECT_EQ(empty_ref.capacity(), 31);
         EXPECT_STREQ(empty_ref.c_str(), "");
         EXPECT_TRUE(empty_ref.empty());
