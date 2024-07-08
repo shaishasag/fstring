@@ -4,7 +4,7 @@
 namespace fixed
 {
 
-json_creator_base::save_restore_end::save_restore_end(json_creator_base& to_save) noexcept
+base_json_creator::save_restore_end::save_restore_end(base_json_creator& to_save) noexcept
 : m_creator_to_save(to_save)
 {
     std::string_view end_to_save = m_creator_to_save.save_end();
@@ -16,25 +16,25 @@ json_creator_base::save_restore_end::save_restore_end(json_creator_base& to_save
 }
 
 
-json_creator_base::save_restore_end::~save_restore_end()
+base_json_creator::save_restore_end::~save_restore_end()
 {
     m_creator_to_save.m_json_fstring_ref += m_saved_end_chars;
 }
 
 
-std::string_view json_creator_base::save_end()
+std::string_view base_json_creator::save_end()
 {
     return std::string_view(m_json_fstring_ref.data()+m_json_fstring_ref.size()-m_level-1, m_level+1);
 }
 
 
-void json_creator_base::restore_end(std::string_view in_end)
+void base_json_creator::restore_end(std::string_view in_end)
 {
     m_json_fstring_ref += in_end;
 }
 
 
-void sub_object_creator::prepare_for_additional_value(const std::string_view in_key)
+void sub_object_json_creator::prepare_for_additional_value(const std::string_view in_key)
 {
     if (0 < m_num_subs) {  // not first, need to add ','
         m_json_fstring_ref += internal::_COMMA;
@@ -48,35 +48,35 @@ void sub_object_creator::prepare_for_additional_value(const std::string_view in_
 }
 
 
-sub_object_creator sub_object_creator::append_object(std::string_view in_key)
+sub_object_json_creator sub_object_json_creator::append_object(std::string_view in_key)
 {
-    typename sub_array_creator::save_restore_end sv(*this);
+    typename sub_array_json_creator::save_restore_end sv(*this);
     prepare_for_additional_value(in_key);
-    sub_object_creator retVal(m_json_fstring_ref, m_level+1);
+    sub_object_json_creator retVal(m_json_fstring_ref, m_level+1);
 
     return retVal;
 }
 
-sub_array_creator sub_object_creator::append_array(std::string_view in_key)
+sub_array_json_creator sub_object_json_creator::append_array(std::string_view in_key)
 {
-    typename sub_array_creator::save_restore_end sv(*this);
+    typename sub_array_json_creator::save_restore_end sv(*this);
     prepare_for_additional_value(in_key);
-    sub_array_creator retVal(m_json_fstring_ref, m_level+1);
+    sub_array_json_creator retVal(m_json_fstring_ref, m_level+1);
 
     return retVal;
 }
 
 // add a value that is already formated as json
-void sub_object_creator::append_json_str(const std::string_view in_key, const std::string_view in_value)
+void sub_object_json_creator::append_json_str(const std::string_view in_key, const std::string_view in_value)
 {
-    typename sub_array_creator::save_restore_end sv(*this);
+    typename sub_array_json_creator::save_restore_end sv(*this);
     prepare_for_additional_value(in_key);
     m_json_fstring_ref += in_value;
 }
 
 // add a value that is already formated as json to the begening of the object
 // Warning: less efficient than append_json_str!
-void sub_object_creator::prepend_json_str(const std::string_view in_key, const std::string_view in_value)
+void sub_object_json_creator::prepend_json_str(const std::string_view in_key, const std::string_view in_value)
 {
     size_t num_additional_chars{0};
     num_additional_chars += 1;  // '"'
@@ -109,12 +109,12 @@ void sub_object_creator::prepend_json_str(const std::string_view in_key, const s
     ++m_num_subs;
 }
 
-void sub_object_creator::append_values_from(const sub_object_creator& in_to_merge_from)
+void sub_object_json_creator::append_values_from(const sub_object_json_creator& in_to_merge_from)
 {
     std::string_view values_to_merge(in_to_merge_from.m_json_fstring_ref.data()+1,                                                  in_to_merge_from.m_json_fstring_ref.size()-2);
     if (! values_to_merge.empty())
     {
-        json_creator_base::save_restore_end sv(*this);
+        base_json_creator::save_restore_end sv(*this);
         if (0 < m_num_subs) {  // not first, need to add ','
             m_json_fstring_ref += internal::_COMMA;
             m_json_fstring_ref += ___object_whitespace_after_comma;
@@ -124,7 +124,7 @@ void sub_object_creator::append_values_from(const sub_object_creator& in_to_merg
     }
 }
 
-void sub_object_creator::prepend_values_from(const sub_object_creator& in_to_merge_from)
+void sub_object_json_creator::prepend_values_from(const sub_object_json_creator& in_to_merge_from)
 {
     std::string_view values_to_merge(in_to_merge_from.m_json_fstring_ref.data()+1,                                                  in_to_merge_from.m_json_fstring_ref.size()-2);
     if (! values_to_merge.empty())
@@ -149,7 +149,7 @@ void sub_object_creator::prepend_values_from(const sub_object_creator& in_to_mer
 }
 
 
-void sub_array_creator::prepare_for_additional_value()
+void sub_array_json_creator::prepare_for_additional_value()
 {
     if (0 < m_num_subs) {  // not first, need to add ','
         m_json_fstring_ref += internal::_COMMA;
@@ -158,35 +158,35 @@ void sub_array_creator::prepare_for_additional_value()
     ++m_num_subs;
 }
 
-sub_array_creator sub_array_creator::append_array()
+sub_array_json_creator sub_array_json_creator::append_array()
 {
-    typename sub_array_creator::save_restore_end sv(*this);
+    typename sub_array_json_creator::save_restore_end sv(*this);
     prepare_for_additional_value();
-    sub_array_creator retVal(m_json_fstring_ref, m_level+1);
+    sub_array_json_creator retVal(m_json_fstring_ref, m_level+1);
 
     return retVal;
 }
 
-sub_object_creator sub_array_creator::append_object()
+sub_object_json_creator sub_array_json_creator::append_object()
 {
-    typename sub_array_creator::save_restore_end sv(*this);
+    typename sub_array_json_creator::save_restore_end sv(*this);
     prepare_for_additional_value();
-    sub_object_creator retVal(m_json_fstring_ref, m_level+1);
+    sub_object_json_creator retVal(m_json_fstring_ref, m_level+1);
 
     return retVal;
 }
 
 
 // add a value that is already formated as json to the end of the array
-void sub_array_creator::append_json_str(const std::string_view in_value)
+void sub_array_json_creator::append_json_str(const std::string_view in_value)
 {
-    typename sub_array_creator::save_restore_end sv(*this);
+    typename sub_array_json_creator::save_restore_end sv(*this);
     prepare_for_additional_value();
     m_json_fstring_ref += in_value;
 }
 
 // add a value that is already formated as json to the beginning of the array
-void sub_array_creator::prepend_json_str(const std::string_view in_value)
+void sub_array_json_creator::prepend_json_str(const std::string_view in_value)
 {
     size_t num_additional_chars{in_value.size()};
     if (0 < m_num_subs) {  // not first, need to add ','
@@ -208,20 +208,20 @@ void sub_array_creator::prepend_json_str(const std::string_view in_value)
     ++m_num_subs;
 }
 
-void sub_array_creator::append_value(const char* in_value)
+void sub_array_json_creator::append_value(const char* in_value)
 {
-    typename sub_array_creator::save_restore_end sv(*this);
+    typename sub_array_json_creator::save_restore_end sv(*this);
     prepare_for_additional_value();
     internal::write_value(in_value, m_json_fstring_ref);
 }
 
 
-void sub_array_creator::append_values_from(const sub_array_creator& in_to_merge_from)
+void sub_array_json_creator::append_values_from(const sub_array_json_creator& in_to_merge_from)
 {
     std::string_view values_to_merge(in_to_merge_from.m_json_fstring_ref.data()+1,                                                  in_to_merge_from.m_json_fstring_ref.size()-2);
     if (! values_to_merge.empty())
     {
-        json_creator_base::save_restore_end sv(*this);
+        base_json_creator::save_restore_end sv(*this);
         if (0 < m_num_subs) {  // not first, need to add ','
             m_json_fstring_ref += internal::_COMMA;
             m_json_fstring_ref += ___array_whitespace_after_comma;
@@ -231,7 +231,7 @@ void sub_array_creator::append_values_from(const sub_array_creator& in_to_merge_
     }
 }
 
-void sub_array_creator::prepend_values_from(const sub_array_creator& in_to_merge_from)
+void sub_array_json_creator::prepend_values_from(const sub_array_json_creator& in_to_merge_from)
 {
     std::string_view values_to_merge(in_to_merge_from.m_json_fstring_ref.data()+1,                                                  in_to_merge_from.m_json_fstring_ref.size()-2);
     if (! values_to_merge.empty())
