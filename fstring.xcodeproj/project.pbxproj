@@ -320,7 +320,7 @@
 				F62BDCFA293E502A0000567A /* src */,
 			);
 			name = googletest;
-			path = ../googletest;
+			path = ../googletest/googletest;
 			sourceTree = SOURCE_ROOT;
 		};
 		F62BDC6C293E502A0000567A /* test */ = {
@@ -413,7 +413,7 @@
 				F62BDCC1293E502A0000567A /* gtest_throw_on_failure_ex_test.cc */,
 			);
 			name = test;
-			path = googletest/googletest/test;
+			path = ../googletest/googletest/test;
 			sourceTree = SOURCE_ROOT;
 		};
 		F62BDCC2293E502A0000567A /* cmake */ = {
@@ -426,7 +426,7 @@
 				F62BDCC7293E502A0000567A /* libgtest.la.in */,
 			);
 			name = cmake;
-			path = googletest/googletest/cmake;
+			path = ../googletest/googletest/cmake;
 			sourceTree = SOURCE_ROOT;
 		};
 		F62BDCC8293E502A0000567A /* include */ = {
@@ -527,7 +527,7 @@
 				F62BDD06293E502A0000567A /* gtest-matchers.cc */,
 			);
 			name = src;
-			path = googletest/googletest/src;
+			path = ../googletest/googletest/src;
 			sourceTree = SOURCE_ROOT;
 		};
 		F62BDD07293E511C0000567A /* tests */ = {

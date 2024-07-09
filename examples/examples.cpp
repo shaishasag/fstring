@@ -58,9 +58,9 @@ void assigning()
 
 static void create_array()
 {
-    fixed::object_json_creator object;
+    fixed::    object_json_creator object;
+    fixed::    array_json_creator array;
 
-    fixed::array_json_creator array;
     array.append_value("Dancing Queen");
     array.append_value("Gimme", "Gimme", "Gimme");
     std::vector<float> f_vec{17.f, 18.f};
@@ -75,6 +75,7 @@ static void create_array()
 static void create_object()
 {
     fixed::object_json_creator object;
+
     object.append_value("People Need Love", 1972);
     object.append_value("Nina, Pretty Ballerina", 1973);
     object.append_value("Waterloo", 1974);
