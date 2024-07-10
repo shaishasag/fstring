@@ -1,6 +1,8 @@
 #ifndef __fstring_h__
 #define __fstring_h__
 
+#define NOMINMAX      // avoid min mac macros on windows
+
 #include <stdexcept>
 #include <cstring>
 #include <cctype>

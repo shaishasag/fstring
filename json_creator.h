@@ -179,6 +179,8 @@ public:
     // Warning: less efficient than append_json_str!
     void prepend_json_str(const std::string_view in_key, const std::string_view in_value);
 
+    void append_value() {}
+
     template <typename TValue>
     void append_value(const std::string_view in_key, const TValue& in_value)
     {
@@ -191,6 +193,13 @@ public:
     {
         std::string_view as_sv(in_value);
         append_value<std::string_view>(in_key, as_sv);
+    }
+
+    template<typename TValue, typename... Args>
+    void append_value(std::string_view in_key, const TValue& in_value, Args&&... args)
+    {
+        append_value(in_key, in_value);
+        append_value(std::forward<Args>(args)...);
     }
 
     template<typename TContainer>
