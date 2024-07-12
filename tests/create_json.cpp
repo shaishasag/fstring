@@ -208,3 +208,22 @@ TEST(CreateJson, array_prepend_values_from)
     jac1.prepend_values_from(jac_small);
     ASSERT_STREQ(jac1.c_str(), R"|(["forget", "me not", "mama", "mia"])|");
 }
+
+
+TEST(CreateJson, append_value_variadric)
+{
+    array_json_creator<511> jac1;
+    jac1.append_value(17,
+                      "18",
+                      std::string("19"),
+                      std::string_view("20"),
+                      fixed::fstring31("21"));
+    ASSERT_STREQ(jac1.c_str(), R"|([17, "18", "19", "20", "21"])|");
+    
+    object_json_creator<511> joc1;
+    joc1.append_value("17", 17,
+                      fixed::fstring31("19"), std::string("19"),
+                      std::string("20"), std::string_view("20"),
+                      std::string_view("21"), fixed::fstring31("21"));
+    ASSERT_STREQ(joc1.c_str(), R"|({"17": 17, "19": "19", "20": "20", "21": "21"})|");
+}
