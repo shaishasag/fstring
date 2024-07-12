@@ -41,6 +41,7 @@
 		F6BC984B2941D94C002CC268 /* variadic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6BC984A2941D94C002CC268 /* variadic.cpp */; };
 		F6BC98C129423926002CC268 /* find.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6BC98C029423926002CC268 /* find.cpp */; };
 		F6CEEF9E2A97864500DB97B3 /* containers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6CEEF9D2A97864400DB97B3 /* containers.cpp */; };
+		F6DFFC802C4132E800080329 /* universal_converter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6DFFC7E2C412F3B00080329 /* universal_converter.cpp */; };
 		F6E83F802AC1DD2100656B85 /* erase_all.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6E83F7F2AC1DD2100656B85 /* erase_all.cpp */; };
 		F6F31645293FAA98008D93CF /* compare.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6F31644293FAA98008D93CF /* compare.cpp */; };
 		F6F376122BECC96100DC399D /* examples.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6F376112BECC70400DC399D /* examples.cpp */; };
@@ -57,6 +58,15 @@
 			runOnlyForDeploymentPostprocessing = 1;
 		};
 		F6A6803F2942864D00D9CE7A /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		F6DFFC792C412EF500080329 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -259,6 +269,9 @@
 		F6BC984A2941D94C002CC268 /* variadic.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = variadic.cpp; sourceTree = "<group>"; };
 		F6BC98C029423926002CC268 /* find.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = find.cpp; sourceTree = "<group>"; };
 		F6CEEF9D2A97864400DB97B3 /* containers.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = containers.cpp; sourceTree = "<group>"; };
+		F6DFFC722C412EEA00080329 /* universal_converter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = universal_converter.h; sourceTree = "<group>"; };
+		F6DFFC7D2C412EF500080329 /* universal converter */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "universal converter"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F6DFFC7E2C412F3B00080329 /* universal_converter.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = universal_converter.cpp; sourceTree = "<group>"; };
 		F6E83F7F2AC1DD2100656B85 /* erase_all.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = erase_all.cpp; sourceTree = "<group>"; };
 		F6F31644293FAA98008D93CF /* compare.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = compare.cpp; sourceTree = "<group>"; };
 		F6F376112BECC70400DC399D /* examples.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = examples.cpp; path = examples/examples.cpp; sourceTree = "<group>"; };
@@ -280,6 +293,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F6DFFC782C412EF500080329 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -290,9 +310,10 @@
 				F63F11E32957530B00CAE219 /* fstringstream.h */,
 				F6F376112BECC70400DC399D /* examples.cpp */,
 				F6A680482942867800D9CE7A /* hello_fstring.cpp */,
-				F6507AF82C2F3049001A3B94 /* json_creator.cpp */,
 				F6507AF92C2F3049001A3B94 /* json_creator.h */,
+				F6507AF82C2F3049001A3B94 /* json_creator.cpp */,
 				F62BDCD9293E502A0000567A /* README.md */,
+				F6DFFC7F2C412F4000080329 /* universal converter */,
 				F6B2F8872943484500A4443B /* fmt */,
 				F62BDD07293E511C0000567A /* tests */,
 				F62BDC6A293E502A0000567A /* googletest */,
@@ -305,6 +326,7 @@
 			children = (
 				F600971B293D0621006F1F35 /* fstring_tests */,
 				F6A680412942864D00D9CE7A /* hello_fstring */,
+				F6DFFC7D2C412EF500080329 /* universal converter */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -586,6 +608,15 @@
 			name = fmt;
 			sourceTree = "<group>";
 		};
+		F6DFFC7F2C412F4000080329 /* universal converter */ = {
+			isa = PBXGroup;
+			children = (
+				F6DFFC7E2C412F3B00080329 /* universal_converter.cpp */,
+				F6DFFC722C412EEA00080329 /* universal_converter.h */,
+			);
+			name = "universal converter";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -623,6 +654,23 @@
 			productReference = F6A680412942864D00D9CE7A /* hello_fstring */;
 			productType = "com.apple.product-type.tool";
 		};
+		F6DFFC732C412EF500080329 /* universal converter */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F6DFFC7A2C412EF500080329 /* Build configuration list for PBXNativeTarget "universal converter" */;
+			buildPhases = (
+				F6DFFC742C412EF500080329 /* Sources */,
+				F6DFFC782C412EF500080329 /* Frameworks */,
+				F6DFFC792C412EF500080329 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "universal converter";
+			productName = hello_fstring;
+			productReference = F6DFFC7D2C412EF500080329 /* universal converter */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -655,6 +703,7 @@
 			targets = (
 				F600971A293D0621006F1F35 /* fstring_tests */,
 				F6A680402942864D00D9CE7A /* hello_fstring */,
+				F6DFFC732C412EF500080329 /* universal converter */,
 			);
 		};
 /* End PBXProject section */
@@ -708,6 +757,14 @@
 				F6507AFA2C2F3049001A3B94 /* json_creator.cpp in Sources */,
 				F6F376122BECC96100DC399D /* examples.cpp in Sources */,
 				F6A680492942867800D9CE7A /* hello_fstring.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F6DFFC742C412EF500080329 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F6DFFC802C4132E800080329 /* universal_converter.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -869,6 +926,22 @@
 			};
 			name = Release;
 		};
+		F6DFFC7B2C412EF500080329 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		F6DFFC7C2C412EF500080329 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -895,6 +968,15 @@
 			buildConfigurations = (
 				F6A680462942864D00D9CE7A /* Debug */,
 				F6A680472942864D00D9CE7A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F6DFFC7A2C412EF500080329 /* Build configuration list for PBXNativeTarget "universal converter" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F6DFFC7B2C412EF500080329 /* Debug */,
+				F6DFFC7C2C412EF500080329 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
