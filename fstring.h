@@ -1,7 +1,12 @@
 #ifndef __fstring_h__
 #define __fstring_h__
 
-#define NOMINMAX      // avoid min mac macros on windows
+#ifdef _WINDOWS_
+#ifndef NOMINMAX
+#error NOMINMAX is not defined for windows compilation, this will cause collision with std::min, std::max
+#endif
+#endif
+
 
 #include <stdexcept>
 #include <cstring>
@@ -11,6 +16,7 @@
 #include <type_traits>
 #include <iterator>
 #include <algorithm>
+
 
 // functions marked non-standard have no equivalent in std::string or std::string_view
 
@@ -181,8 +187,10 @@ public:
         set_new_size(0);
     }
 
+#ifndef __linux__
 #pragma warning( push )
 #pragma warning( disable : 4789 )
+#endif
     constexpr fstring_base& insert(size_type index, size_type count, CharT ch)
     {
         if (index > size()) {
@@ -214,8 +222,9 @@ public:
 
         return *this;
     }
-
+#ifndef  __linux__
 #pragma warning( pop )
+#endif
 
     constexpr fstring_base& insert(size_type index, const std::string_view sv)
     {
@@ -590,8 +599,8 @@ public:
                 while (*(end()+(num_chars-1)) == '0') {// remove trailing zeros - if any
                     --num_chars;
                 }
-                if (*(end()+(num_chars-1)) == '.') {// remove decimal point - if any
-                    --num_chars;
+                if (*(end()+(num_chars-1)) == '.') {  // if . came before 0, leave the last 0 so number will look like 2.0
+                    ++num_chars;
                 }
             }
         }
@@ -666,6 +675,7 @@ public:
     using char_type = CharT;
     using traits_type = std::char_traits<CharT>;
 
+    constexpr fstring_ref_base(fstring_ref_base const&)  noexcept = default;
     fstring_ref_base() = delete;
 
     template<size_type TSize>

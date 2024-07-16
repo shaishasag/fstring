@@ -44,7 +44,6 @@
 		F6DFFC802C4132E800080329 /* universal_converter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6DFFC7E2C412F3B00080329 /* universal_converter.cpp */; };
 		F6E83F802AC1DD2100656B85 /* erase_all.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6E83F7F2AC1DD2100656B85 /* erase_all.cpp */; };
 		F6F31645293FAA98008D93CF /* compare.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6F31644293FAA98008D93CF /* compare.cpp */; };
-		F6F376122BECC96100DC399D /* examples.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6F376112BECC70400DC399D /* examples.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -755,7 +754,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F6507AFA2C2F3049001A3B94 /* json_creator.cpp in Sources */,
-				F6F376122BECC96100DC399D /* examples.cpp in Sources */,
 				F6A680492942867800D9CE7A /* hello_fstring.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
