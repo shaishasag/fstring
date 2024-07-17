@@ -1,6 +1,7 @@
 #ifndef __json_creator_h__
 #define __json_creator_h__
 
+#include <utility>
 #include <string.h>
 #include <string>
 #include <string_view>
@@ -21,6 +22,7 @@
 namespace fixed
 {
 
+
 #ifndef OBJECT_WHITESPACE_AFTER_COMMA
     #define OBJECT_WHITESPACE_AFTER_COMMA " "
 #endif
@@ -39,8 +41,8 @@ namespace internal
     constexpr fstring7 _COMMA{","};
     constexpr fstring7 _KEY_VAL_SEP{R"|(": )|"};
 
-    template <typename TValue>
-    inline void write_value(const TValue in_value, fstring_ref in_json_str)
+    template <typename TValue, typename TStr>
+    inline void write_value(const TValue in_value, TStr& in_json_str)
     {
         if constexpr (std::is_same_v<bool, TValue>)
         {
@@ -58,7 +60,9 @@ namespace internal
         }
         else if constexpr (std::is_integral_v<TValue>)
         {
-            in_json_str.printf(in_value);
+            fixed::fstring127 fs;
+            fs.printf(in_value);
+            in_json_str += fs;
         }
         else if constexpr (std::is_floating_point_v<TValue>)
         {
@@ -86,9 +90,12 @@ namespace internal
     }
 }
 
-
+template<typename TStr>
 class DllExport base_json_creator
 {
+    template<typename> // yes, a templated class has to be a friend of itself in order to access protected memebers
+    friend class base_json_creator;
+
 private:
     static const size_t t_max_levels{15};
 
@@ -97,17 +104,16 @@ protected:
     // for use by sub-classes that provide their own fstring member
     class PreventAmbiguityOnConstructorCalls{}; // dummy class to help compiler to mark construction from inheriting classes object_json_creator, array_json_creator
 
-    template<size_t STRING_CAPACITY>
-    base_json_creator(fstring_base<STRING_CAPACITY, char>& in_fstr_to_refer_to, PreventAmbiguityOnConstructorCalls) noexcept
-    : m_json_fstring_ref(in_fstr_to_refer_to)
+    base_json_creator(TStr& in_json_str, PreventAmbiguityOnConstructorCalls) noexcept
+    : m_json_str(in_json_str)
     {}
 
-    base_json_creator(fstring_ref the_str, size_t start_level)  noexcept
-    : m_json_fstring_ref(the_str)
+    base_json_creator(TStr& in_json_str, size_t start_level)  noexcept
+    : m_json_str(in_json_str)
     , m_level(start_level)
     {}
 
-    fstring_ref m_json_fstring_ref;
+    TStr m_json_str;
 
     size_t m_num_subs{0};
     size_t m_level{0};
@@ -130,47 +136,63 @@ protected:
 
 public:
 
-    [[nodiscard]] size_t size() const { return m_json_fstring_ref.size(); }
-    [[nodiscard]] size_t capacity() const { return m_json_fstring_ref.capacity(); }
-    [[nodiscard]] size_t max_size() const { return m_json_fstring_ref.max_size(); }
-    [[nodiscard]] const char* c_str() const { return m_json_fstring_ref.c_str(); }
-    [[nodiscard]] operator std::string_view() const { return m_json_fstring_ref;}
+    void reserve( size_t new_cap )
+    {
+        if constexpr (std::is_same_v<std::string, std::decay_t<TStr>>)
+        {
+            m_json_str.reserve(new_cap);
+        }
+        else if constexpr (std::is_same_v<fixed::fstring_ref, TStr>)
+        {
+            //assert(new_cap <= m_json_str.capacity());
+        }
+    }
+
+    
+    [[nodiscard]] size_t size() const { return m_json_str.size(); }
+    [[nodiscard]] size_t capacity() const { return m_json_str.capacity(); }
+    [[nodiscard]] size_t max_size() const { return m_json_str.max_size(); }
+    [[nodiscard]] const char* c_str() const { return m_json_str.c_str(); }
+    [[nodiscard]] operator std::string_view() const { return m_json_str;}
 };
 
-
+template<typename>
 class sub_array_json_creator;
 
-class DllExport sub_object_json_creator : public base_json_creator
+template<typename TStr>
+class DllExport sub_object_json_creator : public base_json_creator<TStr>
 {
+    
+    template<typename>
     friend class sub_array_json_creator;
-    template<size_t> friend class object_json_creator;
 
 protected:
+    using base_type = base_json_creator<TStr>;
+
     constexpr static inline std::string_view empty_json_object{"{}"};
 
     void prepare_for_additional_value(const std::string_view in_key);
 
     // this constructor should only be called from object_json_creator::append_object or array_json_creator::append_object
-    sub_object_json_creator(fstring_ref the_str, size_t start_level) noexcept
-    : base_json_creator(the_str, start_level)
+    sub_object_json_creator(TStr& the_str, size_t start_level) noexcept
+    : base_type(the_str, start_level)
     {
-        m_json_fstring_ref += empty_json_object;
+        this->m_json_str += empty_json_object;
     }
 
     // this constructor should only be called from object_json_creator::object_json_creator
     // the purpose of this constructor is to avoid using m_json_fstring_ref before it was intialized
     // by object_json_creator
     // for use by sub-classes that provide their own fstring member
-    template<size_t STRING_CAPACITY>
-    sub_object_json_creator(fstring_base<STRING_CAPACITY, char>& in_fstr_to_refer_to,
-                       PreventAmbiguityOnConstructorCalls in_unambig) noexcept
-    : base_json_creator(in_fstr_to_refer_to, in_unambig)
+    sub_object_json_creator(TStr&& in_fstr_to_refer_to,
+                            typename base_type::PreventAmbiguityOnConstructorCalls in_unambig) noexcept
+    : base_type(in_fstr_to_refer_to, in_unambig)
     {}
 
 public:
 
     [[nodiscard]] sub_object_json_creator append_object(std::string_view in_key);
-    [[nodiscard]] sub_array_json_creator append_array(std::string_view in_key);
+    [[nodiscard]] sub_array_json_creator<TStr> append_array(std::string_view in_key);
 
     // add a value that is already formated as json to the end of the object
     void append_json_str(const std::string_view in_key, const std::string_view in_value);
@@ -184,9 +206,9 @@ public:
     template <typename TValue>
     void append_value(const std::string_view in_key, const TValue& in_value)
     {
-        base_json_creator::save_restore_end sv(*this);
+        typename base_json_creator<TStr>::save_restore_end sv(*this);
         prepare_for_additional_value(in_key);
-        internal::write_value(in_value, m_json_fstring_ref);
+        internal::write_value(in_value, this->m_json_str);
     }
 
     void append_value(const std::string_view in_key, const char* in_value)
@@ -214,42 +236,44 @@ public:
     void append_values_from(const sub_object_json_creator& in_to_merge_from);
     void prepend_values_from(const sub_object_json_creator& in_to_merge_from);
 
-    [[nodiscard]] bool empty() const { return m_json_fstring_ref[1] == empty_json_object[1]; }
-    void clear() { m_json_fstring_ref = empty_json_object; m_num_subs = 0; }
+    [[nodiscard]] bool empty() const { return this->m_json_str[1] == empty_json_object[1]; }
+    void clear() { this->m_json_str = empty_json_object; this->m_num_subs = 0; }
 };
 
 
 
-class DllExport sub_array_json_creator : public base_json_creator
+template<typename TStr>
+class DllExport sub_array_json_creator : public base_json_creator<TStr>
 {
+    template<typename>
     friend class sub_object_json_creator;
-    template<size_t> friend class  array_json_creator;
 
 protected:
+    using base_type = base_json_creator<TStr>;
+    
     constexpr static inline std::string_view empty_json_array{"[]"};
 
     void prepare_for_additional_value();
 
-    sub_array_json_creator(fstring_ref the_str, size_t start_level) noexcept
-    : base_json_creator(the_str, start_level)
+    sub_array_json_creator(TStr& the_str, size_t start_level) noexcept
+    : base_type(the_str, start_level)
     {
-        m_json_fstring_ref += empty_json_array;
+        this->m_json_str += empty_json_array;
     }
 
     // this constructor should only be called from object_json_creator::object_json_creator
     // the purpose of this constructor is to avoid using m_json_fstring_ref before it was intialized
     // by object_json_creator
     // for use by sub-classes that provide their own fstring member
-    template<size_t STRING_CAPACITY>
-    sub_array_json_creator(fstring_base<STRING_CAPACITY, char>& in_fstr_to_refer_to,
-                       PreventAmbiguityOnConstructorCalls in_unambig) noexcept
-    : base_json_creator(in_fstr_to_refer_to, in_unambig)
+    sub_array_json_creator(TStr&& in_fstr_to_refer_to,
+                           typename base_json_creator<TStr>::PreventAmbiguityOnConstructorCalls in_unambig) noexcept
+    : base_type(in_fstr_to_refer_to, in_unambig)
     {}
 
 public:
 
     [[nodiscard]] sub_array_json_creator append_array();
-    [[nodiscard]] sub_object_json_creator append_object();
+    [[nodiscard]] sub_object_json_creator<TStr> append_object();
 
     // add a value that is already formated as json
     void append_json_str(const std::string_view in_value);
@@ -266,7 +290,7 @@ public:
     {
         typename sub_array_json_creator::save_restore_end sv(*this);
         prepare_for_additional_value();
-        internal::write_value(in_value, m_json_fstring_ref);
+        internal::write_value(in_value, this->m_json_str);
     }
 
     template<typename TValue, typename... Args>
@@ -288,17 +312,22 @@ public:
     void append_values_from(const sub_array_json_creator& in_to_merge_from);
     void prepend_values_from(const sub_array_json_creator& in_to_merge_from);
 
-    [[nodiscard]] bool empty() const { return m_json_fstring_ref[1] == empty_json_array[1]; }
-    void clear() { m_json_fstring_ref = empty_json_array; m_num_subs = 0; }
+    [[nodiscard]] bool empty() const { return this->m_json_str[1] == empty_json_array[1]; }
+    void clear()
+    {
+        this->m_json_str = empty_json_array;
+        this->m_num_subs = 0;
+    }
 };
 
 
 template<size_t STRING_CAPACITY=511>
-class DllExport object_json_creator : public sub_object_json_creator
+class DllExport object_json_creator : public sub_object_json_creator<fixed::fstring_ref>
 {
 public:
     object_json_creator() noexcept
-    : sub_object_json_creator(m_fstr, PreventAmbiguityOnConstructorCalls())
+    : sub_object_json_creator(m_fstr,
+                              base_json_creator<fixed::fstring_ref>::PreventAmbiguityOnConstructorCalls())
     {}
 
 protected:
@@ -306,25 +335,54 @@ protected:
 };
 
 template<size_t STRING_CAPACITY=511>
-class DllExport array_json_creator : public sub_array_json_creator
+class DllExport array_json_creator : public sub_array_json_creator<fixed::fstring_ref>
 {
 public:
     array_json_creator() noexcept
-    : sub_array_json_creator(m_fstr, PreventAmbiguityOnConstructorCalls())
+    : sub_array_json_creator<fixed::fstring_ref>(fixed::fstring_ref(m_fstr),
+                             base_json_creator<fixed::fstring_ref>::PreventAmbiguityOnConstructorCalls())
     {}
 
 protected:
     fixed::fstring_base<STRING_CAPACITY, char> m_fstr{empty_json_array};
 };
 
-inline std::ostream& operator<<(std::ostream& os, const base_json_creator in_j_c)
+} // namespace fixed
+
+template<typename TStr>
+inline std::ostream& operator<<(std::ostream& os, const fixed::base_json_creator<TStr>& in_j_c)
 {
     const std::string_view as_sv(in_j_c);
     os << as_sv;
     return os;
 }
 
+namespace dyna
+{
+class DllExport object_json_creator : public fixed::sub_object_json_creator<std::string&>
+{
+public:
+    object_json_creator() noexcept
+    : sub_object_json_creator(m_fstr,
+                              base_json_creator<std::string&>::PreventAmbiguityOnConstructorCalls())
+    {}
 
-} // namespace fixed
+protected:
+    std::string m_fstr{empty_json_object};
+};
+
+class DllExport array_json_creator : public fixed::sub_array_json_creator<std::string&>
+{
+public:
+    array_json_creator() noexcept
+    : sub_array_json_creator(m_fstr,
+                             base_json_creator<std::string&>::PreventAmbiguityOnConstructorCalls())
+    {}
+
+protected:
+    std::string m_fstr{empty_json_array};
+};
+
+} // namespace dyna
 
 #endif // __json_creator_h__

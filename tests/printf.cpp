@@ -13,7 +13,7 @@ TEST(Printf, simple)
     {
         fstring31 fs;
         fs.printf(0.0);
-        EXPECT_STREQ(fs.c_str(), "0");
+        EXPECT_STREQ(fs.c_str(), "0.0");
     }
     {
         fstring31 fs;
@@ -25,9 +25,9 @@ TEST(Printf, simple)
     {
         fstring31 fs;
         fs.printf(1.0);
-        EXPECT_STREQ(fs.c_str(), "1"); // by default fstring::printf remove traling zeros
+        EXPECT_STREQ(fs.c_str(), "1.0");
         fs.printf(2.0);
-        EXPECT_STREQ(fs.c_str(), "12");
+        EXPECT_STREQ(fs.c_str(), "1.02.0");
     }
     {
         fstring31 fs;

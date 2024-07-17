@@ -406,11 +406,6 @@ public:
         return *this;
     }
 
-    constexpr fstring_base& replace(size_type pos, const std::string_view replacement_str)
-    {
-        return replace(pos, replacement_str.size(), replacement_str);
-    }
-
     void resize(const size_type count, CharT ch='\0')
     {
         if (count > capacity()) {
@@ -881,6 +876,9 @@ typedef  fstring_base<255,char> fstring255;
 typedef  fstring_base<511,char> fstring511;
 typedef  fstring_base<1023, char> fstring1023;
 typedef  fstring_base<2047, char> fstring2047;
+
+
+
 
 }
 #endif // __fstring_h__

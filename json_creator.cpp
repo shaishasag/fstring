@@ -4,255 +4,340 @@
 namespace fixed
 {
 
-base_json_creator::save_restore_end::save_restore_end(base_json_creator& to_save) noexcept
+template<typename TStr>
+base_json_creator<TStr>::save_restore_end::save_restore_end(base_json_creator& to_save) noexcept
 : m_creator_to_save(to_save)
 {
     std::string_view end_to_save = m_creator_to_save.save_end();
     std::memcpy(m_save_buf,
                 end_to_save.data(),
                 end_to_save.size());
-    to_save.m_json_fstring_ref.resize(to_save.m_json_fstring_ref.size()-end_to_save.size());
+    to_save.m_json_str.resize(to_save.m_json_str.size()-end_to_save.size());
     m_saved_end_chars = std::string_view(m_save_buf, end_to_save.size());
 }
+template base_json_creator<fixed::fstring_ref>::save_restore_end::save_restore_end(base_json_creator& to_save);
+template base_json_creator<std::string&>::save_restore_end::save_restore_end(base_json_creator& to_save);
 
-
-base_json_creator::save_restore_end::~save_restore_end()
+template<typename TStr>
+base_json_creator<TStr>::save_restore_end::~save_restore_end()
 {
-    m_creator_to_save.m_json_fstring_ref += m_saved_end_chars;
+    m_creator_to_save.m_json_str += m_saved_end_chars;
+}
+
+template base_json_creator<fixed::fstring_ref>::save_restore_end::~save_restore_end();
+template base_json_creator<std::string&>::save_restore_end::~save_restore_end();
+
+
+template<typename TStr>
+std::string_view base_json_creator<TStr>::save_end()
+{
+    return std::string_view(this->m_json_str.data()+this->m_json_str.size()-m_level-1, m_level+1);
 }
 
 
-std::string_view base_json_creator::save_end()
+template<typename TStr>
+void base_json_creator<TStr>::restore_end(std::string_view in_end)
 {
-    return std::string_view(m_json_fstring_ref.data()+m_json_fstring_ref.size()-m_level-1, m_level+1);
+    this->m_json_str += in_end;
 }
 
 
-void base_json_creator::restore_end(std::string_view in_end)
+template<typename TStr>
+void sub_object_json_creator<TStr>::prepare_for_additional_value(const std::string_view in_key)
 {
-    m_json_fstring_ref += in_end;
-}
-
-
-void sub_object_json_creator::prepare_for_additional_value(const std::string_view in_key)
-{
-    if (0 < m_num_subs) {  // not first, need to add ','
-        m_json_fstring_ref += internal::_COMMA;
-        m_json_fstring_ref += ___object_whitespace_after_comma;
+    if (0 < this->m_num_subs) {  // not first, need to add ','
+        this->m_json_str += internal::_COMMA;
+        this->m_json_str += ___object_whitespace_after_comma;
     }
-    ++m_num_subs;
+    ++this->m_num_subs;
 
-    m_json_fstring_ref += '"';
-    m_json_fstring_ref += in_key;
-    m_json_fstring_ref += internal::_KEY_VAL_SEP;
+    this->m_json_str += '"';
+    this->m_json_str += in_key;
+    this->m_json_str += internal::_KEY_VAL_SEP;
 }
 
 
-sub_object_json_creator sub_object_json_creator::append_object(std::string_view in_key)
+template<typename TStr>
+sub_object_json_creator<TStr> sub_object_json_creator<TStr>::append_object(std::string_view in_key)
 {
-    typename sub_array_json_creator::save_restore_end sv(*this);
+    typename base_json_creator<TStr>::save_restore_end sv(*this);
     prepare_for_additional_value(in_key);
-    sub_object_json_creator retVal(m_json_fstring_ref, m_level+1);
+    sub_object_json_creator<TStr> retVal(this->m_json_str,
+                                         (this->m_level)+1);
 
     return retVal;
 }
+template sub_object_json_creator<fixed::fstring_ref> sub_object_json_creator<fixed::fstring_ref>::append_object(std::string_view in_key);
+template sub_object_json_creator<std::string&> sub_object_json_creator<std::string&>::append_object(std::string_view in_key);
 
-sub_array_json_creator sub_object_json_creator::append_array(std::string_view in_key)
+template<typename TStr>
+sub_array_json_creator<TStr> sub_object_json_creator<TStr>::append_array(std::string_view in_key)
 {
-    typename sub_array_json_creator::save_restore_end sv(*this);
+    typename base_json_creator<TStr>::save_restore_end sv(*this);
     prepare_for_additional_value(in_key);
-    sub_array_json_creator retVal(m_json_fstring_ref, m_level+1);
+    sub_array_json_creator<TStr> retVal(this->m_json_str,
+                                         (this->m_level)+1);
 
     return retVal;
 }
+template sub_array_json_creator<fixed::fstring_ref> sub_object_json_creator<fixed::fstring_ref>::append_array(std::string_view in_key);
+template sub_array_json_creator<std::string&> sub_object_json_creator<std::string&>::append_array(std::string_view in_key);
 
 // add a value that is already formated as json
-void sub_object_json_creator::append_json_str(const std::string_view in_key, const std::string_view in_value)
+template<typename TStr>
+void sub_object_json_creator<TStr>::append_json_str(const std::string_view in_key, const std::string_view in_value)
 {
-    typename sub_array_json_creator::save_restore_end sv(*this);
+    typename base_json_creator<TStr>::save_restore_end sv(*this);
     prepare_for_additional_value(in_key);
-    m_json_fstring_ref += in_value;
+    this->m_json_str += in_value;
 }
+template void sub_object_json_creator<fixed::fstring_ref>::append_json_str(const std::string_view in_key, const std::string_view);
+template void sub_object_json_creator<std::string&>::append_json_str(const std::string_view in_key, const std::string_view);
 
 // add a value that is already formated as json to the begening of the object
 // Warning: less efficient than append_json_str!
-void sub_object_json_creator::prepend_json_str(const std::string_view in_key, const std::string_view in_value)
+template<typename TStr>
+void sub_object_json_creator<TStr>::prepend_json_str(const std::string_view in_key, const std::string_view in_value)
 {
     size_t num_additional_chars{0};
     num_additional_chars += 1;  // '"'
     num_additional_chars += in_key.size();
     num_additional_chars += internal::_KEY_VAL_SEP.size();
     num_additional_chars += in_value.size();
-    if (0 < m_num_subs) {  // not first, need to add ','
+    if (0 < this->m_num_subs) {  // not first, need to add ','
         num_additional_chars += internal::_COMMA.size();
         num_additional_chars += ___object_whitespace_after_comma.size();
     }
-    m_json_fstring_ref.insert(1, num_additional_chars, '*');
+    this->m_json_str.insert(1, num_additional_chars, '*');
 
     size_t replacement_location{1};
-    m_json_fstring_ref[replacement_location] = '"';
+    this->m_json_str[replacement_location] = '"';
     ++replacement_location;
-    m_json_fstring_ref.replace(replacement_location, in_key);
+    this->m_json_str.replace(replacement_location,
+                             in_key.size(),
+                             in_key);
     replacement_location += in_key.size();
 
-    m_json_fstring_ref.replace(replacement_location, internal::_KEY_VAL_SEP);
+    this->m_json_str.replace(replacement_location,
+                             internal::_KEY_VAL_SEP.size(),
+                             internal::_KEY_VAL_SEP);
     replacement_location += internal::_KEY_VAL_SEP.size();
 
-    m_json_fstring_ref.replace(replacement_location, in_value);
+    this->m_json_str.replace(replacement_location,
+                             in_value.size(),
+                             in_value);
     replacement_location += in_value.size();
 
-    if (0 < m_num_subs) {  // not first, need to add ','
-        m_json_fstring_ref.replace(replacement_location, internal::_COMMA);
+    if (0 < this->m_num_subs) {  // not first, need to add ','
+        this->m_json_str.replace(replacement_location,
+                                 internal::_COMMA.size(),
+                                 internal::_COMMA);
         replacement_location += internal::_COMMA.size();
-        m_json_fstring_ref.replace(replacement_location, ___object_whitespace_after_comma);
+        this->m_json_str.replace(replacement_location,
+                                 ___object_whitespace_after_comma.size(),
+                                 ___object_whitespace_after_comma);
     }
-    ++m_num_subs;
+    ++this->m_num_subs;
 }
+template void sub_object_json_creator<fixed::fstring_ref>::prepend_json_str(const std::string_view in_key, const std::string_view in_value);
+template void sub_object_json_creator<std::string&>::prepend_json_str(const std::string_view in_key, const std::string_view in_value);
 
-void sub_object_json_creator::append_values_from(const sub_object_json_creator& in_to_merge_from)
+template<typename TStr>
+void sub_object_json_creator<TStr>::append_values_from(const sub_object_json_creator& in_to_merge_from)
 {
-    std::string_view values_to_merge(in_to_merge_from.m_json_fstring_ref.data()+1,                                                  in_to_merge_from.m_json_fstring_ref.size()-2);
+    std::string_view values_to_merge(in_to_merge_from.m_json_str.data()+1,
+                                     in_to_merge_from.m_json_str.size()-2);
     if (! values_to_merge.empty())
     {
-        base_json_creator::save_restore_end sv(*this);
-        if (0 < m_num_subs) {  // not first, need to add ','
-            m_json_fstring_ref += internal::_COMMA;
-            m_json_fstring_ref += ___object_whitespace_after_comma;
+        typename base_json_creator<TStr>::save_restore_end sv(*this);
+        if (0 < this->m_num_subs) {  // not first, need to add ','
+            this->m_json_str += internal::_COMMA;
+            this->m_json_str += ___object_whitespace_after_comma;
         }
-        m_json_fstring_ref.insert(m_json_fstring_ref.size(), values_to_merge);
-        ++m_num_subs;
+        this->m_json_str.insert(this->m_json_str.size(), values_to_merge);
+        ++this->m_num_subs;
     }
 }
+template void sub_object_json_creator<fixed::fstring_ref>::append_values_from(const sub_object_json_creator& in_to_merge_from);
+template void sub_object_json_creator<std::string&>::append_values_from(const sub_object_json_creator& in_to_merge_from);
 
-void sub_object_json_creator::prepend_values_from(const sub_object_json_creator& in_to_merge_from)
+template<typename TStr>
+void sub_object_json_creator<TStr>::prepend_values_from(const sub_object_json_creator& in_to_merge_from)
 {
-    std::string_view values_to_merge(in_to_merge_from.m_json_fstring_ref.data()+1,                                                  in_to_merge_from.m_json_fstring_ref.size()-2);
+    std::string_view values_to_merge(in_to_merge_from.m_json_str.data()+1,
+                                     in_to_merge_from.m_json_str.size()-2);
     if (! values_to_merge.empty())
     {
         size_t num_additional_chars{values_to_merge.size()};
-        if (0 < m_num_subs) {  // not first, need to add ','
+        if (0 < this->m_num_subs) {  // not first, need to add ','
             num_additional_chars += internal::_COMMA.size();
             num_additional_chars += ___object_whitespace_after_comma.size();
         }
-        m_json_fstring_ref.insert(1, num_additional_chars, '*');
+        this->m_json_str.insert(1, num_additional_chars, '*');
 
         size_t replacement_location{1};
-        m_json_fstring_ref.replace(replacement_location, values_to_merge);
+        this->m_json_str.replace(replacement_location,
+                                 values_to_merge.size(),
+                                 values_to_merge);
         replacement_location += values_to_merge.size();
-        if (0 < m_num_subs) {
-            m_json_fstring_ref.replace(replacement_location, internal::_COMMA);
+        if (0 < this->m_num_subs) {
+            this->m_json_str.replace(replacement_location,
+                                     internal::_COMMA.size(),
+                                     internal::_COMMA);
             replacement_location += internal::_COMMA.size();
-            m_json_fstring_ref.replace(replacement_location, ___object_whitespace_after_comma);
+            this->m_json_str.replace(replacement_location,
+                                     ___object_whitespace_after_comma.size(),
+                                     ___object_whitespace_after_comma);
         }
-        ++m_num_subs;
+        ++this->m_num_subs;
     }
 }
+template void sub_object_json_creator<fixed::fstring_ref>::prepend_values_from(const sub_object_json_creator& in_to_merge_from);
+template void sub_object_json_creator<std::string&>::prepend_values_from(const sub_object_json_creator& in_to_merge_from);
 
 
-void sub_array_json_creator::prepare_for_additional_value()
+template<typename TStr>
+void sub_array_json_creator<TStr>::prepare_for_additional_value()
 {
-    if (0 < m_num_subs) {  // not first, need to add ','
-        m_json_fstring_ref += internal::_COMMA;
-        m_json_fstring_ref += ___array_whitespace_after_comma;
+    if (0 < this->m_num_subs) {  // not first, need to add ','
+        this->m_json_str += internal::_COMMA;
+        this->m_json_str += ___array_whitespace_after_comma;
     }
-    ++m_num_subs;
+    ++this->m_num_subs;
 }
 
-sub_array_json_creator sub_array_json_creator::append_array()
+template<typename TStr>
+sub_array_json_creator<TStr> sub_array_json_creator<TStr>::append_array()
 {
-    typename sub_array_json_creator::save_restore_end sv(*this);
+    typename base_json_creator<TStr>::save_restore_end sv(*this);
     prepare_for_additional_value();
-    sub_array_json_creator retVal(m_json_fstring_ref, m_level+1);
+    sub_array_json_creator retVal(this->m_json_str,
+                                  base_json_creator<TStr>::m_level+1);
 
     return retVal;
 }
 
-sub_object_json_creator sub_array_json_creator::append_object()
+template<typename TStr>
+sub_object_json_creator<TStr> sub_array_json_creator<TStr>::append_object()
 {
-    typename sub_array_json_creator::save_restore_end sv(*this);
+    typename base_json_creator<TStr>::save_restore_end sv(*this);
     prepare_for_additional_value();
-    sub_object_json_creator retVal(m_json_fstring_ref, m_level+1);
+    sub_object_json_creator<TStr> retVal(this->m_json_str,
+                                         (this->m_level)+1);
 
     return retVal;
 }
+template
+sub_object_json_creator<fixed::fstring_ref> sub_array_json_creator<fixed::fstring_ref>::append_object();
+template
+sub_object_json_creator<std::string&> sub_array_json_creator<std::string&>::append_object();
 
 
 // add a value that is already formated as json to the end of the array
-void sub_array_json_creator::append_json_str(const std::string_view in_value)
+template<typename TStr>
+void sub_array_json_creator<TStr>::append_json_str(const std::string_view in_value)
 {
-    typename sub_array_json_creator::save_restore_end sv(*this);
+    typename sub_array_json_creator<TStr>::save_restore_end sv(*this);
     prepare_for_additional_value();
-    m_json_fstring_ref += in_value;
+    this->m_json_str += in_value;
 }
 
 // add a value that is already formated as json to the beginning of the array
-void sub_array_json_creator::prepend_json_str(const std::string_view in_value)
+template<typename TStr>
+void sub_array_json_creator<TStr>::prepend_json_str(const std::string_view in_value)
 {
     size_t num_additional_chars{in_value.size()};
-    if (0 < m_num_subs) {  // not first, need to add ','
+    if (0 < this->m_num_subs) {  // not first, need to add ','
         num_additional_chars += internal::_COMMA.size();
         num_additional_chars += ___array_whitespace_after_comma.size();
     }
-    m_json_fstring_ref.insert(1, num_additional_chars, '*');
+    this->m_json_str.insert(1, num_additional_chars, '*');
 
     size_t replacement_location{1};
 
-    m_json_fstring_ref.replace(replacement_location, in_value);
+    this->m_json_str.replace(replacement_location,
+                             in_value.size(),
+                             in_value);
     replacement_location += in_value.size();
 
-    if (0 < m_num_subs) {  // not first, need to add ','
-        m_json_fstring_ref.replace(replacement_location, internal::_COMMA);
+    if (0 < this->m_num_subs) {  // not first, need to add ','
+        this->m_json_str.replace(replacement_location,
+                                 internal::_COMMA.size(),
+                                 internal::_COMMA);
         replacement_location += internal::_COMMA.size();
-        m_json_fstring_ref.replace(replacement_location, ___array_whitespace_after_comma);
+        this->m_json_str.replace(replacement_location,
+                                 ___array_whitespace_after_comma.size(),
+                                 ___array_whitespace_after_comma);
     }
-    ++m_num_subs;
+    ++this->m_num_subs;
 }
+template void sub_array_json_creator<fixed::fstring_ref>::prepend_json_str(const std::string_view in_value);
+template void sub_array_json_creator<std::string&>::prepend_json_str(const std::string_view in_value);
 
-void sub_array_json_creator::append_value(const char* in_value)
+template<typename TStr>
+void sub_array_json_creator<TStr>::append_value(const char* in_value)
 {
     typename sub_array_json_creator::save_restore_end sv(*this);
     prepare_for_additional_value();
-    internal::write_value(in_value, m_json_fstring_ref);
+    internal::write_value(in_value, this->m_json_str);
 }
+template void sub_array_json_creator<fixed::fstring_ref>::append_value(const char* in_value);
+template void sub_array_json_creator<std::string&>::append_value(const char* in_value);
 
 
-void sub_array_json_creator::append_values_from(const sub_array_json_creator& in_to_merge_from)
+template<typename TStr>
+void sub_array_json_creator<TStr>::append_values_from(const sub_array_json_creator& in_to_merge_from)
 {
-    std::string_view values_to_merge(in_to_merge_from.m_json_fstring_ref.data()+1,                                                  in_to_merge_from.m_json_fstring_ref.size()-2);
+    std::string_view values_to_merge(in_to_merge_from.m_json_str.data()+1,
+                                     in_to_merge_from.m_json_str.size()-2);
     if (! values_to_merge.empty())
     {
-        base_json_creator::save_restore_end sv(*this);
-        if (0 < m_num_subs) {  // not first, need to add ','
-            m_json_fstring_ref += internal::_COMMA;
-            m_json_fstring_ref += ___array_whitespace_after_comma;
+        typename base_json_creator<TStr>::save_restore_end sv(*this);
+        if (0 < this->m_num_subs) {  // not first, need to add ','
+            this->m_json_str += internal::_COMMA;
+            this->m_json_str += ___array_whitespace_after_comma;
         }
-        m_json_fstring_ref.insert(m_json_fstring_ref.size(), values_to_merge);
-        ++m_num_subs;
+        this->m_json_str.insert(this->m_json_str.size(), values_to_merge);
+        ++this->m_num_subs;
     }
 }
+template
+void sub_array_json_creator<fixed::fstring_ref>::append_values_from(const sub_array_json_creator& in_to_merge_from);
+template
+void sub_array_json_creator<std::string&>::append_values_from(const sub_array_json_creator& in_to_merge_from);
 
-void sub_array_json_creator::prepend_values_from(const sub_array_json_creator& in_to_merge_from)
+template<typename TStr>
+void sub_array_json_creator<TStr>::prepend_values_from(const sub_array_json_creator& in_to_merge_from)
 {
-    std::string_view values_to_merge(in_to_merge_from.m_json_fstring_ref.data()+1,                                                  in_to_merge_from.m_json_fstring_ref.size()-2);
+    std::string_view values_to_merge(in_to_merge_from.m_json_str.data()+1,
+                                     in_to_merge_from.m_json_str.size()-2);
     if (! values_to_merge.empty())
     {
         size_t num_additional_chars{values_to_merge.size()};
-        if (0 < m_num_subs) {  // not first, need to add ','
+        if (0 < this->m_num_subs) {  // not first, need to add ','
             num_additional_chars += internal::_COMMA.size();
             num_additional_chars += ___array_whitespace_after_comma.size();
         }
-        m_json_fstring_ref.insert(1, num_additional_chars, '*');
+        this->m_json_str.insert(1, num_additional_chars, '*');
 
         size_t replacement_location{1};
-        m_json_fstring_ref.replace(replacement_location, values_to_merge);
+        this->m_json_str.replace(replacement_location,
+                                 values_to_merge.size(),
+                                 values_to_merge);
         replacement_location += values_to_merge.size();
-        if (0 < m_num_subs) {
-            m_json_fstring_ref.replace(replacement_location, internal::_COMMA);
+        if (0 < this->m_num_subs) {
+            this->m_json_str.replace(replacement_location,
+                                     internal::_COMMA.size(),
+                                     internal::_COMMA);
             replacement_location += internal::_COMMA.size();
-            m_json_fstring_ref.replace(replacement_location, ___array_whitespace_after_comma);
+            this->m_json_str.replace(replacement_location,
+                                     ___array_whitespace_after_comma.size(),
+                                     ___array_whitespace_after_comma);
         }
-        ++m_num_subs;
+        ++this->m_num_subs;
     }
 }
+template void sub_array_json_creator<fixed::fstring_ref>::prepend_values_from(const sub_array_json_creator& in_to_merge_from);
+template void sub_array_json_creator<std::string&>::prepend_values_from(const sub_array_json_creator& in_to_merge_from);
 
 }
