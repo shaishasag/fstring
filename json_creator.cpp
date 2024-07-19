@@ -52,7 +52,7 @@ void sub_object_json_creator<TStr>::prepare_for_additional_value(const std::stri
     ++this->m_num_subs;
 
     this->m_json_str += '"';
-    this->m_json_str += in_key;
+    internal::copy_and_escape(in_key, this->m_json_str);
     this->m_json_str += internal::_KEY_VAL_SEP;
 }
 

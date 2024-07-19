@@ -571,10 +571,38 @@ public:
                 remove_zeros = true;
             }
             else if constexpr (std::is_integral_v<TToPrintf> && std::is_signed_v<TToPrintf>) {
-                printf_format = "%lli";
+                if constexpr(std::is_same_v<signed char, TToPrintf>) {
+                    printf_format = "%hhi";
+                }
+                else if constexpr(std::is_same_v<short, TToPrintf>) {
+                    printf_format = "%hi";
+                }
+                else if constexpr(std::is_same_v<int, TToPrintf>) {
+                    printf_format = "%i";
+                }
+                else if constexpr(std::is_same_v<long, TToPrintf>) {
+                    printf_format = "%li";
+                }
+                else if constexpr(std::is_same_v<long long, TToPrintf>) {
+                    printf_format = "%lli";
+                }
             }
             else if constexpr (std::is_integral_v<TToPrintf> && std::is_unsigned_v<TToPrintf>) {
-                printf_format = "%llu";
+                if constexpr(std::is_same_v<unsigned char, TToPrintf>) {
+                    printf_format = "%hhu";
+                }
+                else if constexpr(std::is_same_v<unsigned short, TToPrintf>) {
+                    printf_format = "%hu";
+                }
+                else if constexpr(std::is_same_v<unsigned int, TToPrintf>) {
+                    printf_format = "%u";
+                }
+                else if constexpr(std::is_same_v<unsigned long, TToPrintf>) {
+                    printf_format = "%lu";
+                }
+                else if constexpr(std::is_same_v<unsigned long long, TToPrintf>) {
+                    printf_format = "%llu";
+                }
             }
         }
 

@@ -37,9 +37,29 @@ namespace internal
 {
     constexpr fstring7 _TRUE{"true"};
     constexpr fstring7 _FALSE{"false"};
-    constexpr fstring7 _NULL{"false"};
+    constexpr fstring7 _NULL{"null"};
     constexpr fstring7 _COMMA{","};
     constexpr fstring7 _KEY_VAL_SEP{R"|(": )|"};
+
+    template <typename TStr>
+    void copy_and_escape(const std::string_view in_text, TStr& in_json_str)
+    {
+        for (auto ch : in_text)
+        {
+            switch (ch)
+            {
+                case '"': in_json_str += "\\\""; break;
+                case '\\': in_json_str += "\\\\"; break;
+                case '\b': in_json_str += "\\b"; break;
+                case '\f': in_json_str += "\\f"; break;
+                case '\n': in_json_str += "\\n"; break;
+                case '\r': in_json_str += "\\r"; break;
+                case '\t': in_json_str += "\\t"; break;
+                default:
+                    in_json_str += ch;
+            }
+        }
+    }
 
     template <typename TValue, typename TStr>
     inline void write_value(const TValue in_value, TStr& in_json_str)
@@ -54,19 +74,13 @@ namespace internal
             in_json_str += in_value;
             in_json_str += '"';
         }
-        else if constexpr (std::is_same_v<std::byte, TValue>)
-        {
-            in_json_str.printf(in_value);
-        }
-        else if constexpr (std::is_integral_v<TValue>)
+        else if constexpr (std::is_same_v<std::byte, TValue> ||
+                           std::is_integral_v<TValue> ||
+                           std::is_floating_point_v<TValue>)
         {
             fixed::fstring127 fs;
             fs.printf(in_value);
             in_json_str += fs;
-        }
-        else if constexpr (std::is_floating_point_v<TValue>)
-        {
-            in_json_str.printf(in_value);
         }
         else if constexpr (std::is_null_pointer_v<TValue>)
         {
@@ -75,7 +89,7 @@ namespace internal
         else if constexpr (std::is_convertible_v<TValue, std::string_view>)
         {
             in_json_str += '"';
-            in_json_str += std::string_view(in_value);
+            copy_and_escape(std::string_view(in_value), in_json_str);
             in_json_str += '"';
         }
         else
