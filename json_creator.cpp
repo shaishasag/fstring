@@ -5,7 +5,7 @@ namespace fixed
 {
 
 template<typename TStr>
-base_json_creator<TStr>::save_restore_end::save_restore_end(base_json_creator& to_save) noexcept
+base_json_creator<TStr>::save_restore_end::save_restore_end(base_json_creator<TStr>& to_save) noexcept
 : m_creator_to_save(to_save)
 {
     std::string_view end_to_save = m_creator_to_save.save_end();
@@ -15,8 +15,6 @@ base_json_creator<TStr>::save_restore_end::save_restore_end(base_json_creator& t
     to_save.m_json_str.resize(to_save.m_json_str.size()-end_to_save.size());
     m_saved_end_chars = std::string_view(m_save_buf, end_to_save.size());
 }
-template base_json_creator<fixed::fstring_ref>::save_restore_end::save_restore_end(base_json_creator& to_save);
-template base_json_creator<std::string&>::save_restore_end::save_restore_end(base_json_creator& to_save);
 
 template<typename TStr>
 base_json_creator<TStr>::save_restore_end::~save_restore_end()
@@ -24,23 +22,17 @@ base_json_creator<TStr>::save_restore_end::~save_restore_end()
     m_creator_to_save.m_json_str += m_saved_end_chars;
 }
 
-template base_json_creator<fixed::fstring_ref>::save_restore_end::~save_restore_end();
-template base_json_creator<std::string&>::save_restore_end::~save_restore_end();
-
-
 template<typename TStr>
 std::string_view base_json_creator<TStr>::save_end()
 {
     return std::string_view(this->m_json_str.data()+this->m_json_str.size()-m_level-1, m_level+1);
 }
 
-
 template<typename TStr>
 void base_json_creator<TStr>::restore_end(std::string_view in_end)
 {
     this->m_json_str += in_end;
 }
-
 
 template<typename TStr>
 void sub_object_json_creator<TStr>::prepare_for_additional_value(const std::string_view in_key)
@@ -56,7 +48,6 @@ void sub_object_json_creator<TStr>::prepare_for_additional_value(const std::stri
     this->m_json_str += internal::_KEY_VAL_SEP;
 }
 
-
 template<typename TStr>
 sub_object_json_creator<TStr> sub_object_json_creator<TStr>::append_object(std::string_view in_key)
 {
@@ -67,8 +58,6 @@ sub_object_json_creator<TStr> sub_object_json_creator<TStr>::append_object(std::
 
     return retVal;
 }
-template sub_object_json_creator<fixed::fstring_ref> sub_object_json_creator<fixed::fstring_ref>::append_object(std::string_view in_key);
-template sub_object_json_creator<std::string&> sub_object_json_creator<std::string&>::append_object(std::string_view in_key);
 
 template<typename TStr>
 sub_array_json_creator<TStr> sub_object_json_creator<TStr>::append_array(std::string_view in_key)
@@ -80,8 +69,6 @@ sub_array_json_creator<TStr> sub_object_json_creator<TStr>::append_array(std::st
 
     return retVal;
 }
-template sub_array_json_creator<fixed::fstring_ref> sub_object_json_creator<fixed::fstring_ref>::append_array(std::string_view in_key);
-template sub_array_json_creator<std::string&> sub_object_json_creator<std::string&>::append_array(std::string_view in_key);
 
 // add a value that is already formated as json
 template<typename TStr>
@@ -91,8 +78,6 @@ void sub_object_json_creator<TStr>::append_json_str(const std::string_view in_ke
     prepare_for_additional_value(in_key);
     this->m_json_str += in_value;
 }
-template void sub_object_json_creator<fixed::fstring_ref>::append_json_str(const std::string_view in_key, const std::string_view);
-template void sub_object_json_creator<std::string&>::append_json_str(const std::string_view in_key, const std::string_view);
 
 // add a value that is already formated as json to the begening of the object
 // Warning: less efficient than append_json_str!
@@ -139,8 +124,6 @@ void sub_object_json_creator<TStr>::prepend_json_str(const std::string_view in_k
     }
     ++this->m_num_subs;
 }
-template void sub_object_json_creator<fixed::fstring_ref>::prepend_json_str(const std::string_view in_key, const std::string_view in_value);
-template void sub_object_json_creator<std::string&>::prepend_json_str(const std::string_view in_key, const std::string_view in_value);
 
 template<typename TStr>
 void sub_object_json_creator<TStr>::append_values_from(const sub_object_json_creator& in_to_merge_from)
@@ -158,8 +141,6 @@ void sub_object_json_creator<TStr>::append_values_from(const sub_object_json_cre
         ++this->m_num_subs;
     }
 }
-template void sub_object_json_creator<fixed::fstring_ref>::append_values_from(const sub_object_json_creator& in_to_merge_from);
-template void sub_object_json_creator<std::string&>::append_values_from(const sub_object_json_creator& in_to_merge_from);
 
 template<typename TStr>
 void sub_object_json_creator<TStr>::prepend_values_from(const sub_object_json_creator& in_to_merge_from)
@@ -192,9 +173,6 @@ void sub_object_json_creator<TStr>::prepend_values_from(const sub_object_json_cr
         ++this->m_num_subs;
     }
 }
-template void sub_object_json_creator<fixed::fstring_ref>::prepend_values_from(const sub_object_json_creator& in_to_merge_from);
-template void sub_object_json_creator<std::string&>::prepend_values_from(const sub_object_json_creator& in_to_merge_from);
-
 
 template<typename TStr>
 void sub_array_json_creator<TStr>::prepare_for_additional_value()
@@ -227,11 +205,6 @@ sub_object_json_creator<TStr> sub_array_json_creator<TStr>::append_object()
 
     return retVal;
 }
-template
-sub_object_json_creator<fixed::fstring_ref> sub_array_json_creator<fixed::fstring_ref>::append_object();
-template
-sub_object_json_creator<std::string&> sub_array_json_creator<std::string&>::append_object();
-
 
 // add a value that is already formated as json to the end of the array
 template<typename TStr>
@@ -271,8 +244,6 @@ void sub_array_json_creator<TStr>::prepend_json_str(const std::string_view in_va
     }
     ++this->m_num_subs;
 }
-template void sub_array_json_creator<fixed::fstring_ref>::prepend_json_str(const std::string_view in_value);
-template void sub_array_json_creator<std::string&>::prepend_json_str(const std::string_view in_value);
 
 template<typename TStr>
 void sub_array_json_creator<TStr>::append_value(const char* in_value)
@@ -281,9 +252,6 @@ void sub_array_json_creator<TStr>::append_value(const char* in_value)
     prepare_for_additional_value();
     internal::write_value(in_value, this->m_json_str);
 }
-template void sub_array_json_creator<fixed::fstring_ref>::append_value(const char* in_value);
-template void sub_array_json_creator<std::string&>::append_value(const char* in_value);
-
 
 template<typename TStr>
 void sub_array_json_creator<TStr>::append_values_from(const sub_array_json_creator& in_to_merge_from)
@@ -301,10 +269,6 @@ void sub_array_json_creator<TStr>::append_values_from(const sub_array_json_creat
         ++this->m_num_subs;
     }
 }
-template
-void sub_array_json_creator<fixed::fstring_ref>::append_values_from(const sub_array_json_creator& in_to_merge_from);
-template
-void sub_array_json_creator<std::string&>::append_values_from(const sub_array_json_creator& in_to_merge_from);
 
 template<typename TStr>
 void sub_array_json_creator<TStr>::prepend_values_from(const sub_array_json_creator& in_to_merge_from)
@@ -337,7 +301,13 @@ void sub_array_json_creator<TStr>::prepend_values_from(const sub_array_json_crea
         ++this->m_num_subs;
     }
 }
-template void sub_array_json_creator<fixed::fstring_ref>::prepend_values_from(const sub_array_json_creator& in_to_merge_from);
-template void sub_array_json_creator<std::string&>::prepend_values_from(const sub_array_json_creator& in_to_merge_from);
+
+template class DllExport base_json_creator<fixed::fstring_ref>;
+template class DllExport sub_object_json_creator<fixed::fstring_ref>;
+template class DllExport sub_array_json_creator<fixed::fstring_ref>;
+
+template class DllExport base_json_creator<std::string&>;
+template class DllExport sub_object_json_creator<std::string&>;
+template class DllExport sub_array_json_creator<std::string&>;
 
 }

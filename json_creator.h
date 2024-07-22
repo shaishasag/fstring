@@ -78,7 +78,7 @@ namespace internal
                            std::is_integral_v<TValue> ||
                            std::is_floating_point_v<TValue>)
         {
-            fixed::fstring127 fs;
+            ::fixed::fstring127 fs;
             fs.printf(in_value);
             in_json_str += fs;
         }
@@ -138,11 +138,11 @@ protected:
     class DllExport save_restore_end
     {
     public:
-        save_restore_end(base_json_creator& to_save) noexcept;
+        save_restore_end(base_json_creator<TStr>& to_save) noexcept;
         ~save_restore_end();
 
     private:
-        base_json_creator&    m_creator_to_save;
+        base_json_creator<TStr>& m_creator_to_save;
         std::string_view m_saved_end_chars;
 
         char m_save_buf[t_max_levels+1];
@@ -156,13 +156,13 @@ public:
         {
             m_json_str.reserve(new_cap);
         }
-        else if constexpr (std::is_same_v<fixed::fstring_ref, TStr>)
+        else if constexpr (std::is_same_v<::fixed::fstring_ref, TStr>)
         {
             //assert(new_cap <= m_json_str.capacity());
         }
     }
 
-    
+
     [[nodiscard]] size_t size() const { return m_json_str.size(); }
     [[nodiscard]] size_t capacity() const { return m_json_str.capacity(); }
     [[nodiscard]] size_t max_size() const { return m_json_str.max_size(); }
@@ -176,7 +176,9 @@ class sub_array_json_creator;
 template<typename TStr>
 class DllExport sub_object_json_creator : public base_json_creator<TStr>
 {
-    
+    using target_str_t = TStr;
+    using base_creator_t = base_json_creator<TStr>;
+
     template<typename>
     friend class sub_array_json_creator;
 
@@ -209,6 +211,8 @@ public:
     [[nodiscard]] sub_array_json_creator<TStr> append_array(std::string_view in_key);
 
     // add a value that is already formated as json to the end of the object
+    // useful in case you have a string containing a number and you want to
+    // append it as number (i.e. without quotes).
     void append_json_str(const std::string_view in_key, const std::string_view in_value);
 
     // add a value that is already formated as json to the begening of the object
@@ -264,7 +268,7 @@ class DllExport sub_array_json_creator : public base_json_creator<TStr>
 
 protected:
     using base_type = base_json_creator<TStr>;
-    
+
     constexpr static inline std::string_view empty_json_array{"[]"};
 
     void prepare_for_additional_value();
@@ -334,13 +338,15 @@ public:
     }
 };
 
+using sub_object_json_creator_t = sub_object_json_creator<fixed::fstring_ref>;
+using sub_array_json_creator_t = sub_array_json_creator<fixed::fstring_ref>;
 
 template<size_t STRING_CAPACITY=511>
-class DllExport object_json_creator : public sub_object_json_creator<fixed::fstring_ref>
+class DllExport object_json_creator : public sub_object_json_creator_t
 {
 public:
     object_json_creator() noexcept
-    : sub_object_json_creator(m_fstr,
+    : sub_object_json_creator_t(m_fstr,
                               base_json_creator<fixed::fstring_ref>::PreventAmbiguityOnConstructorCalls())
     {}
 
@@ -349,11 +355,11 @@ protected:
 };
 
 template<size_t STRING_CAPACITY=511>
-class DllExport array_json_creator : public sub_array_json_creator<fixed::fstring_ref>
+class DllExport array_json_creator : public sub_array_json_creator_t
 {
 public:
     array_json_creator() noexcept
-    : sub_array_json_creator<fixed::fstring_ref>(fixed::fstring_ref(m_fstr),
+    : sub_array_json_creator_t(fixed::fstring_ref(m_fstr),
                              base_json_creator<fixed::fstring_ref>::PreventAmbiguityOnConstructorCalls())
     {}
 
@@ -373,11 +379,15 @@ inline std::ostream& operator<<(std::ostream& os, const fixed::base_json_creator
 
 namespace dyna
 {
-class DllExport object_json_creator : public fixed::sub_object_json_creator<std::string&>
+
+using sub_object_json_creator_t = fixed::sub_object_json_creator<std::string&>;
+using sub_array_json_creator_t = fixed::sub_array_json_creator<std::string&>;
+
+class DllExport object_json_creator : public sub_object_json_creator_t
 {
 public:
     object_json_creator() noexcept
-    : sub_object_json_creator(m_fstr,
+    : sub_object_json_creator_t(m_fstr,
                               base_json_creator<std::string&>::PreventAmbiguityOnConstructorCalls())
     {}
 
@@ -385,11 +395,11 @@ protected:
     std::string m_fstr{empty_json_object};
 };
 
-class DllExport array_json_creator : public fixed::sub_array_json_creator<std::string&>
+class DllExport array_json_creator : public sub_array_json_creator_t
 {
 public:
     array_json_creator() noexcept
-    : sub_array_json_creator(m_fstr,
+    : sub_array_json_creator_t(m_fstr,
                              base_json_creator<std::string&>::PreventAmbiguityOnConstructorCalls())
     {}
 

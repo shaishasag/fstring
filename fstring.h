@@ -28,6 +28,10 @@
 typedef SSIZE_T ssize_t;
 #endif
 
+#ifndef DllExport
+    #define DllExport
+#endif
+
 namespace fixed
 {
 using size_type = std::size_t;
@@ -38,7 +42,7 @@ template<class CharT>
 class fstring_ref_base;
 
 template<size_type TSize, class CharT>
-class fstring_base
+class DllExport fstring_base
 {
 private:
 
@@ -101,14 +105,19 @@ public:
     }
 
     constexpr void recursive_helper_to_variadic_constructor()  noexcept {}
-
+#ifdef _MSC_VER
+    #pragma warning(push)
+    #pragma warning(disable: 4244)
+#endif
     template<class TFfirst, class... TRest>
     constexpr void recursive_helper_to_variadic_constructor(const TFfirst in_1, const TRest& ...in_rest) noexcept
     {
         append(in_1);
         recursive_helper_to_variadic_constructor(in_rest...);
     }
-
+#ifdef _MSC_VER
+    #pragma warning(pop)
+#endif
     constexpr operator std::string_view() const  noexcept
     {
         return std::string_view(c_str(), size());
@@ -689,7 +698,7 @@ public:
 
 
 template<class CharT>
-class fstring_ref_base
+class DllExport fstring_ref_base
 {
 private:
     fstring_base<0, CharT>& m_referee;
