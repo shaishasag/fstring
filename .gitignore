@@ -1,9 +1,13 @@
+.DS_Store
+.vs
+*.out.json
+*.vcxproj.user
 Debug
-Release
 fmt
 googletest
-*.vcxproj.user
-.vs
-x64
+OptimizationProfiles
 project.xcworkspace
+Release
+x64
+xcshareddata
 xcuserdata
