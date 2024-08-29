@@ -696,6 +696,36 @@ public:
     }
 };
 
+#if __cplusplus >= 202002L
+
+template<size_type TLSize, size_type TRSize, class CharT>
+std::strong_ordering operator<=>(const fstring_base<TLSize, CharT>& lhs, const fstring_base<TRSize, CharT>& rhs)
+{
+    const std::string_view LHSsv(lhs);
+    const std::string_view RHSsv(rhs);
+    int compare_i = LHSsv.compare(RHSsv);  // Xcode does not have std::string_view::operator<=>
+
+    std::strong_ordering retVal{std::strong_ordering::equal};
+    if (0 > compare_i) {
+        retVal = std::strong_ordering::less;
+    }
+    else if (0 < compare_i) {
+        retVal = std::strong_ordering::greater;
+    }
+
+    return retVal;
+}
+template<size_type TLSize, size_type TRSize, class CharT>
+bool operator==(const fstring_base<TLSize, CharT>& lhs, const fstring_base<TRSize, CharT>& rhs)
+{
+    return (lhs <=> rhs) == std::strong_ordering::equal;
+}
+template<size_type TLSize, size_type TRSize, class CharT>
+bool operator!=(const fstring_base<TLSize, CharT>& lhs, const fstring_base<TRSize, CharT>& rhs)
+{
+    return (lhs <=> rhs) != std::strong_ordering::equal;
+}
+#endif
 
 template<class CharT>
 class DllExport fstring_ref_base
@@ -898,8 +928,6 @@ public:
         m_referee.scanf(in_to_scan, scanf_format);
         return *this;
     }
-
-
 };
 
 typedef  fstring_ref_base<char> fstring_ref;

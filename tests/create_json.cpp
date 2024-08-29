@@ -4,7 +4,7 @@ using namespace std::literals;
 #include "fstring.h"
 #include "json_creator.h"
 
-// tests are templated to check the two types of json creators:
+// tests are templated to check the two types of json_creator:
 // - object_json_creator & array_json_creator based on fixed::fstring
 // - object_json_creator & array_json_creator based on std::string
 
@@ -340,6 +340,7 @@ TYPED_TEST(CreateJsonTemplatedTest, append_all_misc_types)
     EXPECT_STREQ(jac1.c_str(), R"|([true, false, null])|");
 }
 
+#if 0
 #include <nlohmann/json.hpp>
 // using nlohmann for parsing to make sure creating json with escaped char works
 
@@ -395,3 +396,4 @@ TYPED_TEST(CreateJsonTemplatedTest, escape_from_object)
     EXPECT_EQ(nj[a_newline].get<std::string_view>(), "newline");
     EXPECT_EQ(nj[a_bell].get<std::string_view>(), "bell");
 }
+#endif

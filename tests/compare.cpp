@@ -102,3 +102,49 @@ TEST(CompareTests, case_insensitive)
         EXPECT_GT(ss.icompare(kc), 0);
     }
 }
+
+TEST(CompareTests, compare_empty)
+{
+    fixed::fstring31 no_init;
+    fixed::fstring31 empty_init("");
+    fixed::fstring31 init_but_cleared("shoshana");
+    init_but_cleared.clear();
+
+    EXPECT_TRUE(no_init.empty());
+    EXPECT_TRUE(empty_init.empty());
+    EXPECT_TRUE(init_but_cleared.empty());
+
+    EXPECT_EQ(no_init.size(), 0);
+    EXPECT_EQ(empty_init.size(), 0);
+    EXPECT_EQ(init_but_cleared.size(), 0);
+
+    EXPECT_EQ(no_init, "");
+    EXPECT_EQ(empty_init, "");
+    EXPECT_EQ(init_but_cleared, "");
+
+    std::string_view sv_no_init;
+    EXPECT_EQ(no_init, sv_no_init);
+    EXPECT_EQ(empty_init, sv_no_init);
+    EXPECT_EQ(init_but_cleared, sv_no_init);
+
+    std::string_view sv_empty_init("");
+    EXPECT_EQ(no_init, sv_empty_init);
+    EXPECT_EQ(empty_init, sv_empty_init);
+    EXPECT_EQ(init_but_cleared, sv_empty_init);
+
+    std::string_view sv_init_but_cleared("ilana");
+    sv_init_but_cleared = "";
+    EXPECT_EQ(no_init, sv_init_but_cleared);
+    EXPECT_EQ(empty_init, sv_init_but_cleared);
+    EXPECT_EQ(init_but_cleared, sv_init_but_cleared);
+
+    EXPECT_EQ(no_init, empty_init);
+    EXPECT_EQ(no_init, init_but_cleared);
+
+    EXPECT_EQ(empty_init, no_init);
+    EXPECT_EQ(empty_init, init_but_cleared);
+
+    EXPECT_EQ(init_but_cleared, no_init);
+    EXPECT_EQ(init_but_cleared, init_but_cleared);
+
+}

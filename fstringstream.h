@@ -66,4 +66,15 @@ inline std::ostream& operator<<(std::ostream& os, const fixed::fstring_ref myStr
     return os;
 }
 
+namespace fixed
+{
+struct fstring_hasher
+{
+    std::size_t operator()(const fixed::fstring_ref in_fixed_str_to_hash) const noexcept
+    {
+        return std::hash<std::string_view>()(std::string_view(in_fixed_str_to_hash));
+    }
+};
+}
+
 #endif // __fstringstream_h__
