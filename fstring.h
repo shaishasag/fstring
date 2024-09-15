@@ -11,16 +11,8 @@
 #endif
 #endif
 
-//
-//#include <stdexcept>
-//#include <cstring>
-//#include <cctype>
-//#include <string>
-//#include <string_view>
-//#include <type_traits>
-//#include <iterator>
 #include <algorithm>
-//#include <execution>
+#include <stdexcept>
 
 // functions marked non-standard have no equivalent in std::string or std::string_view
 
@@ -698,14 +690,16 @@ public:
 
         if (nullptr != scanf_format)
         {
+#ifdef _MSC_VER
             sscanf_s(data(), scanf_format, &in_to_scan);
+#else
+            sscanf(data(), scanf_format, &in_to_scan);
+#endif
         }
         return *this;
     }
 };
 
-#define DELIGATE_TO_REFEREE_CONST(__RETURN_TYPE__, __FUNCI_NAME__) \
-    constexpr __RETURN_TYPE__ __FUNCI_NAME__() const noexcept { return m_referee.__FUNCI_NAME__(); }
 
 template<class CharT>
 class DllExport fstring_ref_base

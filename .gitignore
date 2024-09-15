@@ -11,3 +11,5 @@ Release
 x64
 xcshareddata
 xcuserdata
+*.bak
+
