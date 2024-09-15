@@ -92,8 +92,23 @@
     <ClCompile Include="tests\variadic.cpp">
       <Filter>tests</Filter>
     </ClCompile>
-    <ClCompile Include="googletest\googletest\src\gtest-all.cc">
+    <ClCompile Include="..\googletest\googletest\src\gtest-all.cc">
       <Filter>gtest</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\erase_all.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\hashing.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\replace.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\scanf.cpp">
+      <Filter>tests</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\size_of.cpp">
+      <Filter>tests</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

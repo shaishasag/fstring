@@ -2,7 +2,6 @@
 #include "fstring.h"
 #include "fstringstream.h"
 #include <string_view>
-#include <mach/kern_return.h>
 
 TEST(Stream, stream_numbers)
 {
@@ -100,20 +99,4 @@ TEST(Stream, stream_strs)
         fs_ref << std::string("Potassium");
         EXPECT_STREQ(fs_ref.c_str(), "PotassiumPotassium");
     }
-
-    {
-        kern_return_t kernResult{18};
-        bool b = std::is_convertible_v<decltype(kernResult), std::string_view>;
-        EXPECT_FALSE(b);
-        EXPECT_TRUE(std::is_integral_v<decltype(kernResult)>);
-
-        fstr::fstr127 fs;
-        fs << kernResult;
-        EXPECT_STREQ(fs.c_str(), "18");
-        fstr::fstr_ref fs_ref(fs);
-        kernResult = 19;
-        fs_ref << kernResult;
-        EXPECT_STREQ(fs.c_str(), "1819");
-    }
-
 }

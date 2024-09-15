@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <iostream>
+#include <cassert>
 
 #include "fstring.h"
 #include "fstringstream.h"

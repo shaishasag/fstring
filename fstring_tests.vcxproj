@@ -23,7 +23,7 @@
     <ClInclude Include="fstringstream.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="googletest\googletest\src\gtest-all.cc" />
+    <ClCompile Include="..\googletest\googletest\src\gtest-all.cc" />
     <ClCompile Include="tests\access.cpp" />
     <ClCompile Include="tests\assign.cpp" />
     <ClCompile Include="tests\change.cpp" />
@@ -34,11 +34,16 @@
     <ClCompile Include="tests\conversions.cpp" />
     <ClCompile Include="tests\empty.cpp" />
     <ClCompile Include="tests\erase.cpp" />
+    <ClCompile Include="tests\erase_all.cpp" />
     <ClCompile Include="tests\find.cpp" />
+    <ClCompile Include="tests\hashing.cpp" />
     <ClCompile Include="tests\insert.cpp" />
     <ClCompile Include="tests\memcpy.cpp" />
     <ClCompile Include="tests\printf.cpp" />
     <ClCompile Include="tests\reference.cpp" />
+    <ClCompile Include="tests\replace.cpp" />
+    <ClCompile Include="tests\scanf.cpp" />
+    <ClCompile Include="tests\size_of.cpp" />
     <ClCompile Include="tests\stream.cpp" />
     <ClCompile Include="tests\substr.cpp" />
     <ClCompile Include="tests\tests_main.cpp" />
@@ -146,8 +151,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>googletest\googletest;googletest\googletest\include;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>..\googletest\googletest;..\googletest\googletest\include;.;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -162,8 +168,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>googletest\googletest;googletest\googletest\include;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>..\googletest\googletest;..\googletest\googletest\include;.;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

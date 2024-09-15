@@ -11,16 +11,16 @@
 #endif
 #endif
 
-
-#include <stdexcept>
-#include <cstring>
-#include <cctype>
-#include <string>
-#include <string_view>
-#include <type_traits>
-#include <iterator>
+//
+//#include <stdexcept>
+//#include <cstring>
+//#include <cctype>
+//#include <string>
+//#include <string_view>
+//#include <type_traits>
+//#include <iterator>
 #include <algorithm>
-#include <execution>
+//#include <execution>
 
 // functions marked non-standard have no equivalent in std::string or std::string_view
 
@@ -698,7 +698,7 @@ public:
 
         if (nullptr != scanf_format)
         {
-            sscanf(data(), scanf_format, &in_to_scan);
+            sscanf_s(data(), scanf_format, &in_to_scan);
         }
         return *this;
     }

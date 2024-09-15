@@ -59,8 +59,10 @@ TEST(TypeTraits, some_traits)
         EXPECT_FALSE(std::is_volatile_v<fstr::fstr_ref>);
         EXPECT_FALSE(std::is_trivial_v<fstr::fstr31>);
         EXPECT_FALSE(std::is_trivial_v<fstr::fstr_ref>);
+#ifndef _MSC_VER 
         EXPECT_FALSE(std::is_pod_v<fstr::fstr31>);
         EXPECT_FALSE(std::is_pod_v<fstr::fstr_ref>);
+#endif
         EXPECT_FALSE(std::is_empty_v<fstr::fstr31>);
         EXPECT_FALSE(std::is_empty_v<fstr::fstr_ref>);
         EXPECT_FALSE(std::is_polymorphic_v<fstr::fstr31>);
