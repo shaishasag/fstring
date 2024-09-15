@@ -12,24 +12,24 @@ void constructing()
 {
     // constructing fstring with const char*
     const char* pompidou_c_str = "Centre Pompidou";
-    fixed::fstring31 f1c = pompidou_c_str;  // copy-initialization fstring with const char*
-    fixed::fstring31 f2c(pompidou_c_str);   // direct-initialization fstring with const char*
-    fixed::fstring31 f3c{pompidou_c_str};   // list-initialization fstring with const char*
+    fstr::fstr31 f1c = pompidou_c_str;  // copy-initialization fstring with const char*
+    fstr::fstr31 f2c(pompidou_c_str);   // direct-initialization fstring with const char*
+    fstr::fstr31 f3c{pompidou_c_str};   // list-initialization fstring with const char*
     
     // constructing fstring with std::string_view
     std::string_view pompidou_sv = pompidou_c_str;
-    fixed::fstring31 f1sv = pompidou_sv;    // copy-initialization fstring with std::string_view
-    fixed::fstring31 f2sv(pompidou_sv);     // direct-initialization fstring with std::string_view
-    fixed::fstring31 f3sv{pompidou_sv};     // list-initialization fstring with std::string_view
+    fstr::fstr31 f1sv = pompidou_sv;    // copy-initialization fstring with std::string_view
+    fstr::fstr31 f2sv(pompidou_sv);     // direct-initialization fstring with std::string_view
+    fstr::fstr31 f3sv{pompidou_sv};     // list-initialization fstring with std::string_view
 
     // constructing fstring with std::string
     std::string pompidou_str{pompidou_sv};
-    fixed::fstring31 f1str = pompidou_str;    // copy-initialization fstring with std::string
-    fixed::fstring31 f2str(pompidou_str);     // direct-initialization fstring with std::string
-    fixed::fstring31 f3str{pompidou_str};     // list-initialization fstring with std::string
+    fstr::fstr31 f1str = pompidou_str;    // copy-initialization fstring with std::string
+    fstr::fstr31 f2str(pompidou_str);     // direct-initialization fstring with std::string
+    fstr::fstr31 f3str{pompidou_str};     // list-initialization fstring with std::string
     
     // constructing std::string with fstring
-    fixed::fstring31 pompidou_fixed{pompidou_c_str};
+    fstr::fstr31 pompidou_fixed{pompidou_c_str};
     std::string std_str2(pompidou_fixed);     // direct-initialization std::string with fstring
     std::string std_str3{pompidou_fixed};     // list-initialization std::string with fstring
 
@@ -40,7 +40,7 @@ void constructing()
 
 void assigning()
 {
-    fixed::fstring63 f1;
+    fstr::fstr63 f1;
     
     f1 = "bananarama";                          // assigning const char* to fstring
     f1 = std::string_view("Spandau Ballet");    // assigning std::string_view to fstring
@@ -58,8 +58,8 @@ void assigning()
 
 static void create_array()
 {
-    fixed::    object_json_creator object;
-    fixed::    array_json_creator array;
+    fstr::    object_json_creator object;
+    fstr::    array_json_creator array;
 
     array.append_value("Dancing Queen");
     array.append_value("Gimme", "Gimme", "Gimme");
@@ -74,7 +74,7 @@ static void create_array()
 
 static void create_object()
 {
-    fixed::object_json_creator object;
+    fstr::object_json_creator object;
 
     object.append_value("People Need Love", 1972);
     object.append_value("Nina, Pretty Ballerina", 1973);
@@ -85,7 +85,7 @@ static void create_object()
 
 static void create_object_and_array()
 {
-    fixed::object_json_creator<1023> album;
+    fstr::object_json_creator<1023> album;
     
     album.append_value("Artist", "ABBA");
     album.append_value("Name", "Arrival");
@@ -126,7 +126,7 @@ static void create()
 
 static void all_types()
 {
-    fixed::object_json_creator object;
+    fstr::object_json_creator object;
     
     object.append_value("True", true);
     object.append_value("False", false);

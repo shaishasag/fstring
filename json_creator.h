@@ -7,11 +7,11 @@
 #include <string_view>
 #include <charconv>
 
-#include "fstring.h"
-#include "fstringstream.h"
+#include "fstring/fstring.h"
+#include "fstring/fstringstream.h"
 
 /* Copy to include
-#include "json_creator.h"
+#include "jsonland/json_creator.h"
 */
 
 
@@ -19,7 +19,7 @@
     #define DllExport
 #endif
 
-namespace fixed
+namespace jsonland
 {
 
 
@@ -35,72 +35,71 @@ constexpr std::string_view ___array_whitespace_after_comma{ARRAY_WHITESPACE_AFTE
 
 namespace internal
 {
-    constexpr fstring7 _TRUE{"true"};
-    constexpr fstring7 _FALSE{"false"};
-    constexpr fstring7 _NULL{"null"};
-    constexpr fstring7 _COMMA{","};
-    constexpr fstring7 _KEY_VAL_SEP{R"|(": )|"};
+constexpr fstr::fstr7 _TRUE{"true"};
+constexpr fstr::fstr7 _FALSE{"false"};
+constexpr fstr::fstr7 _NULL{"null"};
+constexpr fstr::fstr7 _COMMA{","};
+constexpr fstr::fstr7 _KEY_VAL_SEP{R"|(": )|"};
 
-    template <typename TStr>
-    void copy_and_escape(const std::string_view in_text, TStr& in_json_str)
+template <typename TStr>
+void copy_and_escape(const std::string_view in_text, TStr& in_json_str)
+{
+    for (auto ch : in_text)
     {
-        for (auto ch : in_text)
+        switch (ch)
         {
-            switch (ch)
-            {
-                case '"': in_json_str += "\\\""; break;
-                case '\\': in_json_str += "\\\\"; break;
-                case '\b': in_json_str += "\\b"; break;
-                case '\f': in_json_str += "\\f"; break;
-                case '\n': in_json_str += "\\n"; break;
-                case '\r': in_json_str += "\\r"; break;
-                case '\t': in_json_str += "\\t"; break;
-                default:
-                    in_json_str += ch;
-            }
+            case '"': in_json_str += "\\\""; break;
+            case '\\': in_json_str += "\\\\"; break;
+            case '\b': in_json_str += "\\b"; break;
+            case '\f': in_json_str += "\\f"; break;
+            case '\n': in_json_str += "\\n"; break;
+            case '\r': in_json_str += "\\r"; break;
+            case '\t': in_json_str += "\\t"; break;
+            default:
+                in_json_str += ch;
         }
     }
+}
 
-    template <typename TValue, typename TStr>
-    inline void write_value(const TValue in_value, TStr& in_json_str)
+template <typename TValue, typename TStr>
+inline void write_value(const TValue in_value, TStr& in_json_str)
+{
+    if constexpr (std::is_same_v<bool, TValue>)
     {
-        if constexpr (std::is_same_v<bool, TValue>)
-        {
-            in_json_str += in_value ? _TRUE : _FALSE;
-        }
-        else if constexpr (std::is_same_v<char, TValue>)
-        {
-            in_json_str += '"';
-            in_json_str += in_value;
-            in_json_str += '"';
-        }
-        else if constexpr (std::is_same_v<std::byte, TValue> ||
-                           std::is_integral_v<TValue> ||
-                           std::is_floating_point_v<TValue>)
-        {
-            ::fixed::fstring127 fs;
-            fs.printf(in_value);
-            in_json_str += fs;
-        }
-        else if constexpr (std::is_null_pointer_v<TValue>)
-        {
-            in_json_str += _NULL;
-        }
-        else if constexpr (std::is_convertible_v<TValue, std::string_view>)
-        {
-            in_json_str += '"';
-            copy_and_escape(std::string_view(in_value), in_json_str);
-            in_json_str += '"';
-        }
-        else
-        {
-            // if you got a compilation error here, it means
-            // append_value was call on type that is string/number/boolean/null
-            // to fix, convert to string before calling append_value
-            in_json_str += '"';
-            in_json_str += in_value;
-            in_json_str += '"';
-        }
+        in_json_str += in_value ? _TRUE : _FALSE;
+    }
+    else if constexpr (std::is_same_v<char, TValue>)
+    {
+        in_json_str += '"';
+        in_json_str += in_value;
+        in_json_str += '"';
+    }
+    else if constexpr (std::is_same_v<std::byte, TValue> ||
+                       std::is_integral_v<TValue> ||
+                       std::is_floating_point_v<TValue>)
+    {
+        fstr::fstr127 fs;
+        fs.printf(in_value);
+        in_json_str += fs;
+    }
+    else if constexpr (std::is_null_pointer_v<TValue>)
+    {
+        in_json_str += _NULL;
+    }
+    else if constexpr (std::is_convertible_v<TValue, std::string_view>)
+    {
+        in_json_str += '"';
+        copy_and_escape(std::string_view(in_value), in_json_str);
+        in_json_str += '"';
+    }
+    else
+    {
+        // if you got a compilation error here, it means
+        // append_value was call on type that is string/number/boolean/null
+        // to fix, convert to string before calling append_value
+        in_json_str += '"';
+        in_json_str += in_value;
+        in_json_str += '"';
     }
 }
 
@@ -156,7 +155,7 @@ public:
         {
             m_json_str.reserve(new_cap);
         }
-        else if constexpr (std::is_same_v<::fixed::fstring_ref, TStr>)
+        else if constexpr (std::is_same_v<fstr::fstr_ref, TStr>)
         {
             //assert(new_cap <= m_json_str.capacity());
         }
@@ -256,6 +255,44 @@ public:
 
     [[nodiscard]] bool empty() const { return this->m_json_str[1] == empty_json_object[1]; }
     void clear() { this->m_json_str = empty_json_object; this->m_num_subs = 0; }
+
+    // reset with string containing json
+    void reset(std::string_view in_value)
+    {
+        if (!in_value.empty())
+        {
+            this->m_json_str = in_value;
+        }
+        else
+        {
+            clear();
+        }
+    }
+
+
+    class DllExport operator_square_brackets_helper
+    {
+        friend class sub_object_json_creator;
+    private:
+        sub_object_json_creator& m_creator;
+        std::string_view m_key;
+    protected:
+        operator_square_brackets_helper(sub_object_json_creator& in_creator,
+                                        std::string_view in_key)
+        : m_creator(in_creator)
+        , m_key(in_key) {}
+    public:
+        template <typename TValue>
+        void operator=(const TValue& in_value)
+        {
+            m_creator.append_value(m_key, in_value);
+        }
+    };
+
+    operator_square_brackets_helper operator[](std::string_view in_key)
+    {
+        return operator_square_brackets_helper(*this, in_key);
+    }
 };
 
 
@@ -330,16 +367,39 @@ public:
     void append_values_from(const sub_array_json_creator& in_to_merge_from);
     void prepend_values_from(const sub_array_json_creator& in_to_merge_from);
 
+    template <typename TValue>
+    void push_back(const TValue& in_value)  // alias to append_value for compatibility with code converted from other json creators
+    {
+        append_value(in_value);
+    }
+
     [[nodiscard]] bool empty() const { return this->m_json_str[1] == empty_json_array[1]; }
     void clear()
     {
         this->m_json_str = empty_json_array;
         this->m_num_subs = 0;
     }
-};
 
-using sub_object_json_creator_t = sub_object_json_creator<fixed::fstring_ref>;
-using sub_array_json_creator_t = sub_array_json_creator<fixed::fstring_ref>;
+    // reset with string containing json
+    void reset(std::string_view in_value)
+    {
+        if (!in_value.empty())
+        {
+            this->m_json_str = in_value;
+        }
+        else
+        {
+            clear();
+        }
+    }
+
+};
+} // namespace internal
+
+namespace fixed // creators based on fstring
+{
+using sub_object_json_creator_t = internal::sub_object_json_creator<fstr::fstr_ref>;
+using sub_array_json_creator_t = internal::sub_array_json_creator<fstr::fstr_ref>;
 
 template<size_t STRING_CAPACITY=511>
 class DllExport object_json_creator : public sub_object_json_creator_t
@@ -347,11 +407,11 @@ class DllExport object_json_creator : public sub_object_json_creator_t
 public:
     object_json_creator() noexcept
     : sub_object_json_creator_t(m_fstr,
-                              base_json_creator<fixed::fstring_ref>::PreventAmbiguityOnConstructorCalls())
+                              base_json_creator<fstr::fstr_ref>::PreventAmbiguityOnConstructorCalls())
     {}
 
 protected:
-    fixed::fstring_base<STRING_CAPACITY, char> m_fstr{empty_json_object};
+    fstr::fstring_base<STRING_CAPACITY, char> m_fstr{empty_json_object};
 };
 
 template<size_t STRING_CAPACITY=511>
@@ -359,18 +419,19 @@ class DllExport array_json_creator : public sub_array_json_creator_t
 {
 public:
     array_json_creator() noexcept
-    : sub_array_json_creator_t(fixed::fstring_ref(m_fstr),
-                             base_json_creator<fixed::fstring_ref>::PreventAmbiguityOnConstructorCalls())
+    : sub_array_json_creator_t(fstr::fstr_ref(m_fstr),
+                             base_json_creator<fstr::fstr_ref>::PreventAmbiguityOnConstructorCalls())
     {}
 
 protected:
-    fixed::fstring_base<STRING_CAPACITY, char> m_fstr{empty_json_array};
+    fstr::fstring_base<STRING_CAPACITY, char> m_fstr{empty_json_array};
 };
 
 } // namespace fixed
 
 template<typename TStr>
-inline std::ostream& operator<<(std::ostream& os, const fixed::base_json_creator<TStr>& in_j_c)
+inline std::ostream& operator<<(std::ostream& os,
+                                const internal::base_json_creator<TStr>& in_j_c)
 {
     const std::string_view as_sv(in_j_c);
     os << as_sv;
@@ -380,8 +441,8 @@ inline std::ostream& operator<<(std::ostream& os, const fixed::base_json_creator
 namespace dyna
 {
 
-using sub_object_json_creator_t = fixed::sub_object_json_creator<std::string&>;
-using sub_array_json_creator_t = fixed::sub_array_json_creator<std::string&>;
+using sub_object_json_creator_t = internal::sub_object_json_creator<std::string&>;
+using sub_array_json_creator_t = internal::sub_array_json_creator<std::string&>;
 
 class DllExport object_json_creator : public sub_object_json_creator_t
 {
@@ -400,7 +461,7 @@ class DllExport array_json_creator : public sub_array_json_creator_t
 public:
     array_json_creator() noexcept
     : sub_array_json_creator_t(m_fstr,
-                             base_json_creator<std::string&>::PreventAmbiguityOnConstructorCalls())
+                               base_json_creator<std::string&>::PreventAmbiguityOnConstructorCalls())
     {}
 
 protected:
@@ -408,5 +469,10 @@ protected:
 };
 
 } // namespace dyna
+
+} // namespace jsonland
+
+namespace jl_fixed = jsonland::fixed;
+namespace jl_dyna = jsonland::dyna;
 
 #endif // __json_creator_h__

@@ -2,10 +2,10 @@
 #include "fstring.h"
 #include "fstringstream.h"
 
-using namespace fixed;
+using namespace fstr;
 
 template<typename ToScanf>
-void scanf_by_type(fixed::fstring_ref in_text, const ToScanf expected, const char* in_format=nullptr)
+void scanf_by_type(fstr::fstr_ref in_text, const ToScanf expected, const char* in_format=nullptr)
 {
     // the varaible to read are the first item in and array
     // the second item if there to check that scanf does not overflow because of wrong format
@@ -20,7 +20,7 @@ void scanf_by_type(fixed::fstring_ref in_text, const ToScanf expected, const cha
 TEST(Scanf, simple)
 {
     {
-        fstring31 fs("0");
+        fstr31 fs("0");
         scanf_by_type<short>(fs, 0);
         scanf_by_type<unsigned short>(fs, 0);
         scanf_by_type<long>(fs, 0);
@@ -29,7 +29,7 @@ TEST(Scanf, simple)
         scanf_by_type<unsigned long long>(fs, 0);
     }
     {
-        fstring31 fs("1717");
+        fstr31 fs("1717");
         scanf_by_type<short>(fs, 1717);
         scanf_by_type<unsigned short>(fs, 1717);
         scanf_by_type<long>(fs, 1717);
@@ -38,25 +38,25 @@ TEST(Scanf, simple)
         scanf_by_type<unsigned long long>(fs, 1717);
     }
     {
-        fstring31 fs("-1717");
+        fstr31 fs("-1717");
         scanf_by_type<short>(fs, -1717);
         scanf_by_type<long>(fs, -1717);
         scanf_by_type<long long>(fs, -1717);
     }
     {
-        fstring31 fs("0.0");
+        fstr31 fs("0.0");
         scanf_by_type<float>(fs, 0.0f);
         scanf_by_type<double>(fs, 0.0);
         scanf_by_type<long double>(fs, 0.0);
     }
     {
-        fstring31 fs("1.0");
+        fstr31 fs("1.0");
         scanf_by_type<float>(fs, 1.0f);
         scanf_by_type<double>(fs, 1.0);
         scanf_by_type<long double>(fs, 1.0);
     }
     {
-        fstring31 fs("-1.0");
+        fstr31 fs("-1.0");
         scanf_by_type<float>(fs, -1.0f);
         scanf_by_type<double>(fs, -1.0);
         scanf_by_type<long double>(fs, -1.0);
@@ -69,7 +69,7 @@ void round_trip_test(const ToTest value)
 {
     {
         const ToTest d{value};
-        fstring31 fs;
+        fstr31 fs;
         fs.printf(d);
         ToTest dd{static_cast<ToTest>(value/2 + 1)};
         fs.scanf(dd);
@@ -78,7 +78,7 @@ void round_trip_test(const ToTest value)
 
     {
         const ToTest d{value};
-        fstring31 fs;
+        fstr31 fs;
         fs << d;
         ToTest dd{static_cast<ToTest>(value/2 + 1)};
         fs >> dd;

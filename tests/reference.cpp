@@ -2,13 +2,13 @@
 #include "fstring.h"
 
 
-static void CompareRefToCharPtr(fixed::fstring_ref in_ref, const char* in_str)
+static void CompareRefToCharPtr(fstr::fstr_ref in_ref, const char* in_str)
 {
     EXPECT_STREQ(in_ref.c_str(), in_str);
 }
 
 template<class TOriginal>
-static void IsRefAndOriginalTheSame(fixed::fstring_ref in_ref, TOriginal& in_origi)
+static void IsRefAndOriginalTheSame(fstr::fstr_ref in_ref, TOriginal& in_origi)
 {
     EXPECT_EQ(in_origi.capacity(), in_ref.capacity());
     EXPECT_EQ(in_origi.c_str(), in_ref.c_str());
@@ -22,8 +22,8 @@ static void IsRefAndOriginalTheSame(fixed::fstring_ref in_ref, TOriginal& in_ori
 TEST(RefTests, RefIsCorrect)
 {
     {
-        fixed::fstring15 ms1 = "umaguma";
-        fixed::fstring_ref ref1(ms1);
+        fstr::fstr15 ms1 = "umaguma";
+        fstr::fstr_ref ref1(ms1);
         IsRefAndOriginalTheSame(ref1, ms1);
 
         ref1 += "Shin";
@@ -33,16 +33,16 @@ TEST(RefTests, RefIsCorrect)
         IsRefAndOriginalTheSame(ref1, ms1);
     }
     {
-        fixed::fstring15 ms1 = "umaguma";
-        fixed::fstring_ref ref1(ms1);
+        fstr::fstr15 ms1 = "umaguma";
+        fstr::fstr_ref ref1(ms1);
         IsRefAndOriginalTheSame(ref1, ms1);
 
         ref1.clear();
         IsRefAndOriginalTheSame(ref1, ms1);
     }
     {
-        fixed::fstring15 ms1 = "umaguma";
-        fixed::fstring_ref ref1(ms1);
+        fstr::fstr15 ms1 = "umaguma";
+        fstr::fstr_ref ref1(ms1);
         IsRefAndOriginalTheSame(ref1, ms1);
 
         ms1.clear();
@@ -50,7 +50,7 @@ TEST(RefTests, RefIsCorrect)
     }
 }
 
-static fixed::fstring_ref Passover(fixed::fstring_ref in_ref)
+static fstr::fstr_ref Passover(fstr::fstr_ref in_ref)
 {
     return in_ref;
 }
@@ -60,8 +60,8 @@ TEST(RefTests, PassToFunc)
 {
     {
         // pass to func as ref explicit
-        fixed::fstring15 ms1 = "umaguma";
-        fixed::fstring_ref ref1 = Passover(fixed::fstring_ref(ms1));
+        fstr::fstr15 ms1 = "umaguma";
+        fstr::fstr_ref ref1 = Passover(fstr::fstr_ref(ms1));
         CompareRefToCharPtr(ref1, "umaguma");
         EXPECT_EQ(ref1.capacity(), 15);
         EXPECT_STREQ(ref1.c_str(), "umaguma");
@@ -72,8 +72,8 @@ TEST(RefTests, PassToFunc)
     }
     {
         // pass to func as ref implicit
-        fixed::fstring15 ms1 = "umaguma";
-        fixed::fstring_ref ref1 = Passover(ms1);
+        fstr::fstr15 ms1 = "umaguma";
+        fstr::fstr_ref ref1 = Passover(ms1);
         CompareRefToCharPtr(ref1, "umaguma");
         EXPECT_EQ(ref1.capacity(), 15);
         EXPECT_STREQ(ref1.c_str(), "umaguma");

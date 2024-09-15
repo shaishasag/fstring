@@ -2,9 +2,9 @@
 #include "fstring.h"
 
 
-/// A helper function to verify that a fixed::fstring and it's reference are the same
+/// A helper function to verify that a fstr::fstring and it's reference are the same
 template<class TOriginal>
-static void IsRefAndOriginalTheSame(fixed::fstring_ref in_ref, TOriginal& in_origi)
+static void IsRefAndOriginalTheSame(fstr::fstr_ref in_ref, TOriginal& in_origi)
 {
     EXPECT_EQ(in_origi.c_str(), in_ref.c_str());    // pointers should be the same
     EXPECT_STREQ(in_origi.c_str(), in_ref.c_str()); // contents should be the same
@@ -17,8 +17,8 @@ static void IsRefAndOriginalTheSame(fixed::fstring_ref in_ref, TOriginal& in_ori
 TEST(ChangesTests, OriginalVsReference)
 {
     {
-        fixed::fstring31 original = "umaguma";
-        fixed::fstring_ref reference(original);
+        fstr::fstr31 original = "umaguma";
+        fstr::fstr_ref reference(original);
         IsRefAndOriginalTheSame(reference, original);
 
         // changing the ref, should also change the original
@@ -37,11 +37,11 @@ TEST(ChangesTests, OriginalVsReference)
     }
 }
 
-/// Verify fixed::fstring::remove_prefix, fixed::fstring::remove_suffix
+/// Verify fstr::fstring::remove_prefix, fstr::fstring::remove_suffix
 TEST(ChangesTests, PresfixDuffix)
 {
     {
-        fixed::fstring31 l("The Psychedelic Furs");
+        fstr::fstr31 l("The Psychedelic Furs");
         l.remove_prefix(0);
         ASSERT_TRUE(l.compare("The Psychedelic Furs") == 0);
         l.remove_suffix(0);

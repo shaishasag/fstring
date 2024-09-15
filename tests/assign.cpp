@@ -1,15 +1,15 @@
 #include "gtest/gtest.h"
 #include "fstring.h"
 
-using namespace fixed;
+using namespace fstr;
 
-/// Verify assignment to fixed::fstring of std::string, std::string_view, fixed::fstring
+/// Verify assignment to fstr::fstring of std::string, std::string_view, fstr::fstring
 TEST(AssignTests, AssignObjects)
 {
     const std::string std_postfix("!?");
     const std::string_view view_postfix("++");
     {
-        fixed::fstring31 fs1("Julian Cope");
+        fstr::fstr31 fs1("Julian Cope");
         EXPECT_STREQ(fs1.c_str(), "Julian Cope");
 
         std::string std_s("The Teardrop Explodes");
@@ -27,9 +27,9 @@ TEST(AssignTests, AssignObjects)
         EXPECT_STREQ(fs1.c_str(), "The Teardrop Explodes");
     }
     {
-        fixed::fstring31 fs1("Julian Cope");
+        fstr::fstr31 fs1("Julian Cope");
         EXPECT_STREQ(fs1.c_str(), "Julian Cope");
-        fixed::fstring63 fixed_63("The Teardrop Explodes");
+        fstr::fstr63 fixed_63("The Teardrop Explodes");
         EXPECT_STREQ(fixed_63.c_str(), "The Teardrop Explodes");
 
         fs1 = fixed_63;
@@ -41,7 +41,7 @@ TEST(AssignTests, AssignObjects)
 
         fs1 = "Julian Cope";
         EXPECT_STREQ(fs1.c_str(), "Julian Cope");
-        fixed::fstring_ref fixed_ref(fixed_63);
+        fstr::fstr_ref fixed_ref(fixed_63);
         fs1 = fixed_ref;
         EXPECT_STREQ(fs1.c_str(), "The Teardrop Explodes");
         fs1 += std_postfix;
@@ -56,19 +56,26 @@ TEST(AssignTests, ConstructAssign)
 {
     {
         // construction by assignment of char*
-        fixed::fstring15 ms1 = "umaguma";
+        fstr::fstr15 ms1 = "umaguma";
         EXPECT_EQ(ms1.capacity(), 15);
         EXPECT_STREQ(ms1.c_str(), "umaguma");
         EXPECT_FALSE(ms1.empty());
         EXPECT_FALSE(ms1.full());
         EXPECT_EQ(ms1.size(), 7);
 
-        fixed::fstring_ref ref1(ms1);
+        fstr::fstr_ref ref1(ms1);
+
+        if (ms1 == ref1) {
+        }
+        else if (ref1 == ms1) {
+            
+        }
+
         EXPECT_EQ(ms1, ref1);
     }
     {
         // simple construction by assignment
-        fixed::fstring15 ms1 = "u";
+        fstr::fstr15 ms1 = "u";
         EXPECT_EQ(ms1.capacity(), 15);
         EXPECT_STREQ(ms1.c_str(), "u");
         EXPECT_FALSE(ms1.empty());
@@ -77,7 +84,7 @@ TEST(AssignTests, ConstructAssign)
     }
     {
         // assign char* to alread constructed
-        fixed::fstring15 ms3("umaguma");
+        fstr::fstr15 ms3("umaguma");
         ms3 = "Shinjuku";
         EXPECT_EQ(ms3.capacity(), 15);
         EXPECT_STREQ(ms3.c_str(), "Shinjuku");
@@ -87,7 +94,7 @@ TEST(AssignTests, ConstructAssign)
     }
     {
         // assign char* to alread constructed
-        fstring15 ms4("umaguma");
+        fstr15 ms4("umaguma");
         ms4 = "S";
         EXPECT_EQ(ms4.capacity(), 15);
         EXPECT_STREQ(ms4.c_str(), "S");
@@ -98,12 +105,12 @@ TEST(AssignTests, ConstructAssign)
     }
 }
 
-/// verify fixed::fstring::operator+=
+/// verify fstr::fstring::operator+=
 TEST(AssignTests, AdditionTypeAssign)
 {
     {
         // += char*
-        fstring15 ms1 = "umag";
+        fstr15 ms1 = "umag";
         ms1 += "uma";
         EXPECT_EQ(ms1.capacity(), 15);
         EXPECT_STREQ(ms1.c_str(), "umaguma");
@@ -114,7 +121,7 @@ TEST(AssignTests, AdditionTypeAssign)
     }
     {
         // += char
-        fstring15 ms1 = "umag";
+        fstr15 ms1 = "umag";
         ms1 += 'u';
         EXPECT_EQ(ms1.capacity(), 15);
         EXPECT_STREQ(ms1.c_str(), "umagu");
@@ -126,7 +133,7 @@ TEST(AssignTests, AdditionTypeAssign)
 
     {
         //  add to empty
-        fstring15 ms1;
+        fstr15 ms1;
         ms1 += "umaguma";
         EXPECT_EQ(ms1.capacity(), 15);
         EXPECT_STREQ(ms1.c_str(), "umaguma");
@@ -137,7 +144,7 @@ TEST(AssignTests, AdditionTypeAssign)
     }
     {
         //  add char* to full fstring
-        fstring15 ms1("quizzifications");
+        fstr15 ms1("quizzifications");
         ms1 += "umaguma";
         EXPECT_EQ(ms1.capacity(), 15);
         EXPECT_STREQ(ms1.c_str(), "quizzifications");
@@ -148,8 +155,8 @@ TEST(AssignTests, AdditionTypeAssign)
     }
     {
         //  add char to full fstring
-        fstring15 ms1("quizzifications");
-        ms1 += 'S'; // adding another char is beyond fstring15 capacity
+        fstr15 ms1("quizzifications");
+        ms1 += 'S'; // adding another char is beyond fstr15 capacity
         EXPECT_EQ(ms1.capacity(), 15);
         EXPECT_STREQ(ms1.c_str(), "quizzifications");
         EXPECT_STRNE(ms1.c_str(), "quizzificationsS");
@@ -159,8 +166,8 @@ TEST(AssignTests, AdditionTypeAssign)
     }
     {
         // simple too much: += char*
-        fstring15 ms1 = "umaguma";
-        ms1 += "BLEACHERS"; // last S is beyond fstring15 capacity
+        fstr15 ms1 = "umaguma";
+        ms1 += "BLEACHERS"; // last S is beyond fstr15 capacity
         EXPECT_EQ(ms1.capacity(), 15);
         EXPECT_STREQ(ms1.c_str(), "umagumaBLEACHER");
         EXPECT_STRNE(ms1.c_str(), "umagumaBLEACHERS");
@@ -170,12 +177,12 @@ TEST(AssignTests, AdditionTypeAssign)
     }
 }
 
-/// Verify assignment of empty char*, and fixed::fstring::clear
+/// Verify assignment of empty char*, and fstr::fstring::clear
 TEST(AssignTests, ClearAndEmptyAssign)
 {
     {
         // assignment empty to empty
-        fstring15 ms1;
+        fstr15 ms1;
         ms1 = "";
         EXPECT_EQ(ms1.capacity(), 15);
         EXPECT_STREQ(ms1.c_str(), "");
@@ -185,7 +192,7 @@ TEST(AssignTests, ClearAndEmptyAssign)
     }
     {
         // assignment empty to full
-        fstring15 ms1 = "umaguma";
+        fstr15 ms1 = "umaguma";
         ms1 = "";
         EXPECT_EQ(ms1.capacity(), 15);
         EXPECT_STREQ(ms1.c_str(), "");
@@ -196,7 +203,7 @@ TEST(AssignTests, ClearAndEmptyAssign)
     }
     {
         // clear
-        fstring15 ms1 = "umaguma";
+        fstr15 ms1 = "umaguma";
         ms1.clear();
         EXPECT_EQ(ms1.capacity(), 15);
         EXPECT_STREQ(ms1.c_str(), "");
@@ -207,12 +214,12 @@ TEST(AssignTests, ClearAndEmptyAssign)
     }
 }
 
-/// verufy std::swap onnfixed::fstring's
+/// verufy std::swap onnfstr::fstring's
 TEST(AssignTests, Swap)
 {
     {   // swap same size fstring
-        fixed::fstring31 a("Herbivore");
-        fixed::fstring31 b("Carnivore");
+        fstr::fstr31 a("Herbivore");
+        fstr::fstr31 b("Carnivore");
         std::swap(a, b);
         EXPECT_STREQ(a.c_str(), "Carnivore");
         EXPECT_STREQ(b.c_str(), "Herbivore");
@@ -221,8 +228,8 @@ TEST(AssignTests, Swap)
         EXPECT_STREQ(a.c_str(), "Herbivore");
     }
     {   // swap different size fstring
-        fixed::fstring31 a("Herbivore");
-        fixed::fstring31 b("Carni");
+        fstr::fstr31 a("Herbivore");
+        fstr::fstr31 b("Carni");
         std::swap(a, b);
         EXPECT_STREQ(a.c_str(), "Carni");
         EXPECT_STREQ(b.c_str(), "Herbivore");
@@ -231,8 +238,8 @@ TEST(AssignTests, Swap)
         EXPECT_STREQ(a.c_str(), "Herbivore");
     }
     {   // swap with empty fstring
-        fixed::fstring31 a("Herbivore");
-        fixed::fstring31 b("Carni");
+        fstr::fstr31 a("Herbivore");
+        fstr::fstr31 b("Carni");
         b.clear();
         std::swap(a, b);
         EXPECT_STREQ(a.c_str(), "");
@@ -243,12 +250,12 @@ TEST(AssignTests, Swap)
     }
 }
 
-/// Verify assign to fixed::fstring_ref effects the target fixed::fstring
+/// Verify assign to fstr::fstr_ref effects the target fstr::fstring
 TEST(AssignTests, AssignToRef)
 {
     {
-        fixed::fstring31 the_referred;
-        fixed::fstring_ref the_ref(the_referred);
+        fstr::fstr31 the_referred;
+        fstr::fstr_ref the_ref(the_referred);
 
         the_ref = 'O';  // assign single char
         EXPECT_STREQ(the_referred.c_str(), "O");
@@ -258,14 +265,14 @@ TEST(AssignTests, AssignToRef)
         EXPECT_STREQ(the_referred.c_str(), "Herbivore");
         EXPECT_STREQ(the_ref.c_str(), "Herbivore");
 
-        fixed::fstring15 f15{"Carnivore"};
+        fstr::fstr15 f15{"Carnivore"};
         the_ref = f15;   // assign fstring
         EXPECT_STREQ(the_referred.c_str(), "Carnivore");
         EXPECT_STREQ(the_ref.c_str(), "Carnivore");
 
-        fixed::fstring63 f63{"Omnivore"};
-        fixed::fstring_ref f63_ref(f63);
-        the_ref = f63_ref;   // assign fstring_ref
+        fstr::fstr63 f63{"Omnivore"};
+        fstr::fstr_ref f63_ref(f63);
+        the_ref = f63_ref;   // assign fstr_ref
         EXPECT_STREQ(the_referred.c_str(), "Omnivore");
         EXPECT_STREQ(the_ref.c_str(), "Omnivore");
 
@@ -281,22 +288,22 @@ TEST(AssignTests, AssignToRef)
     }
 }
 
-fixed::fstring_ref return_me_the_ref(fixed::fstring_ref the_ref)
+fstr::fstr_ref return_me_the_ref(fstr::fstr_ref the_ref)
 {
     return the_ref;
 }
 
-/// Verify assign of reference to fstring_ref to fstring_ref
+/// Verify assign of reference to fstr_ref to fstr_ref
 /// including through function calls, still refers to the original string
 TEST(AssignTests, Ref2Ref2Ref)
 {
-    fixed::fstring31 original_str{"Detritivore"};
-    fixed::fstring_ref ref1{original_str};
+    fstr::fstr31 original_str{"Detritivore"};
+    fstr::fstr_ref ref1{original_str};
     EXPECT_STREQ(ref1.c_str(), "Detritivore");
     
-    fixed::fstring_ref ref2{ref1};
+    fstr::fstr_ref ref2{ref1};
     
-    fixed::fstring_ref ref3 = return_me_the_ref(ref2);
+    fstr::fstr_ref ref3 = return_me_the_ref(ref2);
     original_str += "1";  // change the original string directly
     ref2 += "2"; // change the through ref2
     ref3 += "3"; // change the through ref3
@@ -311,11 +318,11 @@ TEST(AssignTests, Ref2Ref2Ref)
 #if 0
 TEST(AssignTests, RepeatedAssignToRef)
 {
-    fixed::fstring15 f1{"Insectivore"};
-    fixed::fstring15 f2{"Frugivore"};
-    fixed::fstring15 f3{"Granivore"};
+    fstr::fstr15 f1{"Insectivore"};
+    fstr::fstr15 f2{"Frugivore"};
+    fstr::fstr15 f3{"Granivore"};
     
-    fixed::fstring_ref the_ref{f1};
+    fstr::fstr_ref the_ref{f1};
     EXPECT_STREQ(the_ref.c_str(), "Insectivore");
     EXPECT_STREQ(f1.c_str(), "Insectivore");
     EXPECT_STREQ(f2.c_str(), "Frugivore");

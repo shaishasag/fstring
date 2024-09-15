@@ -1,11 +1,12 @@
 #include "gtest/gtest.h"
 #include <string_view>
 using namespace std::literals;
-#include "fstring.h"
+#include "fstring/fstring.h"
+#include "fstring/fstringstream.h"
 #include "json_creator.h"
 
 // tests are templated to check the two types of json_creator:
-// - object_json_creator & array_json_creator based on fixed::fstring
+// - object_json_creator & array_json_creator based on fstr::fstring
 // - object_json_creator & array_json_creator based on std::string
 
 template <typename T>
@@ -15,7 +16,7 @@ class CreateJsonTemplatedTest : public ::testing::Test {
 // Register the pairs of types to test
 // std::pair::first => object_json_creator<...>
 // std::pair::second => array_json_creator<...>
-typedef ::testing::Types<std::pair<fixed::object_json_creator<511>, fixed::array_json_creator<511>>,                        std::pair<dyna::object_json_creator, dyna::array_json_creator>> ObjArrPair;
+typedef ::testing::Types<std::pair<jl_fixed::object_json_creator<511>, jl_fixed::array_json_creator<511>>,                        std::pair<jl_dyna::object_json_creator, jl_dyna::array_json_creator>> ObjArrPair;
 
 TYPED_TEST_SUITE(CreateJsonTemplatedTest, ObjArrPair);
 
@@ -45,13 +46,13 @@ TYPED_TEST(CreateJsonTemplatedTest, merge_from_another)
     
     obj_creator_t joc3;
     joc3.append_value("Ani", "Purim");
-    joc3.append_values_from(joc2); // merge to fixed::object_json_creator that has some values
+    joc3.append_values_from(joc2); // merge to fstr::object_json_creator that has some values
     EXPECT_STREQ(joc1.c_str(), R"|({"mitsi": "pitsi"})|");
     EXPECT_STREQ(joc2.c_str(), R"|({"mitsi": "pitsi"})|");
     EXPECT_STREQ(joc3.c_str(), R"|({"Ani": "Purim", "mitsi": "pitsi"})|");
     
     obj_creator_t joc_empty;
-    joc3.append_values_from(joc_empty); // merge from an empty fixed::object_json_creator
+    joc3.append_values_from(joc_empty); // merge from an empty fstr::object_json_creator
     EXPECT_STREQ(joc1.c_str(), R"|({"mitsi": "pitsi"})|");
     EXPECT_STREQ(joc2.c_str(), R"|({"mitsi": "pitsi"})|");
     EXPECT_STREQ(joc3.c_str(), R"|({"Ani": "Purim", "mitsi": "pitsi"})|");
@@ -98,7 +99,7 @@ TYPED_TEST(CreateJsonTemplatedTest, append_json_str)
     EXPECT_STREQ(joc1.c_str(), R"|({"first": {"mama": "mia"}, "second": {"dancing": "queen"}})|");
     
     joc1.clear();
-    fixed::array_json_creator<31> jac_small;
+    arr_creator_t jac_small;
     jac_small.append_value("mama", "mia");
     // append_json_str (which is an array) on empty object
     joc1.append_json_str("first", jac_small.c_str());
@@ -132,7 +133,7 @@ TYPED_TEST(CreateJsonTemplatedTest, object_prepend_json_str)
     EXPECT_STREQ(joc1.c_str(), R"|({"second": {"dancing": "queen"}, "first": {"mama": "mia"}})|");
     
     joc1.clear();
-    fixed::array_json_creator<31> jac_small;
+    arr_creator_t jac_small;
     jac_small.append_value("mama", "mia");
     // prepend_json_str (which is an array) on empty object
     joc1.prepend_json_str("first", jac_small.c_str());
@@ -272,14 +273,14 @@ TYPED_TEST(CreateJsonTemplatedTest, append_value_variadric)
                       "18",
                       std::string("19"),
                       std::string_view("20"),
-                      fixed::fstring31("21"));
+                      fstr::fstr31("21"));
     EXPECT_STREQ(jac1.c_str(), R"|([17, "18", "19", "20", "21"])|");
     
     obj_creator_t joc1;
     joc1.append_value("17", 17,
-                      fixed::fstring31("19"), std::string("19"),
+                      fstr::fstr31("19"), std::string("19"),
                       std::string("20"), std::string_view("20"),
-                      std::string_view("21"), fixed::fstring31("21"));
+                      std::string_view("21"), fstr::fstr31("21"));
     EXPECT_STREQ(joc1.c_str(), R"|({"17": 17, "19": "19", "20": "20", "21": "21"})|");
 }
 
@@ -324,7 +325,7 @@ TYPED_TEST(CreateJsonTemplatedTest, append_all_string_types)
     jac1.append_value("paprika A");
     jac1.append_value(std::string_view("paprika B"));
     jac1.append_value(std::string("paprika C"));
-    jac1.append_value(fixed::fstring15("paprika D"));
+    jac1.append_value(fstr::fstr15("paprika D"));
     EXPECT_STREQ(jac1.c_str(), R"|(["paprika A", "paprika B", "paprika C", "paprika D"])|");
 }
 

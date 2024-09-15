@@ -1,16 +1,16 @@
 #include "gtest/gtest.h"
 #include "fstring.h"
 
-using namespace fixed;
+using namespace fstr;
 
-/// Verify fixed::fstring::operator[], fixed::fstring::at, fixed::fstring::front, fixed::fstring::back
+/// Verify fstr::fstring::operator[], fstr::fstring::at, fstr::fstring::front, fstr::fstring::back
 /// behave as expected and is similiar to same operators in std::string and std::string_view
 TEST(AccessTests, operator_square_brackets_at)
 {
     {
         std::string std_str("my bologna");
         std::string_view std_view(std_str);
-        fixed::fstring15 ms1(std_str);
+        fstr::fstr15 ms1(std_str);
         
         for (size_t i = 0; i < std_str.size(); ++i)
         {
@@ -31,12 +31,12 @@ TEST(AccessTests, operator_square_brackets_at)
     }
 }
 
-/// Verify fixed::fstring::at throws when accessing positon that do not exist,
+/// Verify fstr::fstring::at throws when accessing positon that do not exist,
 /// and does not throw otherwise
 TEST(AccessTests, operator_at_exception)
 {
     {   // at(pos) on empty string should throw for any pos
-        fixed::fstring15 ms_empty;
+        fstr::fstr15 ms_empty;
         for (size_t i = 0; i < 17; ++i)
         {
             EXPECT_THROW(ms_empty.at(i), std::out_of_range);
@@ -44,7 +44,7 @@ TEST(AccessTests, operator_at_exception)
     }
     
     {   // at(pos) on string should throw if pos >= size()
-        fixed::fstring15 ms1("my bologna");
+        fstr::fstr15 ms1("my bologna");
         for (size_t i = 0; i < ms1.size(); ++i)
         {
             EXPECT_NO_THROW(ms1.at(i));
@@ -64,14 +64,14 @@ TEST(AccessTests, operator_at_exception)
     }
 }
 
-/// Verify fixed::fstring::begin, fixed::fstring::end, and range based loops
+/// Verify fstr::fstring::begin, fstr::fstring::end, and range based loops
 /// behave as expected and is similiar to same operators in std::string and std::string_view
 TEST(AccessTests, iterators)
 {
     {
         std::string std_str("my bologna");
         std::string_view std_view(std_str);
-        fixed::fstring15 ms1(std_str);
+        fstr::fstr15 ms1(std_str);
         
         EXPECT_NE(ms1.begin(), ms1.end());
         EXPECT_EQ(std::distance(ms1.begin(), ms1.end()), std::distance(std_str.begin(), std_str.end()));
@@ -93,7 +93,7 @@ TEST(AccessTests, iterators)
     }
     
     {   // for empty string ms1.begin() == ms1.end()
-        fixed::fstring15 ms1("");
+        fstr::fstr15 ms1("");
         EXPECT_EQ(ms1.begin(), ms1.end());
         EXPECT_EQ(std::distance(ms1.begin(), ms1.end()), (ptrdiff_t)ms1.size());
 
@@ -113,12 +113,12 @@ TEST(AccessTests, iterators)
     }
 }
 
-/// Verify fixed::fstring::cbegin, fixed::fstring::cend
+/// Verify fstr::fstring::cbegin, fstr::fstring::cend
 TEST(AccessTests, const_iterators)
 {
     {
         std::string std_str("my bologna");
-        const fixed::fstring15 ms1(std_str);
+        const fstr::fstr15 ms1(std_str);
         EXPECT_NE(ms1.cbegin(), ms1.cend());
         EXPECT_EQ(std::distance(ms1.cbegin(), ms1.cend()), (ptrdiff_t)ms1.size());
 
@@ -129,7 +129,7 @@ TEST(AccessTests, const_iterators)
     }
     
     {   // for empty string ms1.begin() == ms1.end()
-        fixed::fstring15 ms1("");
+        fstr::fstr15 ms1("");
         EXPECT_EQ(ms1.cbegin(), ms1.cend());
         EXPECT_EQ(std::distance(ms1.cbegin(), ms1.cend()), (ptrdiff_t)ms1.size());
 

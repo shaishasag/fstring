@@ -2,7 +2,7 @@
 Fixed capacity C++ string class.
 
 ## About
-**fixed::fstring** is C++17 fixed capacity string class.
+**fstr::fstring** is C++17 fixed capacity string class.
 
 For the most part **fstring** follows the std::string and std::string_view interface.
 
@@ -11,7 +11,7 @@ For the most part **fstring** follows the std::string and std::string_view inter
 
     int main(int argc, char** argv)
     {
-        fixed::fstring31 fstr("Hello fstring");
+        fstr::fstr31 fstr("Hello fstring");
         std::cout << fstr << std::endl;
 
         return 0;
@@ -40,15 +40,15 @@ Associated class **fstring_ref** allows passing/returning **fstring** of any siz
     #include <iostream>
     #include "fstring.h"
 
-    fixed::fstring_ref func(fixed::fstring_ref f_string)
+    fstr::fstring_ref func(fstr::fstring_ref f_string)
     {
         // do something with f_string
         return f_string;
     }
 
-    fixed::fstring15 f15;
-    fixed::fstring31 f31;
-    fixed::fstring63 f63;
+    fstr::fstr15 f15;
+    fstr::fstr31 f31;
+    fstr::fstr63 f63;
 
     // fstring of any size can be passed to func
     std::cout << func(f15) << std::endl;

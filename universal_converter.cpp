@@ -20,7 +20,7 @@ int main()
     ucv[7] = 'X';
     ucv[8] =  std::string_view("tsimuki");
     ucv[9] =  std::string("metuki");
-    ucv[10] = fixed::fstring31("mamluki");
+    ucv[10] = fstr::fstr31("mamluki");
 
     universal_converter uc1; uc1 = "pam";
     

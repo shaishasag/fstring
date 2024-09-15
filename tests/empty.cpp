@@ -6,10 +6,10 @@
 TEST(EmptyTests, Empty)
 {
     {
-        fixed::fstring31 no_init;
-        fixed::fstring31 empty_init{""};
-        fixed::fstring31 cleared_init{"dodo"}; cleared_init.clear();
-        fixed::fstring31 assigned_init = no_init;
+        fstr::fstr31 no_init;
+        fstr::fstr31 empty_init{""};
+        fstr::fstr31 cleared_init{"dodo"}; cleared_init.clear();
+        fstr::fstr31 assigned_init = no_init;
 
         EXPECT_TRUE(no_init.empty());
         EXPECT_TRUE(empty_init.empty());

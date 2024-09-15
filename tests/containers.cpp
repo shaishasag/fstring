@@ -4,32 +4,33 @@
 #include <map>
 #include <unordered_map>
 #include <functional>
-#include "fstring.h"
+#include "fstring/fstring.h"
+#include "fstring/fstringstream.h"
 
-using namespace fixed;
+using namespace fstr;
 
 
 struct fstring_ref_hasher
 {
-    std::size_t operator()(fixed::fstring_ref in_fixed_ref_to_hash) const noexcept
+    std::size_t operator()(fstr::fstr_ref in_fixed_ref_to_hash) const noexcept
     {
         std::string_view sv{in_fixed_ref_to_hash};
         return std::hash<std::string_view>()(sv);
     }
 };
 
-/// fixed::fstring as key and value in std::unordered_map
+/// fstr::fstring as key and value in std::unordered_map
 TEST(Containers, UnorderedMap)
 {
-    std::unordered_map<fixed::fstring31, fixed::fstring31, fstring_ref_hasher> uom;
-    fixed::fstring31 s31("1st");
+    std::unordered_map<fstr::fstr31, fstr::fstr31, fstr::fstr_hasher> uom;
+    fstr::fstr31 s31("1st");
     uom[s31] = s31;
     EXPECT_EQ(uom.count("1st"), 1);
     EXPECT_EQ(uom.count(s31), 1);
     EXPECT_STREQ(uom["1st"].c_str(), "1st");
     EXPECT_STREQ(uom[s31].c_str(), "1st");
 
-    fixed::fstring31 s32("2nd");
+    fstr::fstr31 s32("2nd");
     uom[s32] = s32;
     EXPECT_EQ(uom.count("1st"), 1);
     EXPECT_EQ(uom.count(s31), 1);
@@ -42,18 +43,18 @@ TEST(Containers, UnorderedMap)
     EXPECT_STREQ(uom[s32].c_str(), "2nd");
 }
 
-/// fixed::fstring as key and value in std::map
+/// fstr::fstring as key and value in std::map
 TEST(Containers, Map)
 {
-    std::map<fixed::fstring31, fixed::fstring31> m;
-    fixed::fstring31 s31("1st");
+    std::map<fstr::fstr31, fstr::fstr31> m;
+    fstr::fstr31 s31("1st");
     m[s31] = s31;
     EXPECT_EQ(m.count("1st"), 1);
     EXPECT_EQ(m.count(s31), 1);
     EXPECT_STREQ(m["1st"].c_str(), "1st");
     EXPECT_STREQ(m[s31].c_str(), "1st");
 
-    fixed::fstring31 s32("2nd");
+    fstr::fstr31 s32("2nd");
     m[s32] = s32;
     EXPECT_EQ(m.count("1st"), 1);
     EXPECT_EQ(m.count(s31), 1);
@@ -66,11 +67,11 @@ TEST(Containers, Map)
     EXPECT_STREQ(m[s32].c_str(), "2nd");
 }
 
-/// fixed::fstring as value in std::set
+/// fstr::fstring as value in std::set
 TEST(Containers, Set)
 {
-    std::set<fixed::fstring31> s;
-    fixed::fstring31 s31("1st");
+    std::set<fstr::fstr31> s;
+    fstr::fstr31 s31("1st");
     s.insert(s31);
     EXPECT_EQ(s.count("1st"), 1);
     s31 = "2nd";
@@ -84,11 +85,11 @@ TEST(Containers, Set)
     EXPECT_EQ(s.count("3rd"), 1);
 }
 
-/// fixed::fstring as value in std::vector
+/// fstr::fstring as value in std::vector
 TEST(Containers, Vector)
 {
-    std::vector<fixed::fstring31> v;
-    fixed::fstring31 s31("1st");
+    std::vector<fstr::fstr31> v;
+    fstr::fstr31 s31("1st");
     v.push_back(s31);
     EXPECT_STREQ(v[0].c_str(), "1st");
     s31 = "2nd";

@@ -1,7 +1,9 @@
 #include "json_creator.h"
 
 
-namespace fixed
+namespace jsonland
+{
+namespace internal
 {
 
 template<typename TStr>
@@ -65,7 +67,7 @@ sub_array_json_creator<TStr> sub_object_json_creator<TStr>::append_array(std::st
     typename base_json_creator<TStr>::save_restore_end sv(*this);
     prepare_for_additional_value(in_key);
     sub_array_json_creator<TStr> retVal(this->m_json_str,
-                                         (this->m_level)+1);
+                                        (this->m_level)+1);
 
     return retVal;
 }
@@ -301,13 +303,15 @@ void sub_array_json_creator<TStr>::prepend_values_from(const sub_array_json_crea
         ++this->m_num_subs;
     }
 }
-
-template class DllExport base_json_creator<fixed::fstring_ref>;
-template class DllExport sub_object_json_creator<fixed::fstring_ref>;
-template class DllExport sub_array_json_creator<fixed::fstring_ref>;
-
-template class DllExport base_json_creator<std::string&>;
-template class DllExport sub_object_json_creator<std::string&>;
-template class DllExport sub_array_json_creator<std::string&>;
+} //namespace internal
 
 }
+
+
+template class DllExport jsonland::internal::base_json_creator<fstr::fstr_ref>;
+template class DllExport jsonland::internal::sub_object_json_creator<fstr::fstr_ref>;
+template class DllExport jsonland::internal::sub_array_json_creator<fstr::fstr_ref>;
+
+template class DllExport jsonland::internal::base_json_creator<std::string&>;
+template class DllExport jsonland::internal::sub_object_json_creator<std::string&>;
+template class DllExport jsonland::internal::sub_array_json_creator<std::string&>;

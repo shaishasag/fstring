@@ -1,6 +1,10 @@
 #ifndef __fstring_h__
 #define __fstring_h__
 
+/* Copy to include
+#include "fstring/fstring.h"
+*/
+
 #ifdef _WINDOWS_
 #ifndef NOMINMAX
 #error NOMINMAX is not defined for windows compilation, this will cause collision with std::min, std::max
@@ -16,7 +20,7 @@
 #include <type_traits>
 #include <iterator>
 #include <algorithm>
-
+#include <execution>
 
 // functions marked non-standard have no equivalent in std::string or std::string_view
 
@@ -32,7 +36,7 @@ typedef SSIZE_T ssize_t;
     #define DllExport
 #endif
 
-namespace fixed
+namespace fstr
 {
 using size_type = std::size_t;
 using ssize_type = size_t;
@@ -66,6 +70,8 @@ private:
     }
     constexpr void __append__(const CharT* in_str)  noexcept
     {   // append null teminated char*
+        // not using __append__(const CharT*, const size_type) to avoid traversing the string twice
+        // once to find the size and once to copy
         if (nullptr == in_str) {
             return;
         }
@@ -85,7 +91,7 @@ private:
             return;
         }
 
-        size_type num_chars_to_copy = std::min(in_size, vacancy());
+        const size_type num_chars_to_copy = std::min(in_size, vacancy());
         CharT* copy_to = m_str + m_size;
         memcpy(copy_to, in_str, num_chars_to_copy);
         set_new_size(m_size + num_chars_to_copy);
@@ -304,10 +310,12 @@ public:
     {
         __append__(in_char);
     }
-    constexpr void append(size_type count, const CharT in_char) noexcept
+
+    // Appends count copies of character ch
+    constexpr void append(size_type count, const CharT ch) noexcept
     {
-        size_type actual_count = std::min(vacancy(),count);
-        memset(m_str+size(), in_char, actual_count);
+        const size_type actual_count = std::min(vacancy(), count);
+        memset(m_str+size(), ch, actual_count);
         set_new_size(size()+actual_count);
      }
     constexpr void append(const CharT* in_str)  noexcept
@@ -339,18 +347,24 @@ public:
         return *this;
     }
 
-    bool operator==(const std::string_view sv) const  noexcept
+#if __cplusplus < 202002L
+    template <class _Tp, class = std::enable_if<std::is_convertible_v<_Tp, std::string_view> > >
+    bool operator==(const _Tp& sv_convertible) const  noexcept
     {
-        return 0 == sv.compare(std::string_view(*this));
+        return 0 == std::string_view(sv_convertible).compare(std::string_view(*this));
     }
-    bool operator!=(const std::string_view sv) const  noexcept
+
+    template <class _Tp, class = std::enable_if<std::is_convertible_v<_Tp, std::string_view> > >
+    bool operator!=(const _Tp& sv_convertible) const  noexcept
     {
-        return 0 != sv.compare(std::string_view(*this));
+        return 0 != std::string_view(sv_convertible).compare(std::string_view(*this));
     }
+
     bool operator<(const std::string_view sv) const  noexcept
     {
         return std::string_view(*this) < sv;
     }
+#endif
 
     // compare: use string_view.compare when available in c++20
     // until then, only compare(const std::string_view) is provided
@@ -535,8 +549,8 @@ public:
     // non-standard
     inline void reposition_end(size_type _new_size=npos)
     // Resize the string with current contents intact
-    // usefull when the string was changed from the outside and
-    // if _new_size <= capacity, size will be ste to new_size
+    // usefull when the string was changed from the outside.
+    // if _new_size <= capacity, size will be set to new_size
     // if _new_size > capacity (i.e. _new_size==npos), attempt will be made
     //  to find terminating '\0' and set size accordingly.
     // if '\0' character was not found it will be placed in the beginning
@@ -561,12 +575,6 @@ public:
             }
             set_new_size(i);
         }
-    }
-
-    fstring_base& operator<<(std::string_view sv) noexcept
-    {
-        __append__(sv.data(), sv.size());
-        return *this;
     }
 
     template<typename TToPrintf>
@@ -696,36 +704,8 @@ public:
     }
 };
 
-#if __cplusplus >= 202002L
-
-template<size_type TLSize, size_type TRSize, class CharT>
-std::strong_ordering operator<=>(const fstring_base<TLSize, CharT>& lhs, const fstring_base<TRSize, CharT>& rhs)
-{
-    const std::string_view LHSsv(lhs);
-    const std::string_view RHSsv(rhs);
-    int compare_i = LHSsv.compare(RHSsv);  // Xcode does not have std::string_view::operator<=>
-
-    std::strong_ordering retVal{std::strong_ordering::equal};
-    if (0 > compare_i) {
-        retVal = std::strong_ordering::less;
-    }
-    else if (0 < compare_i) {
-        retVal = std::strong_ordering::greater;
-    }
-
-    return retVal;
-}
-template<size_type TLSize, size_type TRSize, class CharT>
-bool operator==(const fstring_base<TLSize, CharT>& lhs, const fstring_base<TRSize, CharT>& rhs)
-{
-    return (lhs <=> rhs) == std::strong_ordering::equal;
-}
-template<size_type TLSize, size_type TRSize, class CharT>
-bool operator!=(const fstring_base<TLSize, CharT>& lhs, const fstring_base<TRSize, CharT>& rhs)
-{
-    return (lhs <=> rhs) != std::strong_ordering::equal;
-}
-#endif
+#define DELIGATE_TO_REFEREE_CONST(__RETURN_TYPE__, __FUNCI_NAME__) \
+    constexpr __RETURN_TYPE__ __FUNCI_NAME__() const noexcept { return m_referee.__FUNCI_NAME__(); }
 
 template<class CharT>
 class DllExport fstring_ref_base
@@ -777,6 +757,7 @@ public:
     constexpr CharT& back() noexcept         { return back(); }
     constexpr CharT  back() const noexcept   { return back(); }
 
+
     constexpr CharT* begin() noexcept                { return m_referee.begin(); }
     constexpr const CharT* begin() const noexcept    { return m_referee.begin(); }
     constexpr const CharT* cbegin() const noexcept   { return m_referee.xbegin(); }
@@ -790,7 +771,7 @@ public:
     constexpr const CharT* rend() const noexcept      { return m_referee.rend(); }
     constexpr const CharT* rcend() const noexcept     { return m_referee.rcend(); }
     constexpr CharT* data() noexcept { return m_referee.data(); }
-    constexpr const CharT* data() const noexcept { return m_referee.data(); }
+    constexpr const CharT* data() const noexcept { return m_referee.data(); }    
     constexpr const CharT* c_str() const noexcept { return m_referee.c_str(); }
     [[nodiscard]] constexpr bool empty() const noexcept {return m_referee.empty();}
     [[nodiscard]] constexpr size_type size() const noexcept {return m_referee.size();}
@@ -861,9 +842,16 @@ public:
         return *this;
     }
 
-    bool operator==(const std::string_view sv) const noexcept {return m_referee == sv;}
-    bool operator!=(const std::string_view sv) const noexcept {return m_referee != sv;}
-    bool operator<(const std::string_view sv) const noexcept {return m_referee < sv;}
+#if __cplusplus < 202002L
+    bool operator==(const char* cp) const noexcept
+        {return 0 == std::string_view(cp).compare(std::string_view(m_referee));}
+    bool operator==(const std::string_view sv) const noexcept
+        {return 0 == sv.compare(std::string_view(m_referee));}
+    bool operator!=(const std::string_view sv) const noexcept
+        {return m_referee != sv;}
+    bool operator<(const std::string_view sv) const noexcept
+        {return m_referee < sv;}
+#endif
 
     constexpr int compare(const std::string_view sv) const noexcept {return m_referee.compare(sv);}
     constexpr int icompare(const std::string_view sv) const noexcept {return m_referee.icompare(sv);}
@@ -909,13 +897,6 @@ public:
     constexpr void toupper() noexcept { return m_referee.toupper(); }
     inline void reposition_end() noexcept { return m_referee.reposition_end(); }
 
-    fstring_ref_base& operator<<(std::string_view sv) noexcept
-    {
-        m_referee << sv;
-        return *this;
-    }
-
-
     template<typename TToPrintf>
     constexpr fstring_ref_base& printf(const TToPrintf in_to_print, const char* printf_format=nullptr) noexcept
     {
@@ -930,20 +911,81 @@ public:
     }
 };
 
-typedef  fstring_ref_base<char> fstring_ref;
-typedef  fstring_base<4,  char> fstring4;
-typedef  fstring_base<7,  char> fstring7;
-typedef  fstring_base<15, char> fstring15;
-typedef  fstring_base<31, char> fstring31;
-typedef  fstring_base<63, char> fstring63;
-typedef  fstring_base<127,char> fstring127;
-typedef  fstring_base<255,char> fstring255;
-typedef  fstring_base<511,char> fstring511;
-typedef  fstring_base<1023, char> fstring1023;
-typedef  fstring_base<2047, char> fstring2047;
+
+typedef  fstring_ref_base<char> fstr_ref;
+typedef  fstring_base<4,  char> fstr4;
+typedef  fstring_base<7,  char> fstr7;
+typedef  fstring_base<15, char> fstr15;
+typedef  fstring_base<31, char> fstr31;
+typedef  fstring_base<63, char> fstr63;
+typedef  fstring_base<127,char> fstr127;
+typedef  fstring_base<255,char> fstr255;
+typedef  fstring_base<511,char> fstr511;
+typedef  fstring_base<1023, char> fstr1023;
+typedef  fstring_base<2047, char> fstr2047;
 
 
+#if __cplusplus >= 202002L
 
+template<typename From>
+concept StaticCastConvertibleTo_fstr_ref = requires(From from) {
+    static_cast<fstr_ref>(from);  // Check if static_cast<fstr_ref> is valid
+};
+
+template<typename FSTR, typename SV>
+concept StaticCastOrStringViewConvertible = requires(FSTR _fstr, SV _sv) {
+    static_cast<fstr_ref>(_fstr);
+    std::string_view(_sv);
+};
+
+// operator<=> and operator== below should take care of all combinations of comparing:
+// fstring_base <=> fstring_base
+// fstring_base <=> fstring_ref_base
+// fstring_base <=> std::string_view
+// fstring_base <=> const char*
+//
+// fstring_ref_base <=> fstring_base
+// std::string_view <=> fstring_base
+// const char* <=> fstring_base
+//
+// fstring_ref_base <=> fstring_ref_base
+// fstring_ref_base <=> std::string_view
+// fstring_ref_base <=> const char*
+//
+// std::string_view <=> fstring_ref_base
+// const char* <=> fstring_ref_base
+
+
+// operator<=> and operator== should have been templated on CharT
+// Alas Xcode cannot deduce CharT when calling these operators
+template<typename TLHS, typename TRHS>
+requires StaticCastOrStringViewConvertible<TLHS, TRHS> ||  StaticCastOrStringViewConvertible<TRHS, TLHS>
+std::strong_ordering operator<=>(const TLHS& lhs, const TRHS& rhs)
+{
+    const std::string_view LHSsv(lhs);
+    const std::string_view RHSsv(rhs);
+    int compare_i = LHSsv.compare(RHSsv);
+
+    std::strong_ordering retVal{std::strong_ordering::equal};
+    if (0 > compare_i) {
+        retVal = std::strong_ordering::less;
+    }
+    else if (0 < compare_i) {
+        retVal = std::strong_ordering::greater;
+    }
+
+    return retVal;
+}
+template<typename TLHS, typename TRHS>
+requires StaticCastOrStringViewConvertible<TLHS, TRHS> ||  StaticCastOrStringViewConvertible<TRHS, TLHS>
+bool operator==(const TLHS& lhs, const TRHS& rhs)
+{
+    const std::string_view LHSsv(lhs);
+    const std::string_view RHSsv(rhs);
+    return LHSsv == RHSsv;
+}
+
+#endif // __cplusplus >= 202002L
 
 }
 #endif // __fstring_h__

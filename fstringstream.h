@@ -1,7 +1,11 @@
 #ifndef __fstringstream_h__
 #define __fstringstream_h__
 
-#include "fstring.h"
+/* Copy to include
+#include "fstring/fstringstream.h"
+*/
+
+#include "fstring/fstring.h"
 
 #include <limits.h>
 #include <charconv>
@@ -9,14 +13,24 @@
 
 // compiler does not know how to convert from fstring_base<CharT> to  fstring_ref_base<CharT>;
 
-template<typename ToStream, typename = std::enable_if_t<!std::is_convertible_v<ToStream, std::string_view>>>
-fixed::fstring_ref operator<<(fixed::fstring_ref fref, const ToStream& thing_to_stream)
+inline fstr::fstr_ref operator<<(fstr::fstr_ref fref, const char* in_c_str_to_stream)
 {
-    if constexpr (std::is_same<ToStream, bool>())
+    fref += in_c_str_to_stream;
+    return fref;
+}
+
+template<typename ToStream>
+inline fstr::fstr_ref operator<<(fstr::fstr_ref fref, const ToStream& thing_to_stream)
+{
+    if constexpr (std::is_convertible_v<ToStream, std::string_view>)
+    {
+        fref += thing_to_stream;
+    }
+    else if constexpr (std::is_same<ToStream, bool>())
     {
         fref += thing_to_stream ? "true" : "false";
     }
-    else if constexpr (std::is_same_v<ToStream, fixed::fstring_ref::char_type>)
+    else if constexpr (std::is_same_v<ToStream, fstr::fstr_ref::char_type>)
     {
         fref += thing_to_stream;
     }
@@ -37,7 +51,7 @@ fixed::fstring_ref operator<<(fixed::fstring_ref fref, const ToStream& thing_to_
 }
 
 template<typename ToChange>
-void operator>>(fixed::fstring_ref fref, ToChange& thing_to_change)
+void operator>>(fstr::fstr_ref fref, ToChange& thing_to_change)
 {
     if constexpr (std::is_same_v<ToChange, bool>)
     {
@@ -60,17 +74,17 @@ void operator>>(fixed::fstring_ref fref, ToChange& thing_to_change)
     }
 }
 
-inline std::ostream& operator<<(std::ostream& os, const fixed::fstring_ref myStr)
+inline std::ostream& operator<<(std::ostream& os, const fstr::fstr_ref myStr)
 {
     os << std::string_view(myStr);
     return os;
 }
 
-namespace fixed
+namespace fstr
 {
-struct fstring_hasher
+struct fstr_hasher
 {
-    std::size_t operator()(const fixed::fstring_ref in_fixed_str_to_hash) const noexcept
+    std::size_t operator()(const fstr::fstr_ref in_fixed_str_to_hash) const noexcept
     {
         return std::hash<std::string_view>()(std::string_view(in_fixed_str_to_hash));
     }

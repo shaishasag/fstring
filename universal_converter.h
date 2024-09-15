@@ -39,7 +39,7 @@ public:
     }
     
 protected:
-    fixed::fstring63 m_value;
+    fstr::fstr63 m_value;
 };
 
 #endif // __universal_converter_h__

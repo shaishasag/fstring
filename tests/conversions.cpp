@@ -1,7 +1,8 @@
 #include "gtest/gtest.h"
-#include "fstring.h"
+#include "fstring/fstring.h"
+#include "fstring/fstringstream.h"
 
-using namespace fixed;
+using namespace fstr;
 
 size_t get_size_sv(std::string_view in_sv)
 {
@@ -13,20 +14,20 @@ TEST(Conversions, string_view)
     std::string_view banana_sv{"bananarama"};
     EXPECT_EQ(get_size_sv(banana_sv), banana_sv.size());
     
-    fstring15 banana_fixed{banana_sv};  // fstring intialized from string_view
+    fstr15 banana_fixed{banana_sv};  // fstring intialized from string_view
     EXPECT_EQ(get_size_sv(banana_fixed), banana_fixed.size());
     
-    std::string_view fruit_sv_1{banana_fixed};  // string_view initialized from fstring
-    std::string_view fruit_sv_2(banana_fixed);  // string_view initialized from fstring
-    std::string_view fruit_sv_3 = banana_fixed;  // string_view initialized from fstring
+    [[maybe_unused]] std::string_view fruit_sv_1{banana_fixed};  // string_view initialized from fstring
+    [[maybe_unused]] std::string_view fruit_sv_2(banana_fixed);  // string_view initialized from fstring
+    [[maybe_unused]] std::string_view fruit_sv_3 = banana_fixed;  // string_view initialized from fstring
 }
 
 TEST(Conversions, minimal)
 {
-    fstring7 f7;
-    fstring7 ref7{f7};
-    fstring7 f15;
-    fstring7 ref15{f15};
+    fstr7 f7;
+    fstr7 ref7{f7};
+    fstr7 f15;
+    fstr7 ref15{f15};
     const char* cstr = "cstr";
     std::string_view sv{cstr};
     std::string str{sv};

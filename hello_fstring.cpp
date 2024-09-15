@@ -15,7 +15,7 @@ struct fixed_or_std_str_ref
         {
             m_string_ref.reserve(new_cap);
         }
-        else if constexpr (std::is_same_v<fixed::fstring_ref, TStr>)
+        else if constexpr (std::is_same_v<fstr::fstr_ref, TStr>)
         {
             assert(new_cap <= m_string_ref.capacity());
         }
@@ -129,18 +129,18 @@ static void ukalili(const char* name, fixed_or_std_str_ref<TStr> the_ref)
 
 int main(int argc, char** argv)
 {
-    std::cout << "sizeof(fixed::fstring_base<0, char>) = " << sizeof(fixed::fstring_base<0, char>)  << std::endl;
-    std::cout << "sizeof(fixed::fstring15) = " << sizeof(fixed::fstring15)  << std::endl;
-    std::cout << "sizeof(fixed::fstring31) = " << sizeof(fixed::fstring31)  << std::endl;
-    std::cout << "sizeof(fixed::fstring63) = " << sizeof(fixed::fstring63)  << std::endl;
-    std::cout << "sizeof(fixed::fstring_ref) = " << sizeof(fixed::fstring_ref)  << std::endl;
+    std::cout << "sizeof(fstr::fstring_base<0, char>) = " << sizeof(fstr::fstring_base<0, char>)  << std::endl;
+    std::cout << "sizeof(fstr::fstr15) = " << sizeof(fstr::fstr15)  << std::endl;
+    std::cout << "sizeof(fstr::fstr31) = " << sizeof(fstr::fstr31)  << std::endl;
+    std::cout << "sizeof(fstr::fstr63) = " << sizeof(fstr::fstr63)  << std::endl;
+    std::cout << "sizeof(fstr::fstring_ref) = " << sizeof(fstr::fstr_ref)  << std::endl;
 
-    constexpr fixed::fstring31 fstr("Hello fstring");
+    constexpr fstr::fstr31 fstr("Hello fstring");
     std::cout << std::string_view(fstr) << std::endl;
     
     {
-        fixed::fstring31 original("ukalili");
-        fixed_or_std_str_ref<fixed::fstring_ref> the_ref{original};
+        fstr::fstr31 original("ukalili");
+        fixed_or_std_str_ref<fstr::fstr_ref> the_ref{original};
         ukalili("fixed_ref", the_ref);
     }
     {

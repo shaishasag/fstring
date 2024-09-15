@@ -1,18 +1,18 @@
 #include "gtest/gtest.h"
 #include "fstring.h"
 
-//using namespace fixed;
+//using namespace fstr;
 
 struct SomeStrings
 {
-    fixed::fstring7  m1;
-    fixed::fstring15 m3;
-    fixed::fstring31 m5;
+    fstr::fstr7  m1;
+    fstr::fstr15 m3;
+    fstr::fstr31 m5;
 };
 
 TEST(Memcopy, memcpy)
 {
-    {   // fixed::fstring_base should be memcpy-able
+    {   // fstr::fstring_base should be memcpy-able
         SomeStrings someone{"a", "b", "c"};
         SomeStrings sometwo;
 
