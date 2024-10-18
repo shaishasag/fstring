@@ -12,10 +12,7 @@
 #endif
 
 #include <algorithm>
-<<<<<<< HEAD
 #include <stdexcept>
-=======
->>>>>>> a4c861a1e99fbe5020c1b40e5119afe91c73b59c
 
 // functions marked non-standard have no equivalent in std::string or std::string_view
 
