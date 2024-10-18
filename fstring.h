@@ -13,6 +13,7 @@
 
 #include <algorithm>
 #include <stdexcept>
+#include <string_view>
 
 
 // functions marked non-standard have no equivalent in std::string or std::string_view
@@ -906,17 +907,17 @@ public:
 };
 
 
-typedef  fstring_ref_base<char> fstr_ref;
-typedef  fstring_base<4,  char> fstr4;
-typedef  fstring_base<7,  char> fstr7;
-typedef  fstring_base<15, char> fstr15;
-typedef  fstring_base<31, char> fstr31;
-typedef  fstring_base<63, char> fstr63;
-typedef  fstring_base<127,char> fstr127;
-typedef  fstring_base<255,char> fstr255;
-typedef  fstring_base<511,char> fstr511;
-typedef  fstring_base<1023, char> fstr1023;
-typedef  fstring_base<2047, char> fstr2047;
+using fstr_ref = fstring_ref_base<char>;
+using fstr4 =    fstring_base<4,  char>;
+using fstr7 =    fstring_base<7,  char>;
+using fstr15 =   fstring_base<15, char>;
+using fstr31 =   fstring_base<31, char>;
+using fstr63 =   fstring_base<63, char>;
+using fstr127 =  fstring_base<127, char>;
+using fstr255 =  fstring_base<255, char>;
+using fstr511 =  fstring_base<511, char>;
+using fstr1023 = fstring_base<1023, char>;
+using fstr2047 = fstring_base<2047, char>;
 
 
 #if __cplusplus >= 202002L

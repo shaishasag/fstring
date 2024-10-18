@@ -31,24 +31,32 @@ For the most part **fstring** follows the std::string and std::string_view inter
     + toupper
     + erase_all_of
     + erase_all_not_of
+    + printf
+    + scanf
+
+### always maintains terminating '\0', so can be passed to functions like chmod:
+void call_chmod()
+{
+    fstr::fstr255 some_path("/usr/local/bin/exec");
+    chmod(some_path.c_str(), 0766);
+}
 
 ### fstring_ref:
-
 Associated class **fstring_ref** allows passing/returning **fstring** of any size to/from a function so that the function does not need to be templated on the size of **fstring**.
 
 
     #include <iostream>
     #include "fstring.h"
 
-    fstr::fstring_ref func(fstr::fstring_ref f_string)
+    fstr::fstr_ref func(fstr::fstr_ref f_string)
     {
         // do something with f_string
         return f_string;
     }
 
-    fstr::fstr15 f15;
-    fstr::fstr31 f31;
-    fstr::fstr63 f63;
+    fstr::fstr15 f15("short");
+    fstr::fstr31 f31("medium");
+    fstr::fstr63 f63("largish");
 
     // fstring of any size can be passed to func
     std::cout << func(f15) << std::endl;
