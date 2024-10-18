@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <stdexcept>
 
+
 // functions marked non-standard have no equivalent in std::string or std::string_view
 
 #ifdef __clang_major__
@@ -700,7 +701,6 @@ public:
     }
 };
 
-
 template<class CharT>
 class DllExport fstring_ref_base
 {
@@ -765,7 +765,7 @@ public:
     constexpr const CharT* rend() const noexcept      { return m_referee.rend(); }
     constexpr const CharT* rcend() const noexcept     { return m_referee.rcend(); }
     constexpr CharT* data() noexcept { return m_referee.data(); }
-    constexpr const CharT* data() const noexcept { return m_referee.data(); }    
+    constexpr const CharT* data() const noexcept { return m_referee.data(); }
     constexpr const CharT* c_str() const noexcept { return m_referee.c_str(); }
     [[nodiscard]] constexpr bool empty() const noexcept {return m_referee.empty();}
     [[nodiscard]] constexpr size_type size() const noexcept {return m_referee.size();}
