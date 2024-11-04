@@ -86,7 +86,7 @@ inline std::ostream& operator<<(std::ostream& os, const fstr::fstr_ref myStr)
 namespace fstr
 {
 template<typename TContainer>
-static void split(std::string_view to_split_sv, std::string_view splitter, TContainer& out_splitted)
+void split(std::string_view to_split_sv, std::string_view splitter, TContainer& out_splitted)
 {
     auto inserter = std::back_inserter(out_splitted);
     while (!to_split_sv.empty())
