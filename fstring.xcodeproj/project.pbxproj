@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		F600971F293D0621006F1F35 /* tests_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F600971E293D0621006F1F35 /* tests_main.cpp */; };
 		F6077C1C2960738A00C019C4 /* erase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6077C1B2960738A00C019C4 /* erase.cpp */; };
+		F60C64972CD9231100BEA0C1 /* split_and_join.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F60C64962CD9231100BEA0C1 /* split_and_join.cpp */; };
+		F60C64982CD9231100BEA0C1 /* split_and_join.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F60C64962CD9231100BEA0C1 /* split_and_join.cpp */; };
 		F60C98C9295F336F00760EB6 /* substr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F60C98C8295F336F00760EB6 /* substr.cpp */; };
 		F60C98CB295F3DCF00760EB6 /* insert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F60C98CA295F3DCF00760EB6 /* insert.cpp */; };
 		F61AE77429465442002F9078 /* traits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F61AE77329465442002F9078 /* traits.cpp */; };
@@ -134,6 +136,7 @@
 		F600971B293D0621006F1F35 /* fstring_tests C++17 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "fstring_tests C++17"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F600971E293D0621006F1F35 /* tests_main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = tests_main.cpp; path = tests/tests_main.cpp; sourceTree = SOURCE_ROOT; };
 		F6077C1B2960738A00C019C4 /* erase.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = erase.cpp; sourceTree = "<group>"; };
+		F60C64962CD9231100BEA0C1 /* split_and_join.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = split_and_join.cpp; sourceTree = "<group>"; };
 		F60C98C8295F336F00760EB6 /* substr.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = substr.cpp; sourceTree = "<group>"; };
 		F60C98CA295F3DCF00760EB6 /* insert.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = insert.cpp; sourceTree = "<group>"; };
 		F61AE77329465442002F9078 /* traits.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = traits.cpp; sourceTree = "<group>"; };
@@ -637,6 +640,7 @@
 				F6BC984A2941D94C002CC268 /* variadic.cpp */,
 				F6E83F7F2AC1DD2100656B85 /* erase_all.cpp */,
 				F638E75C2C80BCBD00DCF533 /* hashing.cpp */,
+				F60C64962CD9231100BEA0C1 /* split_and_join.cpp */,
 			);
 			path = tests;
 			sourceTree = "<group>";
@@ -802,6 +806,7 @@
 				F62BDD10293E585A0000567A /* gtest-filepath.cc in Sources */,
 				F62BDD11293E586E0000567A /* gtest-printers.cc in Sources */,
 				F62BDD0B293E57B30000567A /* gtest-test-part.cc in Sources */,
+				F60C64972CD9231100BEA0C1 /* split_and_join.cpp in Sources */,
 				F62BDD0E293E58370000567A /* gtest-port.cc in Sources */,
 				F62BDD0A293E57620000567A /* gtest.cc in Sources */,
 				F6BC98C129423926002CC268 /* find.cpp in Sources */,
@@ -852,6 +857,7 @@
 				F65B4F582C8B6C2800C8A84E /* gtest-filepath.cc in Sources */,
 				F65B4F592C8B6C2800C8A84E /* gtest-printers.cc in Sources */,
 				F65B4F5A2C8B6C2800C8A84E /* gtest-test-part.cc in Sources */,
+				F60C64982CD9231100BEA0C1 /* split_and_join.cpp in Sources */,
 				F65B4F5B2C8B6C2800C8A84E /* gtest-port.cc in Sources */,
 				F65B4F5C2C8B6C2800C8A84E /* gtest.cc in Sources */,
 				F65B4F5D2C8B6C2800C8A84E /* find.cpp in Sources */,

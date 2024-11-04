@@ -530,14 +530,14 @@ public:
     constexpr void tolower() noexcept
     {
         std::transform(begin(), end(), begin(),
-                         [](unsigned char c){ return std::tolower(c); });
+                         [](unsigned char c){ return static_cast<unsigned char>(std::tolower(c)); });
     }
 
     // non-standard
     constexpr void toupper() noexcept
     {
         std::transform(begin(), end(), begin(),
-                         [](unsigned char c){ return std::toupper(c); });
+                         [](unsigned char c){ return static_cast<unsigned char>(std::toupper(c)); });
     }
 
     // non-standard

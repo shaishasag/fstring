@@ -5,6 +5,9 @@
 #include "fstring/fstringstream.h"
 */
 
+using namespace std::string_view_literals;
+
+
 #include "fstring/fstring.h"
 
 #include <limits.h>
@@ -82,6 +85,44 @@ inline std::ostream& operator<<(std::ostream& os, const fstr::fstr_ref myStr)
 
 namespace fstr
 {
+template<typename TContainer>
+static void split(std::string_view to_split_sv, std::string_view splitter, TContainer& out_splitted)
+{
+    auto inserter = std::back_inserter(out_splitted);
+    while (!to_split_sv.empty())
+    {
+        auto pos = to_split_sv.find_first_of(splitter);
+        if (pos == std::string_view::npos)
+        {
+            *inserter = to_split_sv;
+            break;
+        }
+        else
+        {
+            auto sub = to_split_sv.substr(0, pos);
+            if (!sub.empty())  // sub is empty if delimiter was at the beginning of to_split_sv
+            {
+                *inserter = sub;
+            }
+            to_split_sv = to_split_sv.substr(pos+splitter.size(), to_split_sv.size());
+        }
+    }
+}
+
+template<typename TIter>
+void join(TIter begin, TIter end, std::string_view delimiter, fstr::fstr_ref out_joined)
+{
+    if (begin != end)
+    {
+        out_joined += *begin++;
+        while (begin != end)
+        {
+            out_joined += delimiter;
+            out_joined += *begin++;
+        }
+    }
+}
+
 struct fstr_hasher
 {
     std::size_t operator()(const fstr::fstr_ref in_fixed_str_to_hash) const noexcept
