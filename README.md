@@ -7,6 +7,7 @@ C++17 compatible code is avaliable in branch "C++17".
 
 For the most part **fstring** follows the std::string and std::string_view interface.
 
+```
     #include <iostream>
     #include "fstring/fstring.h"
 
@@ -17,6 +18,7 @@ For the most part **fstring** follows the std::string and std::string_view inter
 
         return 0;
     }
+```
 
 ## Details
 ### fstring:
@@ -26,7 +28,7 @@ For the most part **fstring** follows the std::string and std::string_view inter
 * Supports most std::string and std::string_view interface.
     Use fstr::fstr_base::**sv()** to access the following std::string_view functions:
     
-    
+```
     fstr::fstr31 hello_fs("hello");
 
     if (hello_fs.sv().starts_with("He")) {}
@@ -37,7 +39,7 @@ For the most part **fstring** follows the std::string and std::string_view inter
     if (hello_fs.sv().find_last_of("ll") != std::string_view::npos) {}
     if (hello_fs.sv().find_first_not_of("xyz") != std::string_view::npos) {}
     if (hello_fs.sv().find_last_not_of("abc") != std::string_view::npos) {}
-
+```
 
 * Automatically converts to string_view.
 * Implements some additional functionality not found in std::string and std::string_view:
@@ -62,7 +64,7 @@ void call_chmod()
 ### fstring_ref:
 Associated class **fstring_ref** allows passing/returning **fstring** of any size to/from a function so that the function does not need to be templated on the size of **fstring**.
 
-
+```
     #include <iostream>
     #include "fstring.h"
 
@@ -80,6 +82,7 @@ Associated class **fstring_ref** allows passing/returning **fstring** of any siz
     std::cout << func(f15) << std::endl;
     std::cout << func(f31) << std::endl;
     std::cout << func(f63) << std::endl;
+```
 
 ## Examples
 See examples/examples.cpp.
