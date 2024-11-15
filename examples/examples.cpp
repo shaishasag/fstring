@@ -68,9 +68,8 @@ void call_chmod()
     chmod(some_path.c_str(), 0766);
 }
 
-void README_example()
+void README_example_1()
 {
-
     fstr::fstr15 f15("short");
     fstr::fstr31 f31("medium");
     fstr::fstr63 f63("largish");
@@ -81,11 +80,26 @@ void README_example()
     std::cout << func(f63) << std::endl;
 }
 
+void README_example_2()
+{
+    fstr::fstr31 hello_fs("hello");
+
+    if (hello_fs.sv().starts_with("He")) {}
+    if (hello_fs.sv().ends_with('o')) {}
+    if (hello_fs.sv().find('l') != std::string_view::npos) {}
+    if (hello_fs.sv().rfind("ll") != std::string_view::npos) {}
+    if (hello_fs.sv().find_first_of('l') != std::string_view::npos) {}
+    if (hello_fs.sv().find_last_of("ll") != std::string_view::npos) {}
+    if (hello_fs.sv().find_first_not_of("xyz") != std::string_view::npos) {}
+    if (hello_fs.sv().find_last_not_of("abc") != std::string_view::npos) {}
+}
+
 int main()
 {
     constructing();
     assigning();
-    README_example();
+    README_example_1();
+    README_example_2();
 
     return 0;
 }

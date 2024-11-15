@@ -9,6 +9,8 @@
 #error C++20 is required to compile fstring,h
 #endif
 
+using namespace std::string_view_literals;
+
 #ifdef _WINDOWS_
 #ifndef NOMINMAX
 #error NOMINMAX is not defined for windows compilation, this will cause collision with std::min, std::max
@@ -315,7 +317,10 @@ public:
         const size_type actual_count = std::min(vacancy(), count);
         memset(m_str+size(), ch, actual_count);
         set_new_size(size()+actual_count);
-     }
+    }
+
+    // Sometimes that compiler does not automatically converts append("abc") to append(std::string_view("abc"))
+    // so must keep append(const CharT* in_str)
     constexpr void append(const CharT* in_str)  noexcept
     {
         __append__(in_str);
@@ -324,7 +329,7 @@ public:
     {
         __append__(in_str, in_size);
     }
-    constexpr void append(std::string_view sv) noexcept
+    constexpr void append(const std::string_view sv) noexcept
     {
         __append__(sv.data(), sv.size());
     }
@@ -332,11 +337,6 @@ public:
     constexpr fstring_base& operator+=(const CharT in_char) noexcept
     {
         __append__(in_char);
-        return *this;
-    }
-    constexpr fstring_base& operator+=(const CharT* in_str)  noexcept
-    {
-        __append__(in_str);
         return *this;
     }
     constexpr fstring_base& operator+=(std::string_view sv) noexcept
@@ -424,12 +424,15 @@ public:
 
     // swap does not make sense for fixed-size string, use std::exchange
     constexpr void swap(fstring_base& other) noexcept = delete;
-    // find: use string_view.find
-    // rfind: use string_view.rfind
-    // find_first_of: use string_view.find_first_of
-    // find_last_of: use string_view.find_last_of
-    // find_first_not_of: use string_view.find_first_not_of
-    // find_last_not_of: use string_view.find_last_not_of
+
+    // starts_with: use fstr::fstrXX.sv().starts_with
+    // ends_with: use fstr::fstrXX.sv().ends_with
+    // find: use fstr::fstrXX.sv().find
+    // rfind: use fstr::fstrXX.sv().rfind
+    // find_first_of: use fstr::fstrXX.sv().find_first_of
+    // find_last_of: use fstr::fstrXX.sv().find_last_of
+    // find_first_not_of: use fstr::fstrXX.sv().find_first_not_of
+    // find_last_not_of: use fstr::fstrXX.sv().find_last_not_of
 
     constexpr void remove_prefix( size_type n )  noexcept
     {
@@ -453,32 +456,10 @@ public:
         }
     }
 
-    //---
-    // functions below will be part of std::string(_view)? interface, with C++20
-    // so currently impemented here
-    constexpr bool starts_with( std::string_view sv ) const noexcept
-    {
-        return std::string_view(c_str(), size()).substr(0, sv.size()) == sv;
-    }
-    constexpr bool starts_with( CharT ch ) const noexcept
-    {
-        return !empty() && front() == ch;
-    }
-    constexpr bool ends_with( std::string_view in_sv ) const noexcept
-    {
-        return size() >= in_sv.size() && sv().compare(size() - in_sv.size(), npos, in_sv) == 0;
-    }
-    constexpr bool ends_with( CharT ch ) const noexcept
-    {
-        return !empty() && back() == ch;
-    }
-    constexpr bool contains( std::string_view in_sv ) const noexcept
+
+    constexpr bool contains(auto&& in_sv) const noexcept
     {
         return sv().find(in_sv) != npos;
-    }
-    constexpr bool contains( CharT c ) const noexcept
-    {
-        return sv().find(c) != npos;
     }
 
     // functions below are not part of std::string(_view)? interface
@@ -486,9 +467,9 @@ public:
     constexpr size_type full() const  noexcept {return size() == capacity();}
 
     // non-standard
-    void trim_front(const CharT* t = " \f\n\r\t\v") noexcept
+    void trim_front(std::string_view trim_chars=" \f\n\r\t\v") noexcept
     {
-        size_type pos = sv().find_first_not_of(t);
+        size_type pos = sv().find_first_not_of(trim_chars);
         if (npos != pos)
         {
             remove_prefix(pos);
@@ -496,9 +477,9 @@ public:
 
     }
     // non-standard
-    void trim_back(const CharT* t = " \f\n\r\t\v") noexcept
+    void trim_back(std::string_view trim_chars=" \f\n\r\t\v") noexcept
     {
-        size_type pos = sv().find_last_not_of(t);
+        size_type pos = sv().find_last_not_of(trim_chars);
         if (npos != pos)
         {
             remove_suffix(size() - pos - 1);
@@ -506,10 +487,10 @@ public:
 
     }
     // non-standard
-    void trim(const CharT* t = " \f\n\r\t\v") noexcept
+    void trim(std::string_view trim_chars=" \f\n\r\t\v") noexcept
     {
-        trim_back(t);
-        trim_front(t);
+        trim_back(trim_chars);
+        trim_front(trim_chars);
     }
 
     // non-standard
@@ -791,30 +772,27 @@ public:
     }
 
     // non-standard
-    void erase_all_of(const std::string_view _sv)
+    void erase_all_of(std::string_view _sv)
     {
         m_referee.erase_all_of(_sv);
     }
     // non-standard
-    constexpr void erase_all_not_of(const std::string_view _sv)
+    constexpr void erase_all_not_of(std::string_view _sv)
     {
         m_referee.erase_all_not_of(_sv);
     }
 
     constexpr void push_back(const CharT in_char)  {return m_referee.push_back(in_char);}
     constexpr void pop_back() noexcept {return m_referee.pop_back();}
+    constexpr void append(const CharT in_char) noexcept {return m_referee.append(in_char);}
     constexpr void append(size_type count, const CharT in_char) noexcept {return m_referee.append(count, in_char);}
-    constexpr void append(const CharT* in_str)  noexcept {return m_referee.append(in_str);}
+    //constexpr void append(const CharT* in_str)  noexcept {return m_referee.append(in_str);}
     constexpr void append(const CharT* in_str, const size_type in_size) noexcept {return m_referee.append(in_str, in_size);}
     constexpr void append(std::string_view sv) noexcept {return m_referee.append(sv);}
+
     constexpr fstring_ref_base& operator+=(const CharT in_char) noexcept
     {
         m_referee += in_char;
-        return *this;
-    }
-    constexpr fstring_ref_base& operator+=(const CharT* in_str)  noexcept
-    {
-        m_referee += in_str;
         return *this;
     }
     constexpr fstring_ref_base& operator+=(std::string_view sv) noexcept
@@ -845,25 +823,14 @@ public:
     // copy: use string_view.copy
     // swap does not make sence for fixed-size string, use std::exchange
     constexpr void swap(fstring_ref_base& other) noexcept = delete;
-    // find: use string_view.find
-    // rfind: use string_view.rfind
-    // find_first_of: use string_view.find_first_of
-    // find_last_of: use string_view.find_last_of
-    // find_first_not_of: use string_view.find_first_not_of
-    // find_last_not_of: use string_view.find_last_not_of
 
     //---
     constexpr size_type vacancy() const noexcept{ return m_referee.vacancy(); }
     constexpr size_type full() const noexcept { return m_referee.full(); }
-    void trim_front(const CharT* t = " \f\n\r\t\v") noexcept { return m_referee.trim_front(t); }
-    void trim_back(const CharT* t = " \f\n\r\t\v") noexcept { return m_referee.trim_back(t); }
-    void trim(const CharT* t = " \f\n\r\t\v") noexcept { return m_referee.trim(t); }
-    constexpr bool starts_with( std::string_view sv ) const noexcept { return m_referee.starts_with(sv); }
-    constexpr bool starts_with( CharT ch )  const noexcept { return m_referee.starts_with(ch); }
-    constexpr bool ends_with( std::string_view in_sv) const noexcept { return m_referee.ends_with(in_sv); }
-    constexpr bool ends_with( CharT ch ) const noexcept { return m_referee.ends_with(ch); }
-    constexpr bool contains( std::string_view in_sv )  const noexcept { return m_referee.contains(in_sv); }
-    constexpr bool contains( CharT c )  const noexcept { return m_referee.contains(c); }
+    void trim_front(std::string_view trim_chars=" \f\n\r\t\v") noexcept { return m_referee.trim_front(trim_chars); }
+    void trim_back(std::string_view trim_chars=" \f\n\r\t\v") noexcept { return m_referee.trim_back(trim_chars); }
+    void trim(std::string_view trim_chars=" \f\n\r\t\v") noexcept { return m_referee.trim(trim_chars); }
+    constexpr bool contains(auto&& in_sv)  const noexcept { return m_referee.contains(in_sv); }
     constexpr void tolower() noexcept { return m_referee.tolower(); }
     constexpr void toupper() noexcept { return m_referee.toupper(); }
     inline void reposition_end() noexcept { return m_referee.reposition_end(); }

@@ -28,7 +28,7 @@ inline fstr::fstr_ref operator<<(fstr::fstr_ref fref, const ToStream& thing_to_s
     }
     else if constexpr (std::is_same<ToStream, bool>())
     {
-        fref += thing_to_stream ? "true" : "false";
+        fref += thing_to_stream ? "true"sv : "false"sv;
     }
     else if constexpr (std::is_same_v<ToStream, fstr::fstr_ref::char_type>)
     {
@@ -55,10 +55,10 @@ void operator>>(fstr::fstr_ref fref, ToChange& thing_to_change)
 {
     if constexpr (std::is_same_v<ToChange, bool>)
     {
-        if (fref.starts_with("true")) {
+        if (fref.sv().starts_with("true")) {
             thing_to_change = true;
         }
-        else if (fref.starts_with("false")) {
+        else if (fref.sv().starts_with("false")) {
             thing_to_change = false;
         }
     }

@@ -314,30 +314,3 @@ TEST(AssignTests, Ref2Ref2Ref)
     EXPECT_STREQ(ref2.c_str(), "Detritivore123");
     EXPECT_STREQ(ref3.c_str(), "Detritivore123");
 }
-
-#if 0
-TEST(AssignTests, RepeatedAssignToRef)
-{
-    fstr::fstr15 f1{"Insectivore"};
-    fstr::fstr15 f2{"Frugivore"};
-    fstr::fstr15 f3{"Granivore"};
-    
-    fstr::fstr_ref the_ref{f1};
-    EXPECT_STREQ(the_ref.c_str(), "Insectivore");
-    EXPECT_STREQ(f1.c_str(), "Insectivore");
-    EXPECT_STREQ(f2.c_str(), "Frugivore");
-    EXPECT_STREQ(f2.c_str(), "Granivore");
-
-    the_ref = f2;
-    EXPECT_STREQ(the_ref.c_str(), "Frugivore");
-    EXPECT_STREQ(f1.c_str(), "Frugivore");
-    EXPECT_STREQ(f2.c_str(), "Frugivore");
-    EXPECT_STREQ(f2.c_str(), "Granivore");
-
-    the_ref = f3;
-    EXPECT_STREQ(the_ref.c_str(), "Granivore");
-    EXPECT_STREQ(f1.c_str(), "Frugivore");
-    EXPECT_STREQ(f2.c_str(), "Frugivore");
-    EXPECT_STREQ(f2.c_str(), "Frugivore");
-}
-#endif

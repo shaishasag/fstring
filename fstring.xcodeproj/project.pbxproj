@@ -41,6 +41,7 @@
 		F65B4F672C8B6C2800C8A84E /* conversions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F669396B2A8FBD03007E68A7 /* conversions.cpp */; };
 		F65B4F682C8B6C2800C8A84E /* substr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F60C98C8295F336F00760EB6 /* substr.cpp */; };
 		F65B4F692C8B6C2800C8A84E /* gtest-assertion-result.cc in Sources */ = {isa = PBXBuildFile; fileRef = F62BDD02293E502A0000567A /* gtest-assertion-result.cc */; };
+		F698BB362CE77C320059414F /* append.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F698BB352CE77C320059414F /* append.cpp */; };
 		F6A680492942867800D9CE7A /* hello_fstring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6A680482942867800D9CE7A /* hello_fstring.cpp */; };
 		F6DFFC802C4132E800080329 /* universal_converter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6DFFC7E2C412F3B00080329 /* universal_converter.cpp */; };
 /* End PBXBuildFile section */
@@ -249,6 +250,7 @@
 		F6652D0E2AC48D0D00F932A4 /* scanf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scanf.cpp; sourceTree = "<group>"; };
 		F669396B2A8FBD03007E68A7 /* conversions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = conversions.cpp; sourceTree = "<group>"; };
 		F66DF9A429CCA40A007B2032 /* empty.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = empty.cpp; sourceTree = "<group>"; };
+		F698BB352CE77C320059414F /* append.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = append.cpp; sourceTree = "<group>"; };
 		F69EF04A2AAA371F0033190A /* replace.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = replace.cpp; sourceTree = "<group>"; };
 		F6A56B142A976378002BAEFD /* printf.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = printf.cpp; sourceTree = "<group>"; };
 		F6A680412942864D00D9CE7A /* hello_fstring */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = hello_fstring; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -576,6 +578,7 @@
 				F6BC984A2941D94C002CC268 /* variadic.cpp */,
 				F6E83F7F2AC1DD2100656B85 /* erase_all.cpp */,
 				F638E75C2C80BCBD00DCF533 /* hashing.cpp */,
+				F698BB352CE77C320059414F /* append.cpp */,
 			);
 			path = tests;
 			sourceTree = "<group>";
@@ -719,6 +722,7 @@
 				F65B4F502C8B6C2800C8A84E /* memcpy.cpp in Sources */,
 				F65B4F512C8B6C2800C8A84E /* change.cpp in Sources */,
 				F65B4F522C8B6C2800C8A84E /* variadic.cpp in Sources */,
+				F698BB362CE77C320059414F /* append.cpp in Sources */,
 				F65B4F532C8B6C2800C8A84E /* constexpr.cpp in Sources */,
 				F65B4F542C8B6C2800C8A84E /* compare.cpp in Sources */,
 				F65B4F552C8B6C2800C8A84E /* printf.cpp in Sources */,

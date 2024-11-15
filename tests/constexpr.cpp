@@ -91,7 +91,7 @@ TEST(Constexpr, pass_to_func)
 TEST(Constexpr, call_constexpr)
 {
     constexpr fstr::fstr31 con1("Kajagoogoo");
-    constexpr bool b = con1.ends_with("googoo");
+    constexpr bool b = con1.sv().ends_with("googoo");
     EXPECT_TRUE(b);
 
     constexpr fstr::size_type pos = con1.sv().find_last_of('g');

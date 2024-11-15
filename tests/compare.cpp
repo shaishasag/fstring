@@ -1,39 +1,76 @@
 #include "gtest/gtest.h"
 #include "fstring.h"
 
-// Verify fstr::fstring::starts_with, fstr::fstring::ends_with, , fstr::fstring::contains
-TEST(CompareTests, starts_ends_contains)
+
+TEST(CompareTests, starts_ends_sv)
+{
+    {
+        fstr::fstr31 original("The Psychedelic Furs");
+
+        EXPECT_TRUE(original.sv().starts_with('T'));
+
+        EXPECT_TRUE(original.sv().starts_with('T'));
+        EXPECT_TRUE(original.sv().starts_with("The"));
+        EXPECT_TRUE(original.sv().ends_with("Furs"));
+        EXPECT_TRUE(original.sv().ends_with('s'));
+        EXPECT_FALSE(original.sv().starts_with("the"));
+        EXPECT_FALSE(original.sv().ends_with("furs"));
+
+        fstr::fstr31 reference(original);
+        EXPECT_TRUE(original == reference);
+        EXPECT_TRUE(reference.sv().starts_with('T'));
+        EXPECT_TRUE(reference.sv().starts_with("The"));
+        EXPECT_TRUE(reference.sv().ends_with("Furs"));
+        EXPECT_TRUE(reference.sv().ends_with('s'));
+        EXPECT_FALSE(reference.sv().starts_with("the"));
+        EXPECT_FALSE(reference.sv().ends_with("furs"));
+    }
+}
+
+// Verify fstr::fstring::contains
+TEST(CompareTests, contains)
 {
 
     {
         fstr::fstr31 original("The Psychedelic Furs");
 
-        fstr::fstr31 reference(original);
-        EXPECT_TRUE(original == reference);
-        EXPECT_TRUE(original.starts_with('T'));
-        EXPECT_TRUE(original.starts_with("The"));
-        EXPECT_TRUE(original.ends_with("Furs"));
-        EXPECT_TRUE(original.ends_with('s'));
-        EXPECT_FALSE(original.starts_with("the"));
-        EXPECT_FALSE(original.ends_with("furs"));
+        // call contains with various string types
+        std::string delic{"delic"};
+        std::string_view dElic{"dElic"};
+        fstr::fstr15 Psych{"Psych"};
+        fstr::fstr15 psych{"psych"};
+        fstr::fstr_ref Psych_ref{Psych};
+        fstr::fstr_ref psych_ref{psych};
+        const char* Furs = "Furs";
+        const char* furs = "furs";
+
         EXPECT_TRUE(original.contains(""));
         EXPECT_TRUE(original.contains('d'));
         EXPECT_FALSE(original.contains('Z'));
-        EXPECT_TRUE(original.contains("delic"));
-        EXPECT_FALSE(original.contains("dElic"));
+        EXPECT_TRUE(original.contains(delic));
+        EXPECT_FALSE(original.contains(dElic));
+        EXPECT_TRUE(original.contains(Psych));
+        EXPECT_FALSE(original.contains(psych));
+        EXPECT_TRUE(original.contains(Furs));
+        EXPECT_FALSE(original.contains(furs));
+        EXPECT_TRUE(original.contains(Psych_ref));
+        EXPECT_FALSE(original.contains(psych_ref));
         EXPECT_TRUE(original.contains("The Psychedelic Furs"));
-        
-        EXPECT_TRUE(reference.starts_with('T'));
-        EXPECT_TRUE(reference.starts_with("The"));
-        EXPECT_TRUE(reference.ends_with("Furs"));
-        EXPECT_TRUE(reference.ends_with('s'));
-        EXPECT_FALSE(reference.starts_with("the"));
-        EXPECT_FALSE(reference.ends_with("furs"));
+
+        fstr::fstr31 reference(original);
+        EXPECT_TRUE(original == reference);
+
         EXPECT_TRUE(reference.contains(""));
         EXPECT_TRUE(reference.contains('d'));
         EXPECT_FALSE(reference.contains('Z'));
-        EXPECT_TRUE(reference.contains("delic"));
-        EXPECT_FALSE(reference.contains("dElic"));
+        EXPECT_TRUE(reference.contains(delic));
+        EXPECT_FALSE(reference.contains(dElic));
+        EXPECT_TRUE(reference.contains(Psych));
+        EXPECT_FALSE(reference.contains(psych));
+        EXPECT_TRUE(reference.contains(Furs));
+        EXPECT_FALSE(reference.contains(furs));
+        EXPECT_TRUE(reference.contains(Psych_ref));
+        EXPECT_FALSE(reference.contains(psych_ref));
         EXPECT_TRUE(reference.contains("The Psychedelic Furs"));
     }
 }

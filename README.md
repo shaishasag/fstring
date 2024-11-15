@@ -21,9 +21,23 @@ For the most part **fstring** follows the std::string and std::string_view inter
 ## Details
 ### fstring:
 * Never allocates memory, so can be used in time-critical code.
-* Is memcopy-able.
+* Is memcopy-able: can be copied with memcpy.
+
 * Supports most std::string and std::string_view interface.
-* Automatically converted to string_view.
+    Use fstr::fstr_base::sv() to access the following std::string_view functions:
+    
+    fstr::fstr31 hello_fs("hello");
+
+    if (hello_fs.sv().starts_with("He")) {}
+    if (hello_fs.sv().ends_with('o')) {}
+    if (hello_fs.sv().find('l') != std::string_view::npos) {}
+    if (hello_fs.sv().rfind("ll") != std::string_view::npos) {}
+    if (hello_fs.sv().find_first_of('l') != std::string_view::npos) {}
+    if (hello_fs.sv().find_last_of("ll") != std::string_view::npos) {}
+    if (hello_fs.sv().find_first_not_of("xyz") != std::string_view::npos) {}
+    if (hello_fs.sv().find_last_not_of("abc") != std::string_view::npos) {}
+
+* Automatically converts to string_view.
 * Implements some additional functionality not found in std::string and std::string_view:
     + trim_front
     + trim_back
@@ -34,6 +48,7 @@ For the most part **fstring** follows the std::string and std::string_view inter
     + erase_all_not_of
     + printf
     + scanf
+
 
 ### always maintains terminating '\0', so can be passed to functions like chmod:
 void call_chmod()
