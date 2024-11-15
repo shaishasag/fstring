@@ -24,7 +24,8 @@ For the most part **fstring** follows the std::string and std::string_view inter
 * Is memcopy-able: can be copied with memcpy.
 
 * Supports most std::string and std::string_view interface.
-    Use fstr::fstr_base::sv() to access the following std::string_view functions:
+    Use fstr::fstr_base::**sv()** to access the following std::string_view functions:
+    
     
     fstr::fstr31 hello_fs("hello");
 
@@ -36,6 +37,7 @@ For the most part **fstring** follows the std::string and std::string_view inter
     if (hello_fs.sv().find_last_of("ll") != std::string_view::npos) {}
     if (hello_fs.sv().find_first_not_of("xyz") != std::string_view::npos) {}
     if (hello_fs.sv().find_last_not_of("abc") != std::string_view::npos) {}
+
 
 * Automatically converts to string_view.
 * Implements some additional functionality not found in std::string and std::string_view:
