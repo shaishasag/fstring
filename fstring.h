@@ -330,8 +330,8 @@ public:
         set_new_size(size()+actual_count);
     }
 
-    // Sometimes that compiler does not automatically converts append("abc") to append(std::string_view("abc"))
-    // so must keep append(const CharT* in_str)
+    // Sometimes the compiler does not automatically converts append("abc") to append(std::string_view("abc"))
+    // so cannot remove append(const CharT* in_str)
     constexpr void append(const CharT* in_str)  noexcept
     {
         __append__(in_str);
@@ -508,14 +508,14 @@ public:
     constexpr void tolower() noexcept
     {
         std::transform(begin(), end(), begin(),
-                         [](unsigned char c){ return std::tolower(c); });
+                         [](unsigned char c){ return static_cast<CharT>(std::tolower(c)); });
     }
 
     // non-standard
     constexpr void toupper() noexcept
     {
         std::transform(begin(), end(), begin(),
-                         [](unsigned char c){ return std::toupper(c); });
+                         [](unsigned char c){ return static_cast<CharT>(std::toupper(c)); });
     }
 
     // non-standard
