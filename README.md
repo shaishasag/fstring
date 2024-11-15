@@ -2,7 +2,8 @@
 Fixed capacity C++ string class.
 
 ## About
-**fstr::fstring** is C++17 fixed capacity string class.
+**fstr::fstring** is C++20 fixed capacity string class. 
+C++17 compatible code is avaliable in branch "C++17".
 
 For the most part **fstring** follows the std::string and std::string_view interface.
 

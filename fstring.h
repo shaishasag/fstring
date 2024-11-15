@@ -5,6 +5,10 @@
 #include "fstring/fstring.h"
 */
 
+#if __cplusplus < 202002L
+#error C++20 is required to compile fstring,h
+#endif
+
 #ifdef _WINDOWS_
 #ifndef NOMINMAX
 #error NOMINMAX is not defined for windows compilation, this will cause collision with std::min, std::max
@@ -341,24 +345,6 @@ public:
         return *this;
     }
 
-#if __cplusplus < 202002L
-    template <class _Tp, class = std::enable_if<std::is_convertible_v<_Tp, std::string_view> > >
-    bool operator==(const _Tp& sv_convertible) const  noexcept
-    {
-        return 0 == std::string_view(sv_convertible).compare(std::string_view(*this));
-    }
-
-    template <class _Tp, class = std::enable_if<std::is_convertible_v<_Tp, std::string_view> > >
-    bool operator!=(const _Tp& sv_convertible) const  noexcept
-    {
-        return 0 != std::string_view(sv_convertible).compare(std::string_view(*this));
-    }
-
-    bool operator<(const std::string_view sv) const  noexcept
-    {
-        return std::string_view(*this) < sv;
-    }
-#endif
 
     // compare: use string_view.compare when available in c++20
     // until then, only compare(const std::string_view) is provided
@@ -837,16 +823,6 @@ public:
         return *this;
     }
 
-#if __cplusplus < 202002L
-    bool operator==(const char* cp) const noexcept
-        {return 0 == std::string_view(cp).compare(std::string_view(m_referee));}
-    bool operator==(const std::string_view sv) const noexcept
-        {return 0 == sv.compare(std::string_view(m_referee));}
-    bool operator!=(const std::string_view sv) const noexcept
-        {return m_referee != sv;}
-    bool operator<(const std::string_view sv) const noexcept
-        {return m_referee < sv;}
-#endif
 
     constexpr int compare(const std::string_view sv) const noexcept {return m_referee.compare(sv);}
     constexpr int icompare(const std::string_view sv) const noexcept {return m_referee.icompare(sv);}
@@ -920,8 +896,6 @@ using fstr1023 = fstring_base<1023, char>;
 using fstr2047 = fstring_base<2047, char>;
 
 
-#if __cplusplus >= 202002L
-
 template<typename From>
 concept StaticCastConvertibleTo_fstr_ref = requires(From from) {
     static_cast<fstr_ref>(from);  // Check if static_cast<fstr_ref> is valid
@@ -980,7 +954,6 @@ bool operator==(const TLHS& lhs, const TRHS& rhs)
     return LHSsv == RHSsv;
 }
 
-#endif // __cplusplus >= 202002L
 
 }
 #endif // __fstring_h__
