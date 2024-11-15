@@ -155,7 +155,5 @@ int main(int argc, char** argv)
         ukalili("std_conc", the_ref);
     }
 
-    func_user();
-
     return 0;
 }
