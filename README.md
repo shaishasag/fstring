@@ -7,7 +7,7 @@ C++17 compatible code is avaliable in branch "C++17".
 
 For the most part **fstring** follows the std::string and std::string_view interface.
 
-```
+```source.c++
     #include <iostream>
     #include "fstring/fstring.h"
 
@@ -28,7 +28,7 @@ For the most part **fstring** follows the std::string and std::string_view inter
 * Supports most std::string and std::string_view interface.
     Use fstr::fstr_base::**sv()** to access the following std::string_view functions:
     
-```
+```source.c++
     fstr::fstr31 hello_fs("hello");
 
     if (hello_fs.sv().starts_with("He")) {}
@@ -55,16 +55,19 @@ For the most part **fstring** follows the std::string and std::string_view inter
 
 
 ### always maintains terminating '\0', so can be passed to functions like chmod:
+
+```source.c++
 void call_chmod()
 {
     fstr::fstr255 some_path("/usr/local/bin/exec");
     chmod(some_path.c_str(), 0766);
 }
+```
 
 ### fstring_ref:
 Associated class **fstring_ref** allows passing/returning **fstring** of any size to/from a function so that the function does not need to be templated on the size of **fstring**.
 
-```
+```source.c++
     #include <iostream>
     #include "fstring.h"
 
