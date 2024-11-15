@@ -100,3 +100,31 @@ TEST(Stream, stream_strs)
         EXPECT_STREQ(fs_ref.c_str(), "PotassiumPotassium");
     }
 }
+
+TEST(Stream, more_streaming)
+{
+    {   // stream to fstr with integer and boolean
+        fstr::fstr31 vari;
+        vari << "The" << ' ' << 3 << ' ' << "Musketeers? " << true;
+        EXPECT_EQ(vari, "The 3 Musketeers? true");
+    }
+    {   // stream to fstr_ref with integer and boolean
+        fstr::fstr31 vari;
+        fstr::fstr_ref vari_ref{vari};
+        vari_ref << "The" << ' ' << 3 << ' ' << "Musketeers? " << true;
+        EXPECT_EQ(vari, "The 3 Musketeers? true");
+        EXPECT_EQ(vari_ref, "The 3 Musketeers? true");
+    }
+    {   // stream to fstr with float and boolean
+        fstr::fstr31 vari;
+        vari << "The" << ' ' << 3.1415 << ' ' << "Musketeers? " << false;
+        EXPECT_EQ(vari, "The 3.1415 Musketeers? false");
+    }
+    {   // stream to fstr_ref with float and boolean
+        fstr::fstr31 vari;
+        fstr::fstr_ref vari_ref{vari};
+        vari_ref << "The" << ' ' << 3.1415 << ' ' << "Musketeers? " << false;
+        EXPECT_EQ(vari, "The 3.1415 Musketeers? false");
+        EXPECT_EQ(vari_ref, "The 3.1415 Musketeers? false");
+    }
+}

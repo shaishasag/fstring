@@ -22,29 +22,14 @@ inline fstr::fstr_ref operator<<(fstr::fstr_ref fref, const char* in_c_str_to_st
 template<typename ToStream>
 inline fstr::fstr_ref operator<<(fstr::fstr_ref fref, const ToStream& thing_to_stream)
 {
-    if constexpr (std::is_convertible_v<ToStream, std::string_view>)
+    if constexpr (std::is_convertible_v<ToStream, std::string_view>
+                  || std::is_same_v<ToStream, fstr::fstr_ref::char_type>)
     {
         fref += thing_to_stream;
     }
-    else if constexpr (std::is_same<ToStream, bool>())
-    {
-        fref += thing_to_stream ? "true"sv : "false"sv;
-    }
-    else if constexpr (std::is_same_v<ToStream, fstr::fstr_ref::char_type>)
-    {
-        fref += thing_to_stream;
-    }
-    else if constexpr (std::is_integral_v<ToStream>)
+    else if constexpr (IsPrintfable<ToStream>)
     {
         fref.printf(thing_to_stream);
-    }
-    else if constexpr (std::is_floating_point_v<ToStream>)
-    {
-        fref.printf(thing_to_stream);
-    }
-    else
-    {
-        fref += thing_to_stream;
     }
 
     return fref;

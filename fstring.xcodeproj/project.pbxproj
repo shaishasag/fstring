@@ -553,6 +553,7 @@
 			isa = PBXGroup;
 			children = (
 				F62BDD19293F01860000567A /* access.cpp */,
+				F698BB352CE77C320059414F /* append.cpp */,
 				F62BDD12293E67180000567A /* assign.cpp */,
 				F62BDD17293E80B60000567A /* change.cpp */,
 				F6F31644293FAA98008D93CF /* compare.cpp */,
@@ -561,14 +562,16 @@
 				F6CEEF9D2A97864400DB97B3 /* containers.cpp */,
 				F669396B2A8FBD03007E68A7 /* conversions.cpp */,
 				F66DF9A429CCA40A007B2032 /* empty.cpp */,
+				F6E83F7F2AC1DD2100656B85 /* erase_all.cpp */,
 				F6077C1B2960738A00C019C4 /* erase.cpp */,
 				F6BC98C029423926002CC268 /* find.cpp */,
+				F638E75C2C80BCBD00DCF533 /* hashing.cpp */,
 				F60C98CA295F3DCF00760EB6 /* insert.cpp */,
 				F62BDD1B293F111C0000567A /* memcpy.cpp */,
 				F6A56B142A976378002BAEFD /* printf.cpp */,
-				F6652D0E2AC48D0D00F932A4 /* scanf.cpp */,
 				F62BDD14293E78C00000567A /* reference.cpp */,
 				F69EF04A2AAA371F0033190A /* replace.cpp */,
+				F6652D0E2AC48D0D00F932A4 /* scanf.cpp */,
 				F6B3F3482AA0DD7B001E30AC /* size_of.cpp */,
 				F63F11E42957548E00CAE219 /* stream.cpp */,
 				F60C98C8295F336F00760EB6 /* substr.cpp */,
@@ -576,9 +579,6 @@
 				F61AE77329465442002F9078 /* traits.cpp */,
 				F6BC984829411AFA002CC268 /* trim.cpp */,
 				F6BC984A2941D94C002CC268 /* variadic.cpp */,
-				F6E83F7F2AC1DD2100656B85 /* erase_all.cpp */,
-				F638E75C2C80BCBD00DCF533 /* hashing.cpp */,
-				F698BB352CE77C320059414F /* append.cpp */,
 			);
 			path = tests;
 			sourceTree = "<group>";

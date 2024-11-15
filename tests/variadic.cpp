@@ -57,3 +57,14 @@ TEST(variadic, variadic_more_types)
 
 }
 
+TEST(variadic, variadic_none_string)
+{
+    {   // variadic with integer and boolean
+        fstr::fstr31 vari("The", ' ', 3 , ' ', "Musketeers? ", true);
+        EXPECT_EQ(vari, "The 3 Musketeers? true");
+    }
+    {   // variadic with float and boolean
+        fstr::fstr31 vari("The", ' ', 3.1415 , ' ', "Musketeers? ", false);
+        EXPECT_EQ(vari, "The 3.1415 Musketeers? false");
+    }
+}

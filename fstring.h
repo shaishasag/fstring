@@ -36,6 +36,10 @@ typedef SSIZE_T ssize_t;
     #define DllExport
 #endif
 
+template <typename TPrintfable>
+concept IsPrintfable = (std::is_arithmetic_v<TPrintfable> || std::is_same_v<TPrintfable, bool>)
+                        && ! std::same_as<TPrintfable, char>;
+
 namespace fstr
 {
 using size_type = std::size_t;
@@ -118,7 +122,14 @@ public:
     template<class TFfirst, class... TRest>
     constexpr void recursive_helper_to_variadic_constructor(const TFfirst in_1, const TRest& ...in_rest) noexcept
     {
-        append(in_1);
+        if constexpr (IsPrintfable<TFfirst>)
+        {
+            printf(in_1);
+        }
+        else
+        {
+            append(in_1);
+        }
         recursive_helper_to_variadic_constructor(in_rest...);
     }
 #ifdef _MSC_VER
@@ -538,13 +549,18 @@ public:
         }
     }
 
-    template<typename TToPrintf>
+    template<IsPrintfable TToPrintf>
     constexpr fstring_base& printf(const TToPrintf in_to_print, const char* printf_format=nullptr) noexcept
     {
         bool remove_zeros{false};
         if (nullptr == printf_format)
         {
-            if constexpr (std::is_floating_point_v<TToPrintf>) {
+            if constexpr (std::is_same_v<TToPrintf, bool>)
+            {
+                append(in_to_print ? "true"sv : "false"sv);
+                return *this;
+            }
+            else if constexpr (std::is_floating_point_v<TToPrintf>) {
                 printf_format = "%llf";
                 remove_zeros = true;
             }
