@@ -561,7 +561,15 @@ public:
                 return *this;
             }
             else if constexpr (std::is_floating_point_v<TToPrintf>) {
-                printf_format = "%llf";
+                if (std::is_same_v<TToPrintf, float>) {
+                    printf_format = "%f";
+                }
+                else if (std::is_same_v<TToPrintf, double>) {
+                    printf_format = "%lf";
+                }
+                else if (std::is_same_v<TToPrintf, long double>) {
+                    printf_format = "%Lf";
+                }
                 remove_zeros = true;
             }
             else if constexpr (std::is_integral_v<TToPrintf> && std::is_signed_v<TToPrintf>) {

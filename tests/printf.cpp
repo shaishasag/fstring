@@ -26,8 +26,9 @@ TEST(Printf, simple)
         fstr31 fs;
         fs.printf(1.0);
         EXPECT_STREQ(fs.c_str(), "1.0");
+        fs.clear();
         fs.printf(2.0);
-        EXPECT_STREQ(fs.c_str(), "1.02.0");
+        EXPECT_STREQ(fs.c_str(), "2.0");
     }
     {
         fstr31 fs;
@@ -35,6 +36,9 @@ TEST(Printf, simple)
         EXPECT_STREQ(fs.c_str(), "78.900002");
         fs.clear();
         fs.printf(double(78.90));
+        EXPECT_STREQ(fs.c_str(), "78.9");
+        fs.clear();
+        fs.printf((long double)(78.90));
         EXPECT_STREQ(fs.c_str(), "78.9");
     }
     {
@@ -44,6 +48,9 @@ TEST(Printf, simple)
         fs.clear();
         fs.printf(double(123.456));
         EXPECT_STREQ(fs.c_str(), "123.456");
+        fs.clear();
+        fs.printf((long double)(123.456));
+        EXPECT_STREQ(fs.c_str(), "123.456");
     }
     {
         fstr31 fs;
@@ -52,6 +59,9 @@ TEST(Printf, simple)
         fs.clear();
         fs.printf(double(0.001234));
         EXPECT_STREQ(fs.c_str(), "0.001234");
+        fs.clear();
+        fs.printf((long double)(0.001234));
+        EXPECT_STREQ(fs.c_str(), "0.001234");
     }
     {
         fstr31 fs;
@@ -59,6 +69,9 @@ TEST(Printf, simple)
         EXPECT_STREQ(fs.c_str(), "100.012344");
         fs.clear();
         fs.printf(double(9876543210.0123456789));
+        EXPECT_STREQ(fs.c_str(), "9876543210.012346");
+        fs.clear();
+        fs.printf((long double)(9876543210.0123456789));
         EXPECT_STREQ(fs.c_str(), "9876543210.012346");
     }
     {   // Hex format
