@@ -11,7 +11,7 @@
 #include <charconv>
 #include <iostream>
 
-// compiler does not know how to convert from fstring_base<CharT> to  fstring_ref_base<CharT>;
+// compiler does not know how to convert from fstring_base<CharT> to  fstring_ref_base<CharT>
 
 inline fstr::fstr_ref operator<<(fstr::fstr_ref fref, const char* in_c_str_to_stream)
 {

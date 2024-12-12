@@ -6,10 +6,9 @@
 */
 
 #if __cplusplus < 202002L
-#error C++20 is required to compile fstring,h
+#error C++20 is required to compile fstring.h
 #endif
 
-using namespace std::string_view_literals;
 
 #ifdef _WINDOWS_
 #ifndef NOMINMAX
@@ -17,9 +16,11 @@ using namespace std::string_view_literals;
 #endif
 #endif
 
+#include <cctype>
 #include <algorithm>
 #include <stdexcept>
 #include <string_view>
+using namespace std::string_view_literals;
 
 
 // functions marked non-standard have no equivalent in std::string or std::string_view
