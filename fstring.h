@@ -65,7 +65,10 @@ private:
         m_str[m_size] = '\0';
     }
 
-    constexpr void __append__(const CharT in_char) noexcept
+    // template is needed here to so calling __append__(int) will not compile
+    template <typename TChar>
+    requires std::same_as<TChar, CharT>
+    constexpr void __append__(const TChar in_char) noexcept
     {   // append a single char
         if (m_capacity > m_size)
         {
@@ -145,7 +148,10 @@ public:
         return std::string_view(c_str(), size());
     }
 
-    fstring_base& operator=(const CharT in_char) noexcept
+    // template is needed here to avoid operator= converting ints to char
+    template <typename TChar>
+    requires std::same_as<TChar, CharT>
+    fstring_base& operator=(const TChar in_char) noexcept
     {
         clear();
         __append__(in_char);
@@ -218,7 +224,10 @@ public:
 #pragma warning( push )
 #pragma warning( disable : 4789 )
 #endif
-    constexpr fstring_base& insert(size_type index, size_type count, CharT ch)
+    // template is needed here to so calling insert(int) will not compile
+    template <typename TChar>
+    requires std::same_as<TChar, CharT>
+    constexpr fstring_base& insert(size_type index, size_type count, const TChar ch)
     {
         if (index > size()) {
             throw std::out_of_range("index out of range");
@@ -309,7 +318,10 @@ public:
                 erase(i, 1);
     }
 
-    constexpr void push_back(const CharT in_char)
+    // template is needed here to so calling push_back(int) will not compile
+    template <typename TChar>
+    requires std::same_as<TChar, CharT>
+    constexpr void push_back(const TChar in_char)
     {
         if (full())
             throw std::length_error("fstring is full");
@@ -318,13 +330,19 @@ public:
 
     constexpr void pop_back()  noexcept { resize(size() - 1); }
 
-    constexpr void append(const CharT in_char)  noexcept
+    // template is needed here to so calling append(int) will not compile
+    template <typename TChar>
+    requires std::same_as<TChar, CharT>
+    constexpr void append(const TChar in_char)  noexcept
     {
         __append__(in_char);
     }
 
     // Appends count copies of character ch
-    constexpr void append(size_type count, const CharT ch) noexcept
+    // template is needed here to so calling append(int) will not compile
+    template <typename TChar>
+    requires std::same_as<TChar, CharT>
+    constexpr void append(size_type count, const TChar ch) noexcept
     {
         const size_type actual_count = std::min(vacancy(), count);
         memset(m_str+size(), ch, actual_count);
@@ -346,7 +364,10 @@ public:
         __append__(sv.data(), sv.size());
     }
 
-    constexpr fstring_base& operator+=(const CharT in_char) noexcept
+    // template is needed here to avoid operator+= converting ints to char
+    template <typename TChar>
+    requires std::same_as<TChar, CharT>
+    constexpr fstring_base& operator+=(const TChar in_char) noexcept
     {
         __append__(in_char);
         return *this;
@@ -421,7 +442,10 @@ public:
         return *this;
     }
 
-    void resize(const size_type count, CharT ch='\0')
+    // template is needed here to so calling resize(int) will not compile
+    template <typename TChar>
+    requires std::same_as<TChar, CharT>
+    void resize(const size_type count, const TChar ch)
     {
         if (count > capacity()) {
             throw std::length_error("cannot resize count too long");
@@ -432,6 +456,11 @@ public:
             memset(m_str+size(), ch, new_size-size()+1);
         }
         set_new_size(new_size);
+    }
+
+    constexpr void resize(const size_type count)
+    {
+        resize(count, '\0');
     }
 
     // swap does not make sense for fixed-size string, use std::exchange
@@ -469,7 +498,7 @@ public:
     }
 
 
-    constexpr bool contains(auto&& in_sv) const noexcept
+    constexpr bool contains(const auto& in_sv) const noexcept
     {
         return sv().find(in_sv) != npos;
     }
@@ -739,10 +768,10 @@ public:
     constexpr CharT  at(const size_type pos) const          { m_referee.at(pos); }
     constexpr CharT& operator[](const size_type pos) noexcept        { return m_referee[pos]; }
     constexpr CharT  operator[](const size_type pos) const  noexcept { return m_referee[pos]; }
-    constexpr CharT& front()  noexcept       { return front(); }
-    constexpr CharT  front() const  noexcept { return front(); }
-    constexpr CharT& back() noexcept         { return back(); }
-    constexpr CharT  back() const noexcept   { return back(); }
+    constexpr CharT& front()  noexcept       { return m_referee.front(); }
+    constexpr CharT  front() const  noexcept { return m_referee.front(); }
+    constexpr CharT& back() noexcept         { return m_referee.back(); }
+    constexpr CharT  back() const noexcept   { return m_referee.back(); }
 
 
     constexpr CharT* begin() noexcept                { return m_referee.begin(); }
@@ -807,19 +836,35 @@ public:
         m_referee.erase_all_not_of(_sv);
     }
 
-    constexpr void push_back(const CharT in_char)  {return m_referee.push_back(in_char);}
+    // template is needed here to so calling push_back(int) will not compile
+    template <typename TChar>
+    requires std::same_as<TChar, CharT>
+    constexpr void push_back(const TChar in_char)  {return m_referee.push_back(in_char);}
+
     constexpr void pop_back() noexcept {return m_referee.pop_back();}
-    constexpr void append(const CharT in_char) noexcept {return m_referee.append(in_char);}
-    constexpr void append(size_type count, const CharT in_char) noexcept {return m_referee.append(count, in_char);}
-    //constexpr void append(const CharT* in_str)  noexcept {return m_referee.append(in_str);}
+
+    // template is needed here to so calling append(int) will not compile
+    template <typename TChar>
+    requires std::same_as<TChar, CharT>
+    constexpr void append(const TChar in_char) noexcept {return m_referee.append(in_char);}
+
+    // template is needed here to so calling append(int) will not compile
+    template <typename TChar>
+    requires std::same_as<TChar, CharT>
+    constexpr void append(size_type count, const TChar in_char) noexcept {return m_referee.append(count, in_char);}
+
     constexpr void append(const CharT* in_str, const size_type in_size) noexcept {return m_referee.append(in_str, in_size);}
     constexpr void append(std::string_view sv) noexcept {return m_referee.append(sv);}
 
-    constexpr fstring_ref_base& operator+=(const CharT in_char) noexcept
+    // template is needed here to avoid operator+= converting ints to char
+    template <typename TChar>
+    requires std::same_as<TChar, CharT>
+    constexpr fstring_ref_base& operator+=(const TChar in_char) noexcept
     {
         m_referee += in_char;
         return *this;
     }
+
     constexpr fstring_ref_base& operator+=(std::string_view sv) noexcept
     {
         m_referee += sv;
@@ -842,7 +887,15 @@ public:
         return *this;
     }
 
-    void resize(const size_type count, CharT ch='\0') { m_referee.resize(count, ch);}
+    // template is needed here to so calling resize(int) will not compile
+    template <typename TChar>
+    requires std::same_as<TChar, CharT>
+    void resize(const size_type count, const TChar ch) { m_referee.resize(count, ch);}
+
+    constexpr void resize(const size_type count)
+    {
+        m_referee.resize(count);
+    }
 
     // substr: use string_view.substr
     // copy: use string_view.copy
@@ -855,7 +908,7 @@ public:
     void trim_front(std::string_view trim_chars=" \f\n\r\t\v") noexcept { return m_referee.trim_front(trim_chars); }
     void trim_back(std::string_view trim_chars=" \f\n\r\t\v") noexcept { return m_referee.trim_back(trim_chars); }
     void trim(std::string_view trim_chars=" \f\n\r\t\v") noexcept { return m_referee.trim(trim_chars); }
-    constexpr bool contains(auto&& in_sv)  const noexcept { return m_referee.contains(in_sv); }
+    constexpr bool contains(const auto&& in_sv)  const noexcept { return m_referee.contains(in_sv); }
     constexpr void tolower() noexcept { return m_referee.tolower(); }
     constexpr void toupper() noexcept { return m_referee.toupper(); }
     inline void reposition_end() noexcept { return m_referee.reposition_end(); }
