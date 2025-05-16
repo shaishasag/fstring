@@ -18,6 +18,7 @@
 
 #include <cctype>
 #include <algorithm>
+#include <iterator>
 #include <stdexcept>
 #include <string_view>
 using namespace std::string_view_literals;
@@ -101,7 +102,7 @@ private:
 
         const size_type num_chars_to_copy = std::min(in_size, vacancy());
         CharT* copy_to = m_str + m_size;
-        memcpy(copy_to, in_str, num_chars_to_copy);
+        std::copy_n(in_str, num_chars_to_copy, copy_to);
         set_new_size(m_size + num_chars_to_copy);
     }
 
@@ -254,7 +255,7 @@ public:
         }
 
         std::memmove(m_str+index+count, m_str+index, size()-index);
-        memset(m_str+index, ch, count);
+        std::fill_n(m_str+index, count, ch);
         set_new_size(m_size + count);
 
         return *this;
@@ -269,8 +270,8 @@ public:
             throw std::length_error("too many chars to insert");
         }
 
-        memmove(m_str+index+count, m_str+index, size()-index);
-        memmove(m_str+index, sv.data(), count);
+        std::copy_backward(m_str+index, m_str+size(), m_str+size()+count);
+        std::copy_backward(sv.begin(), sv.begin()+count, m_str+index+count);
         set_new_size(m_size + count);
 
         return *this;
@@ -295,13 +296,14 @@ public:
         else
         {
             size_type num_chars_to_remove = std::min(count, size() - index);
-            std::memmove((void*)(m_str+index), (void*)(m_str+(index+num_chars_to_remove)), size() - index - count);
+            std::copy(m_str + (index+num_chars_to_remove), end(), m_str+index);
             m_size -= count;
         }
         *end() = '\0';
 
         return *this;
     }
+
     constexpr CharT* erase(const CharT* position)
     {
         size_type position_index = std::distance((const CharT*)m_str, position);
@@ -362,7 +364,7 @@ public:
     constexpr void append(size_type count, const TChar ch) noexcept
     {
         const size_type actual_count = std::min(vacancy(), count);
-        memset(m_str+size(), ch, actual_count);
+        std::fill_n(m_str+size(), actual_count, ch);
         set_new_size(size()+actual_count);
     }
 
@@ -470,9 +472,7 @@ public:
         const size_type new_size = std::min(capacity(), count);
         if (size() < new_size)
         {
-            auto from = m_str+size();
-            auto co = new_size-size();
-            memset(m_str+size(), ch, new_size-size());
+            std::fill_n(m_str+size(), new_size-size(), ch);
         }
         set_new_size(new_size);
     }
@@ -733,7 +733,7 @@ public:
         if (nullptr != scanf_format)
         {
 #ifdef _MSC_VER
-            sscanf_s(data(), scanf_format, &in_to_scan);
+            sscanf_s(data(), scanf_format, &in_to_scan); // need to add size here?
 #else
             sscanf(data(), scanf_format, &in_to_scan);
 #endif
@@ -780,31 +780,33 @@ public:
     }
 
     fstring_ref_base assign(std::string_view sv) noexcept {
-        m_referee = sv;;
+        m_referee = sv;
         return *this;
     }
-    constexpr CharT& at(const size_type pos)                { m_referee.at(pos); }
-    constexpr CharT  at(const size_type pos) const          { m_referee.at(pos); }
+    constexpr CharT& at(const size_type pos)                { return m_referee.at(pos); }
+    constexpr CharT  at(const size_type pos) const          { return m_referee.at(pos); }
     constexpr CharT& operator[](const size_type pos) noexcept        { return m_referee[pos]; }
     constexpr CharT  operator[](const size_type pos) const  noexcept { return m_referee[pos]; }
+
     constexpr CharT& front()  noexcept       { return m_referee.front(); }
     constexpr CharT  front() const  noexcept { return m_referee.front(); }
     constexpr CharT& back() noexcept         { return m_referee.back(); }
     constexpr CharT  back() const noexcept   { return m_referee.back(); }
 
-
     constexpr CharT* begin() noexcept                { return m_referee.begin(); }
     constexpr const CharT* begin() const noexcept    { return m_referee.begin(); }
-    constexpr const CharT* cbegin() const noexcept   { return m_referee.xbegin(); }
+    constexpr const CharT* cbegin() const noexcept   { return m_referee.cbegin(); }
     constexpr CharT* end() noexcept                  { return m_referee.end(); }
     constexpr const CharT* end() const noexcept      { return m_referee.end(); }
     constexpr const CharT* cend() const noexcept     { return m_referee.cend(); }
-    constexpr CharT* rbegin() noexcept                { return m_referee.rbegin(); }
-    constexpr const CharT* rbegin() const noexcept    { return m_referee.rbegin(); }
-    constexpr const CharT* rcbegin() const noexcept   { return m_referee.rcbegin(); }
-    constexpr CharT* rend() noexcept                  { return m_referee.rend(); }
-    constexpr const CharT* rend() const noexcept      { return m_referee.rend(); }
-    constexpr const CharT* rcend() const noexcept     { return m_referee.rcend(); }
+
+    constexpr std::reverse_iterator<CharT*> rbegin() noexcept                { return m_referee.rbegin(); }
+    constexpr std::reverse_iterator<const CharT*> rbegin() const noexcept    { return m_referee.rbegin(); }
+    constexpr std::reverse_iterator<const CharT*> crbegin() const noexcept   { return m_referee.crbegin(); }
+    constexpr std::reverse_iterator<CharT*> rend() noexcept                  { return m_referee.rend(); }
+    constexpr std::reverse_iterator<const CharT*> rend() const noexcept      { return m_referee.rend(); }
+    constexpr std::reverse_iterator<const CharT*> crend() const noexcept     { return m_referee.crend(); }
+
     constexpr CharT* data() noexcept { return m_referee.data(); }
     constexpr const CharT* data() const noexcept { return m_referee.data(); }
     constexpr const CharT* c_str() const noexcept { return m_referee.c_str(); }

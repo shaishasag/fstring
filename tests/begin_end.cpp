@@ -55,8 +55,6 @@ TEST(BeginEnd, BackwardLoop)
     }
     {
         fstr::fstr7 fs_in{"1234567"};
-        auto ib = *fs_in.rbegin();
-        auto ie = *fs_in.rend();
         size_t iterations_count = 0;
         for (auto i = fs_in.rbegin(); i != fs_in.rend(); ++i)
         {
@@ -131,5 +129,37 @@ TEST(BeginEnd, BackwardLoopAndCopy)
         }
         EXPECT_EQ(out_index,static_cast<int32_t>(fs_out.size() - 1));
         EXPECT_EQ(fs_out, "xyz");
+    }
+}
+
+//
+TEST(BeginEnd, RangeBasedForwardLoop)
+{
+    {
+        fstr::fstr7 fs_in;
+        size_t iterations_count = 0;
+        for ([[maybe_unused]] auto i : fs_in)
+        {
+            ++iterations_count;
+        }
+        EXPECT_EQ(iterations_count, fs_in.size()); // looping empty string should have 0 iteration
+    }
+    {
+        fstr::fstr7 fs_in{'a'};
+        size_t iterations_count = 0;
+        for ([[maybe_unused]] auto i : fs_in)
+        {
+            ++iterations_count;
+        }
+        EXPECT_EQ(iterations_count, fs_in.size()); // looping 1 char string should have 1 iteration
+    }
+    {
+        fstr::fstr7 fs_in{"1234567"};
+        size_t iterations_count = 0;
+        for (auto i : fs_in)
+        {
+            ++iterations_count;
+        }
+        EXPECT_EQ(iterations_count, fs_in.size()); // looping full string should have 1 iteration
     }
 }
