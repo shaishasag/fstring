@@ -44,13 +44,13 @@ TEST(Printf, simple)
     {
         fstr31 fs;
         fs.printf(float(123.456f));
-        EXPECT_STREQ(fs.c_str(), "123.456001");
+        EXPECT_STREQ(fs.c_str(), "123.4560012817");
         fs.clear();
         fs.printf(double(123.456));
-        EXPECT_STREQ(fs.c_str(), "123.456");
+        EXPECT_STREQ(fs.c_str(), "123.45600000000000307");
         fs.clear();
         fs.printf((long double)(123.456));
-        EXPECT_STREQ(fs.c_str(), "123.456");
+        EXPECT_STREQ(fs.c_str(), "123.45600000000000307");
     }
     {
         fstr31 fs;
@@ -66,13 +66,13 @@ TEST(Printf, simple)
     {
         fstr31 fs;
         fs.printf(100.0123456789f);
-        EXPECT_STREQ(fs.c_str(), "100.012344");
+        EXPECT_STREQ(fs.c_str(), "100.0123443604");
         fs.clear();
         fs.printf(double(9876543210.0123456789));
-        EXPECT_STREQ(fs.c_str(), "9876543210.012346");
+        EXPECT_STREQ(fs.c_str(), "9876543210.012346267700195312");
         fs.clear();
         fs.printf((long double)(9876543210.0123456789));
-        EXPECT_STREQ(fs.c_str(), "9876543210.012346");
+        EXPECT_STREQ(fs.c_str(), "9876543210.012346267700195312");
     }
     {   // Hex format
         fstr31 fs;

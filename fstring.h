@@ -470,7 +470,9 @@ public:
         const size_type new_size = std::min(capacity(), count);
         if (size() < new_size)
         {
-            memset(m_str+size(), ch, new_size-size()+1);
+            auto from = m_str+size();
+            auto co = new_size-size();
+            memset(m_str+size(), ch, new_size-size());
         }
         set_new_size(new_size);
     }

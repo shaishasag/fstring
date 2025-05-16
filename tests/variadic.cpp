@@ -64,7 +64,7 @@ TEST(variadic, variadic_none_string)
         EXPECT_EQ(vari, "The 3 Musketeers? true");
     }
     {   // variadic with float and boolean
-        fstr::fstr31 vari("The", ' ', 3.1415 , ' ', "Musketeers? ", false);
-        EXPECT_EQ(vari, "The 3.1415 Musketeers? false");
+        fstr::fstr63 vari("The", ' ', 3.1415 , ' ', "Musketeers? ", false);
+        EXPECT_EQ(vari, "The 3.141500000000000181 Musketeers? false");
     }
 }

@@ -44,6 +44,7 @@
 		F698BB362CE77C320059414F /* append.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F698BB352CE77C320059414F /* append.cpp */; };
 		F6A680492942867800D9CE7A /* hello_fstring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6A680482942867800D9CE7A /* hello_fstring.cpp */; };
 		F6DEE8A02DD76F5300FAA006 /* begin_end.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6DEE89F2DD76F5300FAA006 /* begin_end.cpp */; };
+		F6DEE8A22DD784DE00FAA006 /* resize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6DEE8A12DD784DE00FAA006 /* resize.cpp */; };
 		F6DFFC802C4132E800080329 /* universal_converter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6DFFC7E2C412F3B00080329 /* universal_converter.cpp */; };
 /* End PBXBuildFile section */
 
@@ -263,6 +264,7 @@
 		F6BC98C029423926002CC268 /* find.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = find.cpp; sourceTree = "<group>"; };
 		F6CEEF9D2A97864400DB97B3 /* containers.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = containers.cpp; sourceTree = "<group>"; };
 		F6DEE89F2DD76F5300FAA006 /* begin_end.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = begin_end.cpp; sourceTree = "<group>"; };
+		F6DEE8A12DD784DE00FAA006 /* resize.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = resize.cpp; sourceTree = "<group>"; };
 		F6DFFC722C412EEA00080329 /* universal_converter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = universal_converter.h; sourceTree = "<group>"; };
 		F6DFFC7D2C412EF500080329 /* universal converter */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "universal converter"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6DFFC7E2C412F3B00080329 /* universal_converter.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = universal_converter.cpp; sourceTree = "<group>"; };
@@ -582,6 +584,7 @@
 				F61AE77329465442002F9078 /* traits.cpp */,
 				F6BC984829411AFA002CC268 /* trim.cpp */,
 				F6BC984A2941D94C002CC268 /* variadic.cpp */,
+				F6DEE8A12DD784DE00FAA006 /* resize.cpp */,
 			);
 			path = tests;
 			sourceTree = "<group>";
@@ -715,6 +718,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F65B4F472C8B6C2800C8A84E /* empty.cpp in Sources */,
+				F6DEE8A22DD784DE00FAA006 /* resize.cpp in Sources */,
 				F65B4F482C8B6C2800C8A84E /* containers.cpp in Sources */,
 				F65B4F492C8B6C2800C8A84E /* tests_main.cpp in Sources */,
 				F65B4F4A2C8B6C2800C8A84E /* stream.cpp in Sources */,
