@@ -43,6 +43,7 @@
 		F65B4F692C8B6C2800C8A84E /* gtest-assertion-result.cc in Sources */ = {isa = PBXBuildFile; fileRef = F62BDD02293E502A0000567A /* gtest-assertion-result.cc */; };
 		F698BB362CE77C320059414F /* append.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F698BB352CE77C320059414F /* append.cpp */; };
 		F6A680492942867800D9CE7A /* hello_fstring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6A680482942867800D9CE7A /* hello_fstring.cpp */; };
+		F6DEE8A02DD76F5300FAA006 /* begin_end.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6DEE89F2DD76F5300FAA006 /* begin_end.cpp */; };
 		F6DFFC802C4132E800080329 /* universal_converter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6DFFC7E2C412F3B00080329 /* universal_converter.cpp */; };
 /* End PBXBuildFile section */
 
@@ -261,6 +262,7 @@
 		F6BC984A2941D94C002CC268 /* variadic.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = variadic.cpp; sourceTree = "<group>"; };
 		F6BC98C029423926002CC268 /* find.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = find.cpp; sourceTree = "<group>"; };
 		F6CEEF9D2A97864400DB97B3 /* containers.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = containers.cpp; sourceTree = "<group>"; };
+		F6DEE89F2DD76F5300FAA006 /* begin_end.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = begin_end.cpp; sourceTree = "<group>"; };
 		F6DFFC722C412EEA00080329 /* universal_converter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = universal_converter.h; sourceTree = "<group>"; };
 		F6DFFC7D2C412EF500080329 /* universal converter */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "universal converter"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6DFFC7E2C412F3B00080329 /* universal_converter.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = universal_converter.cpp; sourceTree = "<group>"; };
@@ -555,6 +557,7 @@
 				F62BDD19293F01860000567A /* access.cpp */,
 				F698BB352CE77C320059414F /* append.cpp */,
 				F62BDD12293E67180000567A /* assign.cpp */,
+				F6DEE89F2DD76F5300FAA006 /* begin_end.cpp */,
 				F62BDD17293E80B60000567A /* change.cpp */,
 				F6F31644293FAA98008D93CF /* compare.cpp */,
 				F6BC984629410D1C002CC268 /* constexpr.cpp */,
@@ -724,6 +727,7 @@
 				F65B4F522C8B6C2800C8A84E /* variadic.cpp in Sources */,
 				F698BB362CE77C320059414F /* append.cpp in Sources */,
 				F65B4F532C8B6C2800C8A84E /* constexpr.cpp in Sources */,
+				F6DEE8A02DD76F5300FAA006 /* begin_end.cpp in Sources */,
 				F65B4F542C8B6C2800C8A84E /* compare.cpp in Sources */,
 				F65B4F552C8B6C2800C8A84E /* printf.cpp in Sources */,
 				F65B4F562C8B6C2800C8A84E /* trim.cpp in Sources */,

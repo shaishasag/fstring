@@ -8,6 +8,7 @@ using namespace std::literals;
 #include <array>
 #include <string_view>
 #include <iostream>
+#include <charconv>
 
 void constructing()
 {
@@ -100,6 +101,18 @@ int main()
     assigning();
     README_example_1();
     README_example_2();
+
+    double a1 = 3.141500000000000181;
+    double a2 = 3.1415;
+    std::cout << "a1 " << ((a1==a2) ? "==" : "!=") << " a2"<< std::endl;
+
+    char buf[32];
+    auto [ptr, ec] = std::to_chars(buf, buf + sizeof(buf), a1);
+    if (ec == std::errc()) {
+        std::cout << std::string_view(buf, ptr - buf) << "\n";
+    } else {
+        std::cerr << "Conversion failed\n";
+    }
 
     return 0;
 }

@@ -33,13 +33,13 @@ TEST(Printf, simple)
     {
         fstr31 fs;
         fs.printf(float(78.90f));
-        EXPECT_STREQ(fs.c_str(), "78.900002");
+        EXPECT_STREQ(fs.c_str(), "78.9000015259");
         fs.clear();
         fs.printf(double(78.90));
-        EXPECT_STREQ(fs.c_str(), "78.9");
+        EXPECT_STREQ(fs.c_str(), "78.900000000000005684");
         fs.clear();
         fs.printf((long double)(78.90));
-        EXPECT_STREQ(fs.c_str(), "78.9");
+        EXPECT_STREQ(fs.c_str(), "78.900000000000005684");
     }
     {
         fstr31 fs;

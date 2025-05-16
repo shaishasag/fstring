@@ -23,7 +23,7 @@
 using namespace std::string_view_literals;
 
 
-// functions marked non-standard have no equivalent in std::string or std::string_view
+// functions marked as 'non-standard' have no equivalent in std::string or std::string_view
 
 #ifdef __clang_major__
 #pragma clang diagnostic ignored "-Wunknown-pragmas"
@@ -148,7 +148,7 @@ public:
         return std::string_view(c_str(), size());
     }
 
-    // template is needed here to avoid operator= converting ints to char
+    // template with requires is needed here to avoid operator= converting ints to char
     template <typename TChar>
     requires std::same_as<TChar, CharT>
     fstring_base& operator=(const TChar in_char) noexcept
@@ -193,18 +193,35 @@ public:
     constexpr CharT& back()  noexcept        { return m_str[size()-1]; }
     constexpr CharT  back() const  noexcept   { return m_str[size()-1]; }
 
-    constexpr CharT* begin() noexcept                { return m_str; }
-    constexpr const CharT* begin() const noexcept    { return m_str; }
-    constexpr const CharT* cbegin() const noexcept   { return begin(); }
-    constexpr CharT* end() noexcept                  { return m_str+m_size; }
-    constexpr const CharT* end() const noexcept      { return m_str+m_size; }
-    constexpr const CharT* cend() const noexcept     { return end(); }
-    constexpr CharT* rbegin() noexcept                { return m_str+(m_size-1); }
-    constexpr const CharT* rbegin() const noexcept    { return m_str+(m_size-1); }
-    constexpr const CharT* rcbegin() const noexcept   { return rbegin(); }
-    constexpr CharT* rend() noexcept                  { return m_str-1; }
-    constexpr const CharT* rend() const noexcept      { return m_str-1; }
-    constexpr const CharT* rcend() const noexcept     { return rend(); }
+    // Forward iterators
+    constexpr CharT* begin() noexcept { return m_str; }
+    constexpr const CharT* begin() const noexcept { return m_str; }
+    constexpr const CharT* cbegin() const noexcept { return begin(); }
+
+    constexpr CharT* end() noexcept { return m_str + m_size; }
+    constexpr const CharT* end() const noexcept { return m_str + m_size; }
+    constexpr const CharT* cend() const noexcept { return end(); }
+
+    // Reverse iterators
+    constexpr std::reverse_iterator<CharT*> rbegin() noexcept {
+        return std::reverse_iterator<CharT*>(end());
+    }
+    constexpr std::reverse_iterator<const CharT*> rbegin() const noexcept {
+        return std::reverse_iterator<const CharT*>(end());
+    }
+    constexpr std::reverse_iterator<const CharT*> crbegin() const noexcept {
+        return std::reverse_iterator<const CharT*>(cend());
+    }
+    constexpr std::reverse_iterator<CharT*> rend() noexcept {
+        return std::reverse_iterator<CharT*>(begin());
+    }
+    constexpr std::reverse_iterator<const CharT*> rend() const noexcept {
+        return std::reverse_iterator<const CharT*>(begin());
+    }
+    constexpr std::reverse_iterator<const CharT*> crend() const noexcept {
+        return std::reverse_iterator<const CharT*>(cbegin());
+    }
+
     constexpr CharT* data() noexcept { return m_str; }
     constexpr const CharT* data() const noexcept { return m_str; }
     constexpr const CharT* c_str() const noexcept { return data(); }
@@ -592,13 +609,13 @@ public:
             }
             else if constexpr (std::is_floating_point_v<TToPrintf>) {
                 if (std::is_same_v<TToPrintf, float>) {
-                    printf_format = "%f";
+                    printf_format = "%.10f";
                 }
                 else if (std::is_same_v<TToPrintf, double>) {
-                    printf_format = "%lf";
+                    printf_format = "%.18lf";
                 }
                 else if (std::is_same_v<TToPrintf, long double>) {
-                    printf_format = "%Lf";
+                    printf_format = "%.18Lf";
                 }
                 remove_zeros = true;
             }
