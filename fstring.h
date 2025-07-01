@@ -48,7 +48,7 @@ using size_type = std::size_t;
 using ssize_type = size_t;
 static constexpr size_type npos = size_type(-1);
 
-template<class CharT>
+template<typename CharT>
 class fstring_ref_base;
 
 template<size_type TSize, class CharT>
@@ -112,7 +112,7 @@ public:
 
     fstring_base() = default;
 
-    template<class TFfirst, class... TRest>
+    template<typename TFfirst, class... TRest>
     constexpr fstring_base(const TFfirst in_1, const TRest& ...in_rest) noexcept
     : fstring_base()
     {
@@ -124,7 +124,7 @@ public:
     #pragma warning(push)
     #pragma warning(disable: 4244)
 #endif
-    template<class TFfirst, class... TRest>
+    template<typename TFfirst, class... TRest>
     constexpr void recursive_helper_to_variadic_constructor(const TFfirst in_1, const TRest& ...in_rest) noexcept
     {
         if constexpr (IsPrintfable<TFfirst>)
@@ -159,7 +159,8 @@ public:
         return *this;
     }
 
-    template <class TConverible, class = std::enable_if<std::is_convertible_v<TConverible, std::string_view> > >
+    template <typename TConverible>
+    requires std::is_convertible_v<TConverible, std::string_view>
     fstring_base& operator=(const TConverible& in_converti) noexcept
     {
         clear();
@@ -195,13 +196,13 @@ public:
     constexpr CharT  back() const  noexcept   { return m_str[size()-1]; }
 
     // Forward iterators
-    constexpr CharT* begin() noexcept { return m_str; }
-    constexpr const CharT* begin() const noexcept { return m_str; }
-    constexpr const CharT* cbegin() const noexcept { return begin(); }
+    constexpr CharT* begin() noexcept                { return m_str; }
+    constexpr const CharT* begin() const noexcept    { return m_str; }
+    constexpr const CharT* cbegin() const noexcept   { return begin(); }
 
-    constexpr CharT* end() noexcept { return m_str + m_size; }
-    constexpr const CharT* end() const noexcept { return m_str + m_size; }
-    constexpr const CharT* cend() const noexcept { return end(); }
+    constexpr CharT* end() noexcept                  { return m_str+m_size; }
+    constexpr const CharT* end() const noexcept      { return m_str+m_size; }
+    constexpr const CharT* cend() const noexcept     { return end(); }
 
     // Reverse iterators
     constexpr std::reverse_iterator<CharT*> rbegin() noexcept {
@@ -742,7 +743,7 @@ public:
     }
 };
 
-template<class CharT>
+template<typename CharT>
 class DllExport fstring_ref_base
 {
 private:
@@ -766,7 +767,16 @@ public:
     constexpr operator std::string_view() const  noexcept { return std::string_view(m_referee); }
     constexpr std::string_view sv() const  noexcept { return std::string_view(m_referee); }
 
-    template <class _Tp, class = std::enable_if<std::is_convertible_v<_Tp, std::string_view> > >
+    template <typename _Cp>
+    requires std::is_same_v<_Cp, CharT>
+    fstring_ref_base& operator=(const _Cp __t) noexcept
+    {
+        m_referee = __t;
+        return *this;
+    }
+
+    template <typename _Tp>
+    requires std::is_convertible_v<_Tp, std::string_view>
     fstring_ref_base& operator=(const _Tp& __t) noexcept
     {
         m_referee = __t;
@@ -835,15 +845,18 @@ public:
     }
     constexpr fstring_ref_base& erase(size_type index = 0, size_type count=npos)
     {
-        return m_referee.erase(index, count);
+        m_referee.erase(index, count);
+        return *this;
     }
     constexpr CharT* erase(const CharT* position)
     {
-        return m_referee.erase(position);
+        m_referee.erase(position);
+        return *this;
     }
     constexpr CharT* erase(const CharT* first, const CharT* last)
     {
-        return m_referee.erase(first, last);
+        m_referee.erase(first, last);
+        return *this;
     }
 
     // non-standard

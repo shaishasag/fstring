@@ -95,6 +95,22 @@ void README_example_2()
     if (hello_fs.sv().find_last_not_of("abc") != std::string_view::npos) {}
 }
 
+template<typename T>
+bool somefunc(const T& t, std::string_view type)
+{
+    bool retVal = false;
+    if constexpr (std::is_convertible_v<T, std::string_view>)
+    {
+        std::cout  << type << " " << t << " is convertible to std::string_view" << std::endl;
+        retVal = true;
+    }
+    else
+    {
+        std::cout  << type << " " << t << " is NOT convertible to std::string_view" << std::endl;
+    }
+    
+    return retVal;
+}
 int main()
 {
     constructing();
@@ -113,6 +129,10 @@ int main()
     } else {
         std::cerr << "Conversion failed\n";
     }
+
+    somefunc('C', "char");
+    somefunc("charptr", "char*");
+    somefunc("SV", "string_view");
 
     return 0;
 }
