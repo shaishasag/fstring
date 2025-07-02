@@ -486,8 +486,20 @@ public:
     // swap does not make sense for fixed-size string, use std::exchange
     constexpr void swap(fstring_base& other) noexcept = delete;
 
-    // starts_with: use fstr::fstrXX.sv().starts_with
-    // ends_with: use fstr::fstrXX.sv().ends_with
+    // untill Xcode/clang fully implements std::string_view::starts_with/ends_with
+    // Must supply our own implementations.
+    constexpr bool starts_with(std::string_view in_sv) const noexcept
+    {
+        return sv().find(in_sv) == 0;
+    }
+    constexpr bool ends_with(std::string_view in_sv) const noexcept
+    {
+        if (size() < in_sv.size()) { // so size()-in_sv.size() will not undeflow
+            return false;
+        }
+        return sv().rfind(in_sv) == size()-in_sv.size();
+    }
+
     // find: use fstr::fstrXX.sv().find
     // rfind: use fstr::fstrXX.sv().rfind
     // find_first_of: use fstr::fstrXX.sv().find_first_of
@@ -933,9 +945,17 @@ public:
 
     // substr: use string_view.substr
     // copy: use string_view.copy
-    // swap does not make sence for fixed-size string, use std::exchange
+    // swap does not make sense for fixed-size string, use std::exchange
     constexpr void swap(fstring_ref_base& other) noexcept = delete;
 
+    constexpr bool starts_with(std::string_view in_sv) const noexcept
+    {
+        return m_referee.starts_with(in_sv);
+    }
+    constexpr bool ends_with(std::string_view in_sv) const noexcept
+    {
+        return m_referee.ends_with(in_sv);
+    }
     //---
     constexpr size_type vacancy() const noexcept{ return m_referee.vacancy(); }
     constexpr size_type full() const noexcept { return m_referee.full(); }

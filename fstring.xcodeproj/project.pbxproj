@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F603D8162E15937700C3A518 /* starts_ends_with.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F603D8152E15937600C3A518 /* starts_ends_with.cpp */; };
 		F62AF8262E13BB2200FCBF40 /* examples.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6F376112BECC70400DC399D /* examples.cpp */; };
 		F65B4F472C8B6C2800C8A84E /* empty.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F66DF9A429CCA40A007B2032 /* empty.cpp */; };
 		F65B4F482C8B6C2800C8A84E /* containers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6CEEF9D2A97864400DB97B3 /* containers.cpp */; };
@@ -80,6 +81,7 @@
 
 /* Begin PBXFileReference section */
 		F600971E293D0621006F1F35 /* tests_main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = tests_main.cpp; path = tests/tests_main.cpp; sourceTree = SOURCE_ROOT; };
+		F603D8152E15937600C3A518 /* starts_ends_with.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = starts_ends_with.cpp; sourceTree = "<group>"; };
 		F6077C1B2960738A00C019C4 /* erase.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = erase.cpp; sourceTree = "<group>"; };
 		F60C98C8295F336F00760EB6 /* substr.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = substr.cpp; sourceTree = "<group>"; };
 		F60C98CA295F3DCF00760EB6 /* insert.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = insert.cpp; sourceTree = "<group>"; };
@@ -483,6 +485,7 @@
 				F6BC984829411AFA002CC268 /* trim.cpp */,
 				F6BC984A2941D94C002CC268 /* variadic.cpp */,
 				F6DEE8A12DD784DE00FAA006 /* resize.cpp */,
+				F603D8152E15937600C3A518 /* starts_ends_with.cpp */,
 			);
 			path = tests;
 			sourceTree = "<group>";
@@ -501,7 +504,7 @@
 /* Begin PBXNativeTarget section */
 		F643BFB42CC2AB7900CF8130 /* examples */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F62AF8252E13B87D00FCBF40 /* Build configuration list */;
+			buildConfigurationList = F62AF8252E13B87D00FCBF40 /* Build configuration list for PBXNativeTarget "examples" */;
 			buildPhases = (
 				F643BFB52CC2AB7900CF8130 /* Sources */,
 				F643BFB92CC2AB7900CF8130 /* Frameworks */,
@@ -517,7 +520,7 @@
 		};
 		F65B4F452C8B6C2800C8A84E /* fstring_tests C++20 */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F62AF8222E13B87D00FCBF40 /* Build configuration list */;
+			buildConfigurationList = F62AF8222E13B87D00FCBF40 /* Build configuration list for PBXNativeTarget "fstring_tests C++20" */;
 			buildPhases = (
 				F65B4F462C8B6C2800C8A84E /* Sources */,
 				F65B4F6A2C8B6C2800C8A84E /* Frameworks */,
@@ -534,7 +537,7 @@
 		};
 		F6A680402942864D00D9CE7A /* hello_fstring */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F62AF8232E13B87D00FCBF40 /* Build configuration list */;
+			buildConfigurationList = F62AF8232E13B87D00FCBF40 /* Build configuration list for PBXNativeTarget "hello_fstring" */;
 			buildPhases = (
 				F6A6803D2942864D00D9CE7A /* Sources */,
 				F6A6803E2942864D00D9CE7A /* Frameworks */,
@@ -551,7 +554,7 @@
 		};
 		F6DFFC732C412EF500080329 /* universal converter */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F62AF8242E13B87D00FCBF40 /* Build configuration list */;
+			buildConfigurationList = F62AF8242E13B87D00FCBF40 /* Build configuration list for PBXNativeTarget "universal converter" */;
 			buildPhases = (
 				F6DFFC742C412EF500080329 /* Sources */,
 				F6DFFC782C412EF500080329 /* Frameworks */,
@@ -630,6 +633,7 @@
 				F65B4F532C8B6C2800C8A84E /* constexpr.cpp in Sources */,
 				F6DEE8A02DD76F5300FAA006 /* begin_end.cpp in Sources */,
 				F65B4F542C8B6C2800C8A84E /* compare.cpp in Sources */,
+				F603D8162E15937700C3A518 /* starts_ends_with.cpp in Sources */,
 				F65B4F552C8B6C2800C8A84E /* printf.cpp in Sources */,
 				F65B4F562C8B6C2800C8A84E /* trim.cpp in Sources */,
 				F65B4F572C8B6C2800C8A84E /* traits.cpp in Sources */,
@@ -883,7 +887,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F62AF8222E13B87D00FCBF40 /* Build configuration list */ = {
+		F62AF8222E13B87D00FCBF40 /* Build configuration list for PBXNativeTarget "fstring_tests C++20" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F62AF81A2E13B86900FCBF40 /* Debug */,
@@ -892,7 +896,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F62AF8232E13B87D00FCBF40 /* Build configuration list */ = {
+		F62AF8232E13B87D00FCBF40 /* Build configuration list for PBXNativeTarget "hello_fstring" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F62AF81C2E13B86900FCBF40 /* Debug */,
@@ -901,7 +905,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F62AF8242E13B87D00FCBF40 /* Build configuration list */ = {
+		F62AF8242E13B87D00FCBF40 /* Build configuration list for PBXNativeTarget "universal converter" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F62AF81E2E13B86900FCBF40 /* Debug */,
@@ -910,7 +914,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F62AF8252E13B87D00FCBF40 /* Build configuration list */ = {
+		F62AF8252E13B87D00FCBF40 /* Build configuration list for PBXNativeTarget "examples" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F62AF8202E13B86900FCBF40 /* Debug */,
