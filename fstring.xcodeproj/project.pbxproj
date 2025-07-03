@@ -42,6 +42,7 @@
 		F65B4F672C8B6C2800C8A84E /* conversions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F669396B2A8FBD03007E68A7 /* conversions.cpp */; };
 		F65B4F682C8B6C2800C8A84E /* substr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F60C98C8295F336F00760EB6 /* substr.cpp */; };
 		F65B4F692C8B6C2800C8A84E /* gtest-assertion-result.cc in Sources */ = {isa = PBXBuildFile; fileRef = F62BDD02293E502A0000567A /* gtest-assertion-result.cc */; };
+		F68B358A2E169942002667B6 /* suggested.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F68B35892E16993A002667B6 /* suggested.cpp */; };
 		F698BB362CE77C320059414F /* append.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F698BB352CE77C320059414F /* append.cpp */; };
 		F6A680492942867800D9CE7A /* hello_fstring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6A680482942867800D9CE7A /* hello_fstring.cpp */; };
 		F6DEE8A02DD76F5300FAA006 /* begin_end.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6DEE89F2DD76F5300FAA006 /* begin_end.cpp */; };
@@ -200,6 +201,7 @@
 		F6652D0E2AC48D0D00F932A4 /* scanf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scanf.cpp; sourceTree = "<group>"; };
 		F669396B2A8FBD03007E68A7 /* conversions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = conversions.cpp; sourceTree = "<group>"; };
 		F66DF9A429CCA40A007B2032 /* empty.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = empty.cpp; sourceTree = "<group>"; };
+		F68B35892E16993A002667B6 /* suggested.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = suggested.cpp; sourceTree = "<group>"; };
 		F698BB352CE77C320059414F /* append.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = append.cpp; sourceTree = "<group>"; };
 		F69EF04A2AAA371F0033190A /* replace.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = replace.cpp; sourceTree = "<group>"; };
 		F6A56B142A976378002BAEFD /* printf.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = printf.cpp; sourceTree = "<group>"; };
@@ -456,6 +458,7 @@
 		F62BDD07293E511C0000567A /* tests */ = {
 			isa = PBXGroup;
 			children = (
+				F68B35892E16993A002667B6 /* suggested.cpp */,
 				F62BDD19293F01860000567A /* access.cpp */,
 				F698BB352CE77C320059414F /* append.cpp */,
 				F62BDD12293E67180000567A /* assign.cpp */,
@@ -622,6 +625,7 @@
 				F65B4F482C8B6C2800C8A84E /* containers.cpp in Sources */,
 				F65B4F492C8B6C2800C8A84E /* tests_main.cpp in Sources */,
 				F65B4F4A2C8B6C2800C8A84E /* stream.cpp in Sources */,
+				F68B358A2E169942002667B6 /* suggested.cpp in Sources */,
 				F65B4F4B2C8B6C2800C8A84E /* erase.cpp in Sources */,
 				F65B4F4C2C8B6C2800C8A84E /* erase_all.cpp in Sources */,
 				F65B4F4D2C8B6C2800C8A84E /* size_of.cpp in Sources */,

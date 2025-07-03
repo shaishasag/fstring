@@ -109,6 +109,7 @@ private:
 public:
     using char_type = CharT;
     using traits_type = std::char_traits<CharT>;
+    using iterator = CharT*;
 
     fstring_base() = default;
 
@@ -163,16 +164,26 @@ public:
     requires std::is_convertible_v<TConverible, std::string_view>
     fstring_base& operator=(const TConverible& in_converti) noexcept
     {
-        clear();
         std::string_view as_sv = std::string_view(in_converti);
-        __append__(as_sv.data(), as_sv.size());
+        assign(as_sv, as_sv.size());
+
         return *this;
     }
 
-    constexpr fstring_base& assign(std::string_view sv) noexcept
+    constexpr fstring_base& assign(std::string_view sv, const size_type count=npos) noexcept
     {
-        clear();
-        __append__(sv.data(), sv.size());
+        if (sv.data() != data())
+        {
+            clear();
+            __append__(sv.data(), std::min(count, sv.size()));
+        }
+        // weird situation of self assignment but with shorter size.
+        // it cannot be larger since fstr always tetminate with '\0'
+        // see: TEST(FStringEdgeTest, SelfAssignment)
+        else if (sv.size() < size())
+        {
+            resize(sv.size());
+        }
         return *this;
     }
 
@@ -797,12 +808,15 @@ public:
 
     fstring_ref_base& operator=(const fstring_ref_base in_ref) noexcept
     {
-        m_referee = in_ref;
+        if (&m_referee != &in_ref.m_referee)
+        {
+            m_referee = in_ref;
+        }
         return *this;
     }
 
-    fstring_ref_base assign(std::string_view sv) noexcept {
-        m_referee = sv;
+    fstring_ref_base assign(std::string_view sv, const size_type count=npos) noexcept {
+        m_referee.assign(sv, count);
         return *this;
     }
     constexpr CharT& at(const size_type pos)                { return m_referee.at(pos); }
@@ -962,7 +976,7 @@ public:
     void trim_front(std::string_view trim_chars=" \f\n\r\t\v") noexcept { return m_referee.trim_front(trim_chars); }
     void trim_back(std::string_view trim_chars=" \f\n\r\t\v") noexcept { return m_referee.trim_back(trim_chars); }
     void trim(std::string_view trim_chars=" \f\n\r\t\v") noexcept { return m_referee.trim(trim_chars); }
-    constexpr bool contains(const auto&& in_sv)  const noexcept { return m_referee.contains(in_sv); }
+    constexpr bool contains(const auto& in_sv)  const noexcept { return m_referee.contains(in_sv); }
     constexpr void tolower() noexcept { return m_referee.tolower(); }
     constexpr void toupper() noexcept { return m_referee.toupper(); }
     inline void reposition_end() noexcept { return m_referee.reposition_end(); }
@@ -980,7 +994,6 @@ public:
         return *this;
     }
 };
-
 
 using fstr_ref = fstring_ref_base<char>;
 using fstr4 =    fstring_base<4,  char>;
