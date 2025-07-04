@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -45,6 +45,8 @@
 		F68B358A2E169942002667B6 /* suggested.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F68B35892E16993A002667B6 /* suggested.cpp */; };
 		F698BB362CE77C320059414F /* append.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F698BB352CE77C320059414F /* append.cpp */; };
 		F6A680492942867800D9CE7A /* hello_fstring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6A680482942867800D9CE7A /* hello_fstring.cpp */; };
+		F6D8F3EA2E17EABF00378B39 /* split.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6D8F3E92E17EABF00378B39 /* split.cpp */; };
+		F6D8F3EC2E17F90600378B39 /* join.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6D8F3EB2E17F90600378B39 /* join.cpp */; };
 		F6DEE8A02DD76F5300FAA006 /* begin_end.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6DEE89F2DD76F5300FAA006 /* begin_end.cpp */; };
 		F6DEE8A22DD784DE00FAA006 /* resize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6DEE8A12DD784DE00FAA006 /* resize.cpp */; };
 		F6DFFC802C4132E800080329 /* universal_converter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F6DFFC7E2C412F3B00080329 /* universal_converter.cpp */; };
@@ -213,6 +215,8 @@
 		F6BC984A2941D94C002CC268 /* variadic.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = variadic.cpp; sourceTree = "<group>"; };
 		F6BC98C029423926002CC268 /* find.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = find.cpp; sourceTree = "<group>"; };
 		F6CEEF9D2A97864400DB97B3 /* containers.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = containers.cpp; sourceTree = "<group>"; };
+		F6D8F3E92E17EABF00378B39 /* split.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = split.cpp; sourceTree = "<group>"; };
+		F6D8F3EB2E17F90600378B39 /* join.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = join.cpp; sourceTree = "<group>"; };
 		F6DEE89F2DD76F5300FAA006 /* begin_end.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = begin_end.cpp; sourceTree = "<group>"; };
 		F6DEE8A12DD784DE00FAA006 /* resize.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = resize.cpp; sourceTree = "<group>"; };
 		F6DFFC722C412EEA00080329 /* universal_converter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = universal_converter.h; sourceTree = "<group>"; };
@@ -223,10 +227,6 @@
 		F6F376112BECC70400DC399D /* examples.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = examples.cpp; path = examples/examples.cpp; sourceTree = "<group>"; };
 		F6F5490A2A98A546000B95FC /* fstring.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fstring.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		F62AF7FA2E13B58400FCBF40 /* examplesEx */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = examplesEx; sourceTree = "<group>"; };
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		F643BFB92CC2AB7900CF8130 /* Frameworks */ = {
@@ -271,7 +271,6 @@
 				F6DFFC7F2C412F4000080329 /* universal converter */,
 				F62BDD07293E511C0000567A /* tests */,
 				F62BDC6A293E502A0000567A /* googletest */,
-				F62AF7FA2E13B58400FCBF40 /* examplesEx */,
 				F600971C293D0621006F1F35 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -489,6 +488,8 @@
 				F6BC984A2941D94C002CC268 /* variadic.cpp */,
 				F6DEE8A12DD784DE00FAA006 /* resize.cpp */,
 				F603D8152E15937600C3A518 /* starts_ends_with.cpp */,
+				F6D8F3E92E17EABF00378B39 /* split.cpp */,
+				F6D8F3EB2E17F90600378B39 /* join.cpp */,
 			);
 			path = tests;
 			sourceTree = "<group>";
@@ -624,6 +625,7 @@
 				F6DEE8A22DD784DE00FAA006 /* resize.cpp in Sources */,
 				F65B4F482C8B6C2800C8A84E /* containers.cpp in Sources */,
 				F65B4F492C8B6C2800C8A84E /* tests_main.cpp in Sources */,
+				F6D8F3EA2E17EABF00378B39 /* split.cpp in Sources */,
 				F65B4F4A2C8B6C2800C8A84E /* stream.cpp in Sources */,
 				F68B358A2E169942002667B6 /* suggested.cpp in Sources */,
 				F65B4F4B2C8B6C2800C8A84E /* erase.cpp in Sources */,
@@ -652,6 +654,7 @@
 				F65B4F602C8B6C2800C8A84E /* replace.cpp in Sources */,
 				F65B4F612C8B6C2800C8A84E /* insert.cpp in Sources */,
 				F65B4F622C8B6C2800C8A84E /* gtest-death-test.cc in Sources */,
+				F6D8F3EC2E17F90600378B39 /* join.cpp in Sources */,
 				F65B4F642C8B6C2800C8A84E /* assign.cpp in Sources */,
 				F65B4F652C8B6C2800C8A84E /* hashing.cpp in Sources */,
 				F65B4F662C8B6C2800C8A84E /* access.cpp in Sources */,

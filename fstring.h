@@ -775,6 +775,7 @@ private:
 public:
     using char_type = CharT;
     using traits_type = std::char_traits<CharT>;
+    using iterator = const CharT*;
 
     constexpr fstring_ref_base(fstring_ref_base const&)  noexcept = default;
     fstring_ref_base() = delete;
