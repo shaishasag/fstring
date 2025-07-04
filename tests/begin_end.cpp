@@ -156,7 +156,7 @@ TEST(BeginEnd, RangeBasedForwardLoop)
     {
         fstr::fstr7 fs_in{"1234567"};
         size_t iterations_count = 0;
-        for (auto i : fs_in)
+        for ([[maybe_unused]] auto i : fs_in)
         {
             ++iterations_count;
         }

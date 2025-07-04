@@ -12,7 +12,7 @@ TEST(Trim, trim_simple)
         EXPECT_FALSE(empty.full());
         EXPECT_EQ(empty.size(), 0);
     }
-    {   // trim a string that does not nedd trimming
+    {   // trim a string that does not need trimming
         fstr::fstr31 con("Kajagoogoo");
         con.trim_front();
         con.trim_back();

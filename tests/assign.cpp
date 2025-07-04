@@ -3,7 +3,7 @@
 
 using namespace fstr;
 
-/// Verify assignment to fstr::fstring of std::string, std::string_view, fstr::fstring
+/// Verify assignment to fstr::fstr_base of std::string, std::string_view, fstr::fstr_base
 TEST(AssignTests, AssignObjects)
 {
     const std::string std_postfix("!?");
@@ -105,7 +105,7 @@ TEST(AssignTests, ConstructAssign)
     }
 }
 
-/// verify fstr::fstring::operator+=
+/// verify fstr::fstr_base::operator+=
 TEST(AssignTests, AdditionTypeAssign)
 {
     {
@@ -177,7 +177,7 @@ TEST(AssignTests, AdditionTypeAssign)
     }
 }
 
-/// Verify assignment of empty char*, and fstr::fstring::clear
+/// Verify assignment of empty char*, and fstr::fstr_base::clear
 TEST(AssignTests, ClearAndEmptyAssign)
 {
     {
@@ -214,7 +214,7 @@ TEST(AssignTests, ClearAndEmptyAssign)
     }
 }
 
-/// verufy std::swap onnfstr::fstring's
+/// verufy std::swap onnfstr::fstr_base's
 TEST(AssignTests, Swap)
 {
     {   // swap same size fstring
@@ -250,7 +250,7 @@ TEST(AssignTests, Swap)
     }
 }
 
-/// Verify assign to fstr::fstr_ref effects the target fstr::fstring
+/// Verify assign to fstr::fstr_ref effects the target fstr::fstr_base
 TEST(AssignTests, AssignToRef)
 {
     {

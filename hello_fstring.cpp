@@ -130,11 +130,11 @@ static void ukalili(const char* name, fixed_or_std_str_ref<TStr> the_ref)
 
 int main(int argc, char** argv)
 {
-    std::cout << "sizeof(fstr::fstring_base<0, char>) = " << sizeof(fstr::fstring_base<0, char>)  << std::endl;
+    std::cout << "sizeof(fstr::fstr_base<0, char>) = " << sizeof(fstr::fstr_base<0, char>)  << std::endl;
     std::cout << "sizeof(fstr::fstr15) = " << sizeof(fstr::fstr15)  << std::endl;
     std::cout << "sizeof(fstr::fstr31) = " << sizeof(fstr::fstr31)  << std::endl;
     std::cout << "sizeof(fstr::fstr63) = " << sizeof(fstr::fstr63)  << std::endl;
-    std::cout << "sizeof(fstr::fstring_ref) = " << sizeof(fstr::fstr_ref)  << std::endl;
+    std::cout << "sizeof(fstr::fstr_base_ref) = " << sizeof(fstr::fstr_ref)  << std::endl;
 
     constexpr fstr::fstr31 fstr("Hello fstring");
     std::cout << std::string_view(fstr) << std::endl;

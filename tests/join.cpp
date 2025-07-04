@@ -18,7 +18,7 @@ static void test_join_expected(const sv_vec& parts,
 
     // fstr_ref version
     fstr::fstr31 fstr_result("prefix:");
-    // fstr_result might be too short, expect behaviour is to append as much as possible
+    // fstr_result might be too short, expected behaviour is to append as much as possible
     std::string_view expected_result_with_fstr(std_result.data(),
                                           std::min(std_result.size(), fstr_result.max_size()));
     fstr::join(parts, delim, fstr_result);

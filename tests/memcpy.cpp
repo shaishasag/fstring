@@ -12,7 +12,7 @@ struct SomeStrings
 
 TEST(Memcopy, memcpy)
 {
-    {   // fstr::fstring_base should be memcpy-able
+    {   // fstr::fstr_base should be memcpy-able
         SomeStrings someone{"a", "b", "c"};
         SomeStrings sometwo;
 

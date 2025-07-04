@@ -3,7 +3,7 @@
 
 using namespace fstr;
 
-/// Verify fstr::fstring::operator[], fstr::fstring::at, fstr::fstring::front, fstr::fstring::back
+/// Verify fstr::fstr_base::operator[], fstr::fstr_base::at, fstr::fstr_base::front, fstr::fstr_base::back
 /// behave as expected and is similiar to same operators in std::string and std::string_view
 TEST(AccessTests, operator_square_brackets_at)
 {
@@ -31,7 +31,7 @@ TEST(AccessTests, operator_square_brackets_at)
     }
 }
 
-/// Verify fstr::fstring::at throws when accessing positon that do not exist,
+/// Verify fstr::fstr_base::at throws when accessing positon that do not exist,
 /// and does not throw otherwise
 TEST(AccessTests, operator_at_exception)
 {
@@ -64,7 +64,7 @@ TEST(AccessTests, operator_at_exception)
     }
 }
 
-/// Verify fstr::fstring::begin, fstr::fstring::end, and range based loops
+/// Verify fstr::fstr_base::begin, fstr::fstr_base::end, and range based loops
 /// behave as expected and is similiar to same operators in std::string and std::string_view
 TEST(AccessTests, iterators)
 {
@@ -113,7 +113,7 @@ TEST(AccessTests, iterators)
     }
 }
 
-/// Verify fstr::fstring::cbegin, fstr::fstring::cend
+/// Verify fstr::fstr_base::cbegin, fstr::fstr_base::cend
 TEST(AccessTests, const_iterators)
 {
     {

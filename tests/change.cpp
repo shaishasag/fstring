@@ -2,7 +2,7 @@
 #include "fstring.h"
 
 
-/// A helper function to verify that a fstr::fstring and it's reference are the same
+/// A helper function to verify that a fstr::fstr_base and it's reference are the same
 template<class TOriginal>
 static void IsRefAndOriginalTheSame(fstr::fstr_ref in_ref, TOriginal& in_origi)
 {
@@ -37,7 +37,7 @@ TEST(ChangesTests, OriginalVsReference)
     }
 }
 
-/// Verify fstr::fstring::remove_prefix, fstr::fstring::remove_suffix
+/// Verify fstr::fstr_base::remove_prefix, fstr::fstr_base::remove_suffix
 TEST(ChangesTests, PresfixDuffix)
 {
     {

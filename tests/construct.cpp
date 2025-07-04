@@ -1,16 +1,6 @@
 #include "gtest/gtest.h"
 #include "fstring.h"
 
-/// Verify expected object size
-TEST(BasicTests, ObjectSize)
-{
-    ASSERT_EQ(sizeof(fstr::fstr_ref), 8);
-    ASSERT_EQ(sizeof(fstr::fstr7), 24);
-    ASSERT_EQ(sizeof(fstr::fstr15), 32);
-    ASSERT_EQ(sizeof(fstr::fstr31), 48);
-    ASSERT_EQ(sizeof(fstr::fstr63), 80);
-}
-
 /// Verify construction with char*
 TEST(ConstructionTests, char_ptr_Construction)
 {
@@ -71,7 +61,7 @@ TEST(ConstructionTests, char_ptr_Construction)
     }
 }
 
-/// Verify construction from another fstr::fstring
+/// Verify construction from another fstr::fstr_base
 TEST(ConstructionTests, fstring_Construction1)
 {
     {
@@ -128,7 +118,7 @@ TEST(ConstructionTests, fstring_Construction1)
     }
 }
 
-/// Verify construction from another fstr::fstring of different capacity
+/// Verify construction from another fstr::fstr_base of different capacity
 TEST(ConstructionTests, fstring_Construction2)
 {
     {

@@ -244,7 +244,7 @@ public:
     [[nodiscard]] constexpr size_type max_size() const noexcept {return m_capacity;}
     constexpr void reserve(size_type new_cap) = delete;
     [[nodiscard]] constexpr size_type capacity() const noexcept {return max_size();}
-    constexpr void shrink_to_fit()  noexcept {} // will do nothing
+    constexpr void shrink_to_fit()  noexcept {} // will do nothing, for std::string compatibility
     constexpr void clear() noexcept
     {
         set_new_size(0);
@@ -548,7 +548,7 @@ public:
 
     // functions below are not part of std::string(_view)? interface
     constexpr size_type vacancy() const  noexcept {return capacity() - size();}
-    constexpr size_type full() const  noexcept {return size() == capacity();}
+    constexpr bool full() const  noexcept {return size() == capacity();}
 
     // non-standard
     void trim_front(std::string_view trim_chars=" \f\n\r\t\v") noexcept
@@ -973,7 +973,7 @@ public:
     }
     //---
     constexpr size_type vacancy() const noexcept{ return m_referee.vacancy(); }
-    constexpr size_type full() const noexcept { return m_referee.full(); }
+    constexpr bool full() const noexcept { return m_referee.full(); }
     void trim_front(std::string_view trim_chars=" \f\n\r\t\v") noexcept { return m_referee.trim_front(trim_chars); }
     void trim_back(std::string_view trim_chars=" \f\n\r\t\v") noexcept { return m_referee.trim_back(trim_chars); }
     void trim(std::string_view trim_chars=" \f\n\r\t\v") noexcept { return m_referee.trim(trim_chars); }

@@ -19,7 +19,7 @@ struct fstring_ref_hasher
     }
 };
 
-/// fstr::fstring as key and value in std::unordered_map
+/// fstr::fstr_base as key and value in std::unordered_map
 TEST(Containers, UnorderedMap)
 {
     std::unordered_map<fstr::fstr31, fstr::fstr31, fstr::fstr_hasher> uom;
@@ -43,7 +43,7 @@ TEST(Containers, UnorderedMap)
     EXPECT_STREQ(uom[s32].c_str(), "2nd");
 }
 
-/// fstr::fstring as key and value in std::map
+/// fstr::fstr_base as key and value in std::map
 TEST(Containers, Map)
 {
     std::map<fstr::fstr31, fstr::fstr31> m;
@@ -67,7 +67,7 @@ TEST(Containers, Map)
     EXPECT_STREQ(m[s32].c_str(), "2nd");
 }
 
-/// fstr::fstring as value in std::set
+/// fstr::fstr_base as value in std::set
 TEST(Containers, Set)
 {
     std::set<fstr::fstr31> s;
@@ -85,7 +85,7 @@ TEST(Containers, Set)
     EXPECT_EQ(s.count("3rd"), 1);
 }
 
-/// fstr::fstring as value in std::vector
+/// fstr::fstr_base as value in std::vector
 TEST(Containers, Vector)
 {
     std::vector<fstr::fstr31> v;

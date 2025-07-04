@@ -27,7 +27,7 @@ TEST(CompareTests, starts_ends_sv)
     }
 }
 
-// Verify fstr::fstring::contains
+// Verify fstr::fstr_base::contains
 TEST(CompareTests, contains)
 {
 
@@ -75,7 +75,7 @@ TEST(CompareTests, contains)
     }
 }
 
-/// Verify fstr::fstring::operator==, fstr::fstring::compare
+/// Verify fstr::fstr_base::operator==, fstr::fstr_base::compare
 /// when used with const char*, std::string, std::string_view, ixed::fstr_ref
 TEST(CompareTests, full_compare)
 {
@@ -93,7 +93,7 @@ TEST(CompareTests, full_compare)
     }
 }
 
-/// Verify fstr::fstring::compare, comparing partial strings
+/// Verify fstr::fstr_base::compare, comparing partial strings
 /// when used with const char*, std::string, std::string_view, fstr::fstr_ref
 TEST(CompareTests, partial_compare)
 {
@@ -116,7 +116,7 @@ TEST(CompareTests, partial_compare)
     }
 }
 
-/// Verify fstr::fstring::icompare
+/// Verify fstr::fstr_base::icompare
 TEST(CompareTests, case_insensitive)
 {
     const char* the_band = "K.C. and the sunshine band";

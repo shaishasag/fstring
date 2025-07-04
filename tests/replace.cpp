@@ -134,14 +134,14 @@ TEST(Replace, replace_many_chars)
 {
     std::string_view origi{"SuperCaliFragilisticExpialiDocious"};
 
-    {   // place many chars with none
+    {   // replace many chars with none
         std::string super_std(origi);
         fstr::fstr63 super_fixed(origi);
         super_std.replace(5, 20, "");
         super_fixed.replace(5, 20, "");
         EXPECT_STREQ(super_fixed.c_str(), super_std.c_str());
     }
-    {   // place many chars with one
+    {   // replace many chars with one
         std::string super_std(origi);
         fstr::fstr63 super_fixed(origi);
         super_std.replace(5, 20, "X");
@@ -149,7 +149,7 @@ TEST(Replace, replace_many_chars)
         EXPECT_STREQ(super_fixed.c_str(), super_std.c_str());
     }
 
-    {   // place many chars with few
+    {   // replace many chars with few
         std::string super_std(origi);
         fstr::fstr63 super_fixed(origi);
         super_std.replace(5, 20, "KALLISTRY");
@@ -157,7 +157,7 @@ TEST(Replace, replace_many_chars)
         EXPECT_STREQ(super_fixed.c_str(), super_std.c_str());
     }
 
-    {   // place too many chars with few
+    {   // replace too many chars with few
         std::string super_std(origi);
         fstr::fstr63 super_fixed(origi);
         super_std.replace(5, 200, "KALLISTRY");
@@ -187,5 +187,4 @@ TEST(Replace, replace_and_throw)
         super_fixed.replace(6, 7, very_long_replacement);
         EXPECT_STREQ(super_fixed.c_str(), ss.c_str());
     }
-
 }

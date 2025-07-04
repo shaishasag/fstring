@@ -1,8 +1,8 @@
 #include "gtest/gtest.h"
 #include "fstring.h"
 
-/// Verify constructing constexpr fstr::fstring
-/// This is more of a compilation than runtime test
+/// Verify constructing constexpr fstr::fstr_base
+/// This is more of a compilation test than a runtime test
 TEST(Constexpr, expr_simple)
 {
     {
@@ -37,7 +37,7 @@ TEST(Constexpr, expr_simple)
     }
 }
 
-/// Verify initializing constexpr fstr::fstring, const fstr::fstr_ref with constexpr fstr::fstring
+/// Verify initializing constexpr fstr::fstr_base, const fstr::fstr_ref with constexpr fstr::fstr_base
 TEST(Constexpr, expr_compound)
 {
     constexpr fstr::fstr31 con1("Kajagoogoo");
@@ -72,7 +72,7 @@ void func3(const fstr::fstr_ref in_str_ref)
     EXPECT_EQ(in_str_ref.capacity(), 31);
 }
 
-/// Passing constexpr fstr::fstring to function, by value, by reference and as fstr::fstr_ref
+/// Passing constexpr fstr::fstr_base to function, by value, by reference and as fstr::fstr_ref
 TEST(Constexpr, pass_to_func)
 {
     constexpr fstr::fstr31 con1("Kajagoogoo");
@@ -87,7 +87,7 @@ TEST(Constexpr, pass_to_func)
     }
 }
 
-/// Call functions marked as constexpr on constexpr fstr::fstring
+/// Call functions marked as constexpr on constexpr fstr::fstr_base
 TEST(Constexpr, call_constexpr)
 {
     constexpr fstr::fstr31 con1("Kajagoogoo");

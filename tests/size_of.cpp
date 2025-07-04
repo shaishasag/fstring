@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 #include "fstring.h"
 
+/// Verify expected object size
 TEST(SizeOf, SizeOf)
 {
     EXPECT_EQ(sizeof(fstr::fstring_base<0, char>), 24);
