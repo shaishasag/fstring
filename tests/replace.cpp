@@ -188,3 +188,99 @@ TEST(Replace, replace_and_throw)
         EXPECT_STREQ(super_fixed.c_str(), ss.c_str());
     }
 }
+
+
+TEST(Replace, replace_all)
+{
+    {   // replace nothing with nothing - string should not change
+        fstr::fstr63 f1("AABBAABBAA");
+        f1.replace_all("", "");
+        EXPECT_EQ(f1, "AABBAABBAA"sv);
+    }
+    {   // replace nothing with something - string should not change
+        fstr::fstr63 f1("AABBAABBAA");
+        f1.replace_all("", "CC");
+        EXPECT_EQ(f1, "AABBAABBAA"sv);
+    }
+    {   // replace something with nothing
+        fstr::fstr63 f1("AABBAABBAA");
+        f1.replace_all("AA", "");
+        EXPECT_EQ(f1, "BBBB"sv);
+    }
+    {   // replace something with something smaller
+        fstr::fstr63 f1("AABBAABBAA");
+        f1.replace_all("AA", "C");
+        EXPECT_EQ(f1, "CBBCBBC"sv);
+    }
+    {   // replace something with something same size
+        fstr::fstr63 f1("AABBAABBAA");
+        f1.replace_all("AA", "CC");
+        EXPECT_EQ(f1, "CCBBCCBBCC"sv);
+    }
+    {   // replace something with something bigger
+        fstr::fstr63 f1("AABBAABBAA");
+        f1.replace_all("AA", "CCC");
+        EXPECT_EQ(f1, "CCCBBCCCBBCCC"sv);
+    }
+    {   // replace something with the same string
+        fstr::fstr63 f1("AABBAABBAA");
+        f1.replace_all("AB", "AB");
+        EXPECT_EQ(f1, "AABBAABBAA"sv);
+    }
+    {   // replacement too long to fit
+        fstr::fstr15 f1("AABBAABBAABBAA");
+        f1.replace_all("AAB", "1000");
+        EXPECT_EQ(f1, "1000B1000B1000B"sv);
+    }
+}
+TEST(Replace, replace_all_ref)
+{
+    {   // replace nothing with nothing - string should not change
+        fstr::fstr63 f1("AABBAABBAA");
+        fstr::fstr_ref f1_ref(f1);
+        f1_ref.replace_all("", "");
+        EXPECT_EQ(f1_ref, "AABBAABBAA"sv);
+    }
+    {   // replace nothing with something - string should not change
+        fstr::fstr63 f1("AABBAABBAA");
+        fstr::fstr_ref f1_ref(f1);
+        f1_ref.replace_all("", "CC");
+        EXPECT_EQ(f1_ref, "AABBAABBAA"sv);
+    }
+    {   // replace something with nothing
+        fstr::fstr63 f1("AABBAABBAA");
+        fstr::fstr_ref f1_ref(f1);
+        f1_ref.replace_all("AA", "");
+        EXPECT_EQ(f1_ref, "BBBB"sv);
+    }
+    {   // replace something with something smaller
+        fstr::fstr63 f1("AABBAABBAA");
+        fstr::fstr_ref f1_ref(f1);
+        f1_ref.replace_all("AA", "C");
+        EXPECT_EQ(f1_ref, "CBBCBBC"sv);
+    }
+    {   // replace something with something same size
+        fstr::fstr63 f1("AABBAABBAA");
+        fstr::fstr_ref f1_ref(f1);
+        f1_ref.replace_all("AA", "CC");
+        EXPECT_EQ(f1_ref, "CCBBCCBBCC"sv);
+    }
+    {   // replace something with something bigger
+        fstr::fstr63 f1("AABBAABBAA");
+        fstr::fstr_ref f1_ref(f1);
+        f1_ref.replace_all("AA", "CCC");
+        EXPECT_EQ(f1_ref, "CCCBBCCCBBCCC"sv);
+    }
+    {   // replace something with the same string
+        fstr::fstr63 f1("AABBAABBAA");
+        fstr::fstr_ref f1_ref(f1);
+        f1_ref.replace_all("AB", "AB");
+        EXPECT_EQ(f1_ref, "AABBAABBAA"sv);
+    }
+    {   // replacement too long to fit
+        fstr::fstr15 f1("AABBAABBAABBAA");
+        fstr::fstr_ref f1_ref(f1);
+        f1_ref.replace_all("AAB", "1000");
+        EXPECT_EQ(f1_ref, "1000B1000B1000B"sv);
+    }
+}

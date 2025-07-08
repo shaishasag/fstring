@@ -24,7 +24,7 @@
 using namespace std::string_view_literals;
 
 
-// functions marked as 'non-standard' have no equivalent in std::string or std::string_view
+// *** functions marked as 'non-standard' have no equivalent in std::string or std::string_view
 
 #ifdef __clang_major__
 #pragma clang diagnostic ignored "-Wunknown-pragmas"
@@ -331,7 +331,7 @@ public:
         return m_str+index;
     }
 
-    // non-standard
+    // non-standard***
     void erase_all_of(const std::string_view _sv)
     {
         for (std::string_view::size_type i = sv().find_first_of(_sv, 0);
@@ -340,7 +340,7 @@ public:
                 erase(i, 1);
     }
 
-    // non-standard
+    // non-standard***
     constexpr void erase_all_not_of(const std::string_view _sv)
     {
         for (std::string_view::size_type i = sv().find_first_not_of(_sv, 0);
@@ -426,7 +426,7 @@ public:
         return 0;
     }
 
-    // non-standard
+    // non-standard***
     constexpr int icompare(const std::string_view sv) const noexcept
     {
         int retVal = 0;
@@ -472,7 +472,31 @@ public:
 
         return *this;
     }
-
+    
+    /// @brief Replaces all occurrences of a substring with another substring.
+    /// non-standard***
+    ///
+    /// This method searches the current string content for all instances of
+    /// the `from` substring and replaces them with the `to` substring. It handles overlapping
+    /// replacements safely by advancing the search position beyond the last inserted `to`.
+    ///
+    /// @param from The substring to be replaced. If empty, no replacement occurs.
+    /// @param to The substring to insert in place of each occurrence of `from`.
+    ///
+    /// @note If `from` is empty or the string itself is empty, the function returns immediately.
+    ///       The method avoids infinite loops even if `to` contains `from`.
+    void replace_all(std::string_view from, std::string_view to)
+    {
+        if (from.empty() || empty()) return;
+        
+        size_t start_pos = 0;
+        while ((start_pos = sv().find(from, start_pos)) != npos)
+        {
+            replace(start_pos, from.length(), to);
+            start_pos += to.length(); // Avoid infinite loop if 'to' contains 'from'
+        }
+    }
+    
     // template is needed here to so calling resize(int) will not compile
     template <typename TChar>
     requires std::same_as<TChar, CharT>
@@ -550,7 +574,7 @@ public:
     constexpr size_type vacancy() const  noexcept {return capacity() - size();}
     constexpr bool full() const  noexcept {return size() == capacity();}
 
-    // non-standard
+    // non-standard***
     void trim_front(std::string_view trim_chars=" \f\n\r\t\v") noexcept
     {
         size_type pos = sv().find_first_not_of(trim_chars);
@@ -560,7 +584,7 @@ public:
         }
 
     }
-    // non-standard
+    // non-standard***
     void trim_back(std::string_view trim_chars=" \f\n\r\t\v") noexcept
     {
         size_type pos = sv().find_last_not_of(trim_chars);
@@ -570,28 +594,28 @@ public:
         }
 
     }
-    // non-standard
+    // non-standard***
     void trim(std::string_view trim_chars=" \f\n\r\t\v") noexcept
     {
         trim_back(trim_chars);
         trim_front(trim_chars);
     }
 
-    // non-standard
+    // non-standard***
     constexpr void tolower() noexcept
     {
         std::transform(begin(), end(), begin(),
                          [](unsigned char c){ return static_cast<CharT>(std::tolower(c)); });
     }
 
-    // non-standard
+    // non-standard***
     constexpr void toupper() noexcept
     {
         std::transform(begin(), end(), begin(),
                          [](unsigned char c){ return static_cast<CharT>(std::toupper(c)); });
     }
 
-    // non-standard
+    // non-standard***
     inline void reposition_end(size_type _new_size=npos)
     // Resize the string with current contents intact
     // usefull when the string was changed from the outside.
@@ -886,12 +910,12 @@ public:
         return *this;
     }
 
-    // non-standard
+    // non-standard***
     void erase_all_of(std::string_view _sv)
     {
         m_referee.erase_all_of(_sv);
     }
-    // non-standard
+    // non-standard***
     constexpr void erase_all_not_of(std::string_view _sv)
     {
         m_referee.erase_all_not_of(_sv);
@@ -942,6 +966,13 @@ public:
         m_referee.replace(pos, count, replacement_str);
         return *this;
     }
+    
+    void replace_all(std::string_view from, std::string_view to)
+    {
+        m_referee.replace_all(from, to);
+    }
+
+    
     constexpr fstring_ref_base& replace(size_type pos, const std::string_view replacement_str)
     {
         m_referee.replace(pos, replacement_str);
