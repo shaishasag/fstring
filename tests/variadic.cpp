@@ -4,7 +4,7 @@
 TEST(variadic, variadic_basic_types)
 {
     {   // variadic short
-        constexpr fstr::fstr31 vari("a", "b", "c", "d");
+        fstr::fstr31 vari("a", "b", "c", "d");
         EXPECT_STREQ(vari.c_str(), "abcd");
         EXPECT_FALSE(vari.empty());
         EXPECT_FALSE(vari.full());
@@ -23,6 +23,15 @@ TEST(variadic, variadic_basic_types)
         EXPECT_FALSE(vari.empty());
         EXPECT_FALSE(vari.full());
         EXPECT_EQ(vari.size(), 8);
+    }
+    {
+        
+        // variadic some more mixed types
+        fstr::fstr63 vari(true, ' ', false, ' ',
+                          1.23456789f, ' ', 1.23456789,
+                          ' ', 1, ' ', 2, ' ',   3);
+        EXPECT_EQ(vari.sv(), "true false 1.2345679 1.23456789 1 2 3"sv);
+        EXPECT_EQ(vari.size(), 37);
     }
 
 }
@@ -65,6 +74,11 @@ TEST(variadic, variadic_none_string)
     }
     {   // variadic with float and boolean
         fstr::fstr63 vari("The", ' ', 3.1415 , ' ', "Musketeers? ", false);
-        EXPECT_EQ(vari, "The 3.141500000000000181 Musketeers? false");
+        EXPECT_EQ(vari.sv(), "The 3.1415 Musketeers? false"sv);
+    }
+    {   // foramt with float and boolean
+        fstr::fstr63 formi;
+        formi.format("{}{}{}{}{}{}", "The", ' ', 3.1415 , ' ', "Musketeers? ", false);
+        EXPECT_EQ(formi.sv(), "The 3.1415 Musketeers? false"sv);
     }
 }

@@ -128,9 +128,24 @@ static void ukalili(const char* name, fixed_or_std_str_ref<TStr> the_ref)
     std::cout << "    after reserve(30), capacity: " << the_ref.capacity() << "\n";
 }
 
+static constexpr fstr::fstr127 will_it_constexpr()
+{
+    constexpr fstr::fstr31 f0;
+    constexpr fstr::fstr31 f1('X');
+    constexpr fstr::fstr31 f2("Y");
+    constexpr fstr::fstr31 f3("Z"sv);
+    constexpr fstr::fstr31 b0(false);
+    constexpr fstr::fstr31 b1(true);
+    fstr::fstr31 f4(1); // number conversions are not constexpr yet
+    fstr::fstr31 f5(2.3);
+
+    fstr::fstr127 retVal(b0, f0, f1, b1, f2, f3, f4, f5);
+    return retVal;
+}
+
 int main(int argc, char** argv)
 {
-    std::cout << "sizeof(fstr::fstr_base<0, char>) = " << sizeof(fstr::fstr_base<0, char>)  << std::endl;
+    std::cout << "sizeof(fstr::fstr_base<0, char>) = " << sizeof(fstr::fstring_base<0, char>)  << std::endl;
     std::cout << "sizeof(fstr::fstr15) = " << sizeof(fstr::fstr15)  << std::endl;
     std::cout << "sizeof(fstr::fstr31) = " << sizeof(fstr::fstr31)  << std::endl;
     std::cout << "sizeof(fstr::fstr63) = " << sizeof(fstr::fstr63)  << std::endl;
@@ -155,5 +170,8 @@ int main(int argc, char** argv)
         ukalili("std_conc", the_ref);
     }
 
+    auto sum_of_all_constexpr = will_it_constexpr();
+    std::cout << sum_of_all_constexpr.sv() << std::endl;
+    
     return 0;
 }

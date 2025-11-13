@@ -42,6 +42,17 @@ template <typename TPrintfable>
 concept IsPrintfable = (std::is_arithmetic_v<TPrintfable> || std::is_same_v<TPrintfable, bool>)
                         && ! std::same_as<TPrintfable, char>;
 
+template <typename TToCharsable>
+concept is_to_chars_able =
+                    std::is_arithmetic_v<TToCharsable>
+                    && (!std::is_same_v<TToCharsable, bool>);
+
+template <typename TFormatable>
+concept is_format_able =
+requires (TFormatable value) {
+    std::format("{}", value);
+};
+
 namespace fstr
 {
 using size_type = std::size_t;
@@ -126,9 +137,22 @@ public:
     #pragma warning(disable: 4244)
 #endif
     template<typename TFfirst, class... TRest>
-    constexpr void recursive_helper_to_variadic_constructor(const TFfirst in_1, const TRest& ...in_rest) noexcept
+    constexpr void recursive_helper_to_variadic_constructor(const TFfirst in_1,
+                                                            const TRest& ...in_rest) noexcept
     {
-        if constexpr (IsPrintfable<TFfirst>)
+        if constexpr (std::is_same_v<TFfirst, char>)
+        {
+            __append__(in_1);
+        }
+        else if constexpr (std::is_convertible_v<TFfirst, std::string_view>)
+        {
+            append(std::string_view(in_1));
+        }
+        else if constexpr (is_to_chars_able<TFfirst>)
+        {
+            to_chars(in_1);
+        }
+        else if constexpr (IsPrintfable<TFfirst>)
         {
             printf(in_1);
         }
@@ -472,7 +496,7 @@ public:
 
         return *this;
     }
-    
+
     /// @brief Replaces all occurrences of a substring with another substring.
     /// non-standard***
     ///
@@ -488,7 +512,7 @@ public:
     void replace_all(std::string_view from, std::string_view to)
     {
         if (from.empty() || empty()) return;
-        
+
         size_t start_pos = 0;
         while ((start_pos = sv().find(from, start_pos)) != npos)
         {
@@ -496,7 +520,7 @@ public:
             start_pos += to.length(); // Avoid infinite loop if 'to' contains 'from'
         }
     }
-    
+
     // template is needed here to so calling resize(int) will not compile
     template <typename TChar>
     requires std::same_as<TChar, CharT>
@@ -647,7 +671,8 @@ public:
     }
 
     template<IsPrintfable TToPrintf>
-    constexpr fstring_base& printf(const TToPrintf in_to_print, const char* printf_format=nullptr) noexcept
+    constexpr fstring_base& printf(const TToPrintf in_to_print,
+                                   const char* printf_format=nullptr) noexcept
     {
         bool remove_zeros{false};
         if (nullptr == printf_format)
@@ -733,7 +758,8 @@ public:
     }
 
     template<typename TToScanf>
-    constexpr fstring_base& scanf(TToScanf& in_to_scan, const char* scanf_format=nullptr)
+    constexpr fstring_base& scanf(TToScanf& in_to_scan,
+                                  const char* scanf_format=nullptr)
     {
         if (nullptr==scanf_format)
         {
@@ -788,6 +814,80 @@ public:
         }
         return *this;
     }
+
+    template<typename TPrintfable>
+    requires is_to_chars_able<TPrintfable>
+    size_t to_chars(const TPrintfable in_to_print)
+    {
+        size_t num_chars_printed{0};
+        std::to_chars_result result = std::to_chars(end(),
+                                                    begin()+capacity(),
+                                                    in_to_print);
+        if (result.ec == std::errc{})
+        {
+            num_chars_printed = result.ptr - end();
+            set_new_size(size()+num_chars_printed);
+        }
+        
+        return num_chars_printed;
+    }
+    
+    // format options, are only for floating points:
+    //  - std::chars_format::fixed
+    //  - std::chars_format::scientific
+    //  - std::chars_format::hex
+    size_t to_chars(std::floating_point auto in_to_print,
+                    std::chars_format in_format)
+    {
+        size_t num_chars_printed{0};
+        std::to_chars_result result = std::to_chars(end(),
+                                                    begin()+capacity(),
+                                                    in_to_print,
+                                                    in_format);
+        if (result.ec == std::errc{})
+        {
+            num_chars_printed = result.ptr - end();
+            set_new_size(size()+num_chars_printed);
+        }
+        
+        return num_chars_printed;
+    }
+
+    size_t to_chars(std::floating_point auto in_to_print,
+                    std::chars_format in_format,
+                    int in_precision)
+    {
+        size_t num_chars_printed{0};
+        std::to_chars_result result = std::to_chars(end(),
+                                                    begin()+capacity(),
+                                                    in_to_print,
+                                                    in_format,
+                                                    in_precision);
+        if (result.ec == std::errc{})
+        {
+            num_chars_printed = result.ptr - end();
+            set_new_size(size()+num_chars_printed);
+        }
+        
+        return num_chars_printed;
+    }
+     
+
+    template <typename... Args>
+    requires std::same_as<CharT, char>
+    constexpr size_t format(std::format_string<Args...> fmt, Args&&... args)
+    {
+        const size_type space = vacancy();
+        auto result = std::format_to_n(end(),
+                                       space,
+                                       fmt, std::forward<Args>(args)...);
+        // result.size = total size that WOULD have been written (no truncation),
+        // so the number actually appended is min(result.size, space).
+        const size_t written = static_cast<size_t>(std::min<size_type>(result.size, space));
+        set_new_size(size() + written);
+        return written;
+    }
+
 };
 
 template<typename CharT>
@@ -966,13 +1066,13 @@ public:
         m_referee.replace(pos, count, replacement_str);
         return *this;
     }
-    
+
     void replace_all(std::string_view from, std::string_view to)
     {
         m_referee.replace_all(from, to);
     }
 
-    
+
     constexpr fstring_ref_base& replace(size_type pos, const std::string_view replacement_str)
     {
         m_referee.replace(pos, replacement_str);
@@ -1025,6 +1125,33 @@ public:
         m_referee.scanf(in_to_scan, scanf_format);
         return *this;
     }
+
+    // forward numeric printing to the underlying fstring
+    template<typename TPrintfable>
+    requires is_to_chars_able<TPrintfable>
+    size_t to_chars(const TPrintfable in_to_print)
+    {
+        return m_referee.to_chars(in_to_print);
+    }
+    size_t to_chars(std::floating_point auto in_to_print,
+                    std::chars_format in_format)
+    {
+        return m_referee.to_chars(in_to_print, in_format);
+    }
+    size_t to_chars(std::floating_point auto in_to_print,
+                    std::chars_format in_format,
+                    int in_precision)
+    {
+        return m_referee.to_chars(in_to_print, in_format, in_precision);
+    }
+    // forward formatting to the underlying fstring (char)
+    template <typename... Args>
+    requires std::same_as<CharT, char>
+    constexpr size_t format(std::format_string<Args...> fmt, Args&&... args)
+    {
+        return m_referee.format(fmt, std::forward<Args>(args)...);
+    }
+
 };
 
 using fstr_ref = fstring_ref_base<char>;
