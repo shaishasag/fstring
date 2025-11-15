@@ -22,6 +22,9 @@
 #include <stdexcept>
 #include <string_view>
 using namespace std::string_view_literals;
+#include <cstring>
+#include <format>
+#include <charconv>
 
 
 // *** functions marked as 'non-standard' have no equivalent in std::string or std::string_view
@@ -71,6 +74,9 @@ private:
     size_t m_size{0};
     CharT m_str[TSize+1]{'\0'};
 
+public:
+    constexpr operator fstring_base<0, CharT>& () const { return *(fstring_base<0, CharT>*)(this); }
+private:
     constexpr void set_new_size(size_type new_size) noexcept
     {
         m_size = new_size;
@@ -148,10 +154,19 @@ public:
         {
             append(std::string_view(in_1));
         }
+#ifdef __cpp_lib_to_chars // std::to_chars is the fastest for number to text conversion
         else if constexpr (is_to_chars_able<TFfirst>)
         {
             to_chars(in_1);
         }
+#endif
+#ifdef __cpp_lib_format // std::format is the 2nd fastest for number to text conversion
+        else if constexpr (is_format_able<TFfirst>)
+        {
+            format("{}", in_1);
+        }
+#endif
+        // printf is the 3rd fastest for number to text conversion
         else if constexpr (IsPrintfable<TFfirst>)
         {
             printf(in_1);
@@ -815,6 +830,8 @@ public:
         return *this;
     }
 
+#ifdef __cpp_lib_to_chars
+
     template<typename TPrintfable>
     requires is_to_chars_able<TPrintfable>
     size_t to_chars(const TPrintfable in_to_print)
@@ -828,10 +845,10 @@ public:
             num_chars_printed = result.ptr - end();
             set_new_size(size()+num_chars_printed);
         }
-        
+
         return num_chars_printed;
     }
-    
+
     // format options, are only for floating points:
     //  - std::chars_format::fixed
     //  - std::chars_format::scientific
@@ -849,7 +866,7 @@ public:
             num_chars_printed = result.ptr - end();
             set_new_size(size()+num_chars_printed);
         }
-        
+
         return num_chars_printed;
     }
 
@@ -868,11 +885,12 @@ public:
             num_chars_printed = result.ptr - end();
             set_new_size(size()+num_chars_printed);
         }
-        
+
         return num_chars_printed;
     }
-     
+#endif
 
+#ifdef __cpp_lib_format
     template <typename... Args>
     requires std::same_as<CharT, char>
     constexpr size_t format(std::format_string<Args...> fmt, Args&&... args)
@@ -887,6 +905,7 @@ public:
         set_new_size(size() + written);
         return written;
     }
+#endif
 
 };
 
@@ -1126,6 +1145,7 @@ public:
         return *this;
     }
 
+#ifdef __cpp_lib_to_chars
     // forward numeric printing to the underlying fstring
     template<typename TPrintfable>
     requires is_to_chars_able<TPrintfable>
@@ -1144,6 +1164,10 @@ public:
     {
         return m_referee.to_chars(in_to_print, in_format, in_precision);
     }
+
+#endif
+
+#ifdef __cpp_lib_format
     // forward formatting to the underlying fstring (char)
     template <typename... Args>
     requires std::same_as<CharT, char>
@@ -1151,7 +1175,7 @@ public:
     {
         return m_referee.format(fmt, std::forward<Args>(args)...);
     }
-
+#endif
 };
 
 using fstr_ref = fstring_ref_base<char>;
@@ -1225,6 +1249,7 @@ bool operator==(const TLHS& lhs, const TRHS& rhs)
     return LHSsv == RHSsv;
 }
 
+using hasher = std::hash<std::string_view>;
 
 }
 #endif // __fstring_h__

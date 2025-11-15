@@ -1,7 +1,10 @@
 .DS_Store
 .vs
+*.bak
 *.out.json
 *.vcxproj.user
+Bin
+build
 Debug
 fmt
 googletest
@@ -11,5 +14,3 @@ Release
 x64
 xcshareddata
 xcuserdata
-*.bak
-Bin
