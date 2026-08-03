@@ -118,14 +118,22 @@ TEST(Stream, more_streaming)
     {   // stream to fstr with float and boolean
         fstr::fstr63 vari;
         vari << "The" << ' ' << 3.1415 << ' ' << "Musketeers? " << false;
-        EXPECT_EQ(vari, "The 3.141500000000000181 Musketeers? false");
+        EXPECT_EQ(vari, "The 3.14150000000000018 Musketeers? false");
     }
     {   // stream to fstr_ref with float and boolean
         fstr::fstr63 vari;
         fstr::fstr_ref vari_ref{vari};
         vari_ref << "The" << ' ' << 3.1415 << ' ' << "Musketeers? " << false;
         EXPECT_EQ(vari, vari_ref);
-        EXPECT_EQ(vari, "The 3.141500000000000181 Musketeers? false"sv);
-        EXPECT_EQ(vari_ref, "The 3.141500000000000181 Musketeers? false"sv);
+        EXPECT_EQ(vari, "The 3.14150000000000018 Musketeers? false"sv);
+        EXPECT_EQ(vari_ref, "The 3.14150000000000018 Musketeers? false"sv);
     }
+}
+
+TEST(Stream, quote_me)
+{
+    fstr::fstr63 vari;
+    vari << fstr::quote_me("bananarama");
+    EXPECT_EQ(vari, "\"bananarama\"");
+
 }

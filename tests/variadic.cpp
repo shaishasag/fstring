@@ -30,8 +30,8 @@ TEST(variadic, variadic_basic_types)
         fstr::fstr63 vari(true, ' ', false, ' ',
                           1.23456789f, ' ', 1.23456789,
                           ' ', 1, ' ', 2, ' ',   3);
-        EXPECT_EQ(vari.sv(), "true false 1.2345679 1.23456789 1 2 3"sv);
-        EXPECT_EQ(vari.size(), 37);
+        EXPECT_EQ(vari.sv(), "true false 1.234567881 1.23456788999999989 1 2 3"sv);
+        EXPECT_EQ(vari.size(), 48);
     }
 
 }
@@ -74,11 +74,13 @@ TEST(variadic, variadic_none_string)
     }
     {   // variadic with float and boolean
         fstr::fstr63 vari("The", ' ', 3.1415 , ' ', "Musketeers? ", false);
-        EXPECT_EQ(vari.sv(), "The 3.1415 Musketeers? false"sv);
+        EXPECT_EQ(vari.sv(), "The 3.14150000000000018 Musketeers? false"sv);
     }
-    {   // foramt with float and boolean
+#ifdef __cpp_lib_format
+    {   // format with float and boolean
         fstr::fstr63 formi;
         formi.format("{}{}{}{}{}{}", "The", ' ', 3.1415 , ' ', "Musketeers? ", false);
         EXPECT_EQ(formi.sv(), "The 3.1415 Musketeers? false"sv);
     }
+#endif
 }

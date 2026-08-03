@@ -25,6 +25,7 @@ using namespace std::string_view_literals;
 #include <cstring>
 #include <format>
 #include <charconv>
+#include <limits>
 
 
 // *** functions marked as 'non-standard' have no equivalent in std::string or std::string_view
@@ -180,11 +181,11 @@ public:
 #ifdef _MSC_VER
     #pragma warning(pop)
 #endif
-    constexpr operator std::string_view() const  noexcept
+    [[nodiscard]] constexpr operator std::string_view() const  noexcept
     {
         return std::string_view(c_str(), size());
     }
-    constexpr std::string_view sv() const  noexcept
+    [[nodiscard]] constexpr std::string_view sv() const  noexcept
     {
         return std::string_view(c_str(), size());
     }
@@ -283,6 +284,11 @@ public:
     [[nodiscard]] constexpr size_type max_size() const noexcept {return m_capacity;}
     constexpr void reserve(size_type new_cap) = delete;
     [[nodiscard]] constexpr size_type capacity() const noexcept {return max_size();}
+    // Capacity from the template parameter, so it can be queried without an instance,
+    // e.g. fstr::WTFileNameString::static_capacity(). Note that for the type erased
+    // fstring_base<0, CharT> view TSize is 0 while the referred object has a real
+    // capacity - use capacity() on the instance in that case.
+    [[nodiscard]] static constexpr size_type static_capacity() noexcept {return TSize;}
     constexpr void shrink_to_fit()  noexcept {} // will do nothing, for std::string compatibility
     constexpr void clear() noexcept
     {
@@ -581,32 +587,79 @@ public:
     // find_first_not_of: use fstr::fstrXX.sv().find_first_not_of
     // find_last_not_of: use fstr::fstrXX.sv().find_last_not_of
 
+    // non-standard***
+    constexpr size_type ifind(std::string_view in_sv, size_type pos = 0) const noexcept
+    {
+        if (pos > size() || in_sv.size() > size() - pos) {
+            return npos;
+        }
+        if (in_sv.empty()) {
+            return pos;
+        }
+
+        const auto chars_iequal = [](const CharT lhs, const char rhs) {
+            return std::toupper(static_cast<unsigned char>(lhs)) ==
+                   std::toupper(static_cast<unsigned char>(rhs));
+        };
+
+        const auto match = std::search(cbegin() + pos, cend(),
+                                       in_sv.cbegin(), in_sv.cend(), chars_iequal);
+        return match == cend() ? npos : static_cast<size_type>(match - cbegin());
+    }
+
     constexpr void remove_prefix( size_type n )  noexcept
     {
-        const size_type new_size = size()-n;
-        if (n < size())
+        if (n >= size())
         {
-            std::memmove(m_str, c_str()+n, size()-n);
+            clear();
         }
-        set_new_size(new_size);
+        else
+        {
+            const size_type new_size = size()-n;
+            std::memmove(m_str, data()+n, new_size);
+            set_new_size(new_size);
+        }
+    }
+
+    // non-standard***
+    constexpr void remove_prefix( std::string_view in_prefix )  noexcept
+    {
+        if (!in_prefix.empty() && starts_with(in_prefix))
+        {
+            remove_prefix(in_prefix.size());
+        }
     }
 
     constexpr void remove_suffix( size_type n )  noexcept
     {
-        if (n == size())
+        if (n >= size())
         {
             clear();
         }
-        else if (n < size())
+        else
         {
             resize(size()-n);
         }
     }
 
+    // non-standard***
+    constexpr void remove_suffix( std::string_view in_suffix )  noexcept
+    {
+        if (!in_suffix.empty() && ends_with(in_suffix))
+        {
+            remove_suffix(in_suffix.size());
+        }
+    }
 
     constexpr bool contains(const auto& in_sv) const noexcept
     {
         return sv().find(in_sv) != npos;
+    }
+
+    // non-standard***
+    constexpr bool icontains(std::string_view in_sv) const noexcept
+    {
+        return ifind(in_sv) != npos;
     }
 
     // functions below are not part of std::string(_view)? interface
@@ -689,6 +742,11 @@ public:
     constexpr fstring_base& printf(const TToPrintf in_to_print,
                                    const char* printf_format=nullptr) noexcept
     {
+        if (full())
+        {
+            return *this;
+        }
+
         bool remove_zeros{false};
         if (nullptr == printf_format)
         {
@@ -697,19 +755,32 @@ public:
                 append(in_to_print ? "true"sv : "false"sv);
                 return *this;
             }
-            else if constexpr (std::is_floating_point_v<TToPrintf>) {
-                if (std::is_same_v<TToPrintf, float>) {
-                    printf_format = "%.10f";
+            else if constexpr (std::is_floating_point_v<TToPrintf>)
+            {
+                if constexpr (std::is_same_v<TToPrintf, float>) {
+                    printf_format = "%.9f";              // max_digits10 == 9
                 }
-                else if (std::is_same_v<TToPrintf, double>) {
-                    printf_format = "%.18lf";
+                else if constexpr (std::is_same_v<TToPrintf, double>) {
+                    printf_format = "%.17f";             // max_digits10 == 17
                 }
-                else if (std::is_same_v<TToPrintf, long double>) {
-                    printf_format = "%.18Lf";
+                else if constexpr (std::is_same_v<TToPrintf, long double>) {
+                    // long double is 64-bit on arm64 macOS and on MSVC, 80-bit on x86-64
+                    // gcc/clang, 128-bit on some Linux ABIs. Never hard-code the digits.
+                    constexpr int max_digits = std::numeric_limits<long double>::max_digits10;
+                    if constexpr (max_digits <= 17) {
+                        printf_format = "%.17Lf";        // long double == double
+                    }
+                    else if constexpr (max_digits <= 21) {
+                        printf_format = "%.21Lf";        // 80-bit extended
+                    }
+                    else {
+                        printf_format = "%.36Lf";        // 128-bit quad
+                    }
                 }
                 remove_zeros = true;
             }
-            else if constexpr (std::is_integral_v<TToPrintf> && std::is_signed_v<TToPrintf>) {
+            else if constexpr (std::is_integral_v<TToPrintf> && std::is_signed_v<TToPrintf>)
+            {
                 if constexpr(std::is_same_v<signed char, TToPrintf>) {
                     printf_format = "%hhi";
                 }
@@ -745,24 +816,43 @@ public:
             }
         }
 
-        int num_chars = std::snprintf(end(), vacancy(), printf_format, in_to_print);
-        if (vacancy() == (size_type)num_chars)
+        // in case no format was found for TToPrintf
+        if (nullptr == printf_format)
         {
-            // this means there was not enough room for the number
-            // but final '\0' was printed anyway so actualy there are num_chars-1 chars
-            --num_chars;
+            return *this;
+        }
+        
+        // if we got here vacancy() > 0; passing vacancy()+1 to snprintf because
+        // snprintf will write at most vacancy() chars + '\0'.
+        int num_chars = std::snprintf(end(), vacancy()+1, printf_format, in_to_print);
+        if (0 > num_chars)
+        {
+            return *this;
+        }
+
+        if ((int)vacancy() < num_chars)
+        {
+            num_chars = (int)vacancy();
         }
 
         if (remove_zeros && num_chars > 1)// when ouput_size==1 there are no extra '0's
         {
-            const bool is_dot_found = (memchr(end(), '.', num_chars-1) != nullptr);
+            // search all num_chars, including the last one: truncation can leave
+            // the '.' as the final character, and that case needs fixing too
+            const bool is_dot_found = (memchr(end(), '.', num_chars) != nullptr);
             if (is_dot_found)
             {
-                while (*(end()+(num_chars-1)) == '0') {// remove trailing zeros - if any
+                while (num_chars > 1 && *(end()+(num_chars-1)) == '0') {// remove trailing zeros - if any
                     --num_chars;
                 }
-                if (*(end()+(num_chars-1)) == '.') {  // if . came before 0, leave the last 0 so number will look like 2.0
-                    ++num_chars;
+                if (*(end()+(num_chars-1)) == '.')
+                {
+                    if ((int)vacancy() > num_chars) {
+                        ++num_chars;      // if . came before 0, leave the last 0 so number will look like 2.0
+                    }
+                    else {
+                        --num_chars;      // truncated with no room for the 0: drop the dangling '.'
+                    }
                 }
             }
         }
@@ -888,6 +978,19 @@ public:
 
         return num_chars_printed;
     }
+
+#else
+
+    // poor mans's to_chars() so the function can be used
+    // when the compiler does not support it
+    template<typename TPrintfable>
+    requires std::is_arithmetic_v<TPrintfable>
+    size_t to_chars(const TPrintfable in_to_print)
+    {
+        size_t num_chars_before = size();
+        printf(in_to_print);
+        return size() - num_chars_before;
+    }
 #endif
 
 #ifdef __cpp_lib_format
@@ -931,8 +1034,8 @@ public:
     constexpr fstring_ref_base(const fstring_base<TSize, CharT>& in_gstr) noexcept
         : m_referee((fstring_base<0, CharT>&)in_gstr) {}
 
-    constexpr operator std::string_view() const  noexcept { return std::string_view(m_referee); }
-    constexpr std::string_view sv() const  noexcept { return std::string_view(m_referee); }
+    [[nodiscard]] constexpr operator std::string_view() const  noexcept { return std::string_view(m_referee); }
+    [[nodiscard]] constexpr std::string_view sv() const  noexcept { return std::string_view(m_referee); }
 
     template <typename _Cp>
     requires std::is_same_v<_Cp, CharT>
@@ -1121,6 +1224,10 @@ public:
     {
         return m_referee.ends_with(in_sv);
     }
+    constexpr size_type ifind(std::string_view in_sv, size_type pos = 0) const noexcept
+    {
+        return m_referee.ifind(in_sv, pos);
+    }
     //---
     constexpr size_type vacancy() const noexcept{ return m_referee.vacancy(); }
     constexpr bool full() const noexcept { return m_referee.full(); }
@@ -1128,6 +1235,7 @@ public:
     void trim_back(std::string_view trim_chars=" \f\n\r\t\v") noexcept { return m_referee.trim_back(trim_chars); }
     void trim(std::string_view trim_chars=" \f\n\r\t\v") noexcept { return m_referee.trim(trim_chars); }
     constexpr bool contains(const auto& in_sv)  const noexcept { return m_referee.contains(in_sv); }
+    constexpr bool icontains(std::string_view in_sv) const noexcept { return m_referee.icontains(in_sv); }
     constexpr void tolower() noexcept { return m_referee.tolower(); }
     constexpr void toupper() noexcept { return m_referee.toupper(); }
     inline void reposition_end() noexcept { return m_referee.reposition_end(); }
@@ -1164,7 +1272,12 @@ public:
     {
         return m_referee.to_chars(in_to_print, in_format, in_precision);
     }
-
+#else
+    template<typename TPrintfable>
+    size_t to_chars(const TPrintfable in_to_print)
+    {
+        return m_referee.to_chars(in_to_print);
+    }
 #endif
 
 #ifdef __cpp_lib_format

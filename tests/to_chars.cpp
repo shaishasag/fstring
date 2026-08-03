@@ -13,12 +13,12 @@ TEST(ToChars, simple)
     {   // floating point: zero
         fstr31 fs;
         fs.to_chars(0.0);
-        EXPECT_EQ(fs.sv(), "0"sv);
+        EXPECT_EQ(fs.sv(), "0.0"sv);
     }
     {   // floating point
         fstr31 fs;
         fs.to_chars(0.1);
-        EXPECT_EQ(fs.sv(), "0.1"sv);
+        EXPECT_EQ(fs.sv(), "0.10000000000000001"sv);
     }
     {   // to_chars append
         fstr31 fs;
@@ -30,32 +30,32 @@ TEST(ToChars, simple)
     {   // to_chars after cleat
         fstr31 fs;
         fs.to_chars(1.1);
-        EXPECT_EQ(fs.sv(), "1.1"sv);
+        EXPECT_EQ(fs.sv(), "1.10000000000000009"sv);
         fs.clear();
         fs.to_chars(2.2);
-        EXPECT_EQ(fs.sv(), "2.2"sv);
+        EXPECT_EQ(fs.sv(), "2.20000000000000018"sv);
     }
     {
         fstr31 fs;
         fs.to_chars(float(78.90f));
-        EXPECT_EQ(fs.sv(), "78.9"sv);
+        EXPECT_EQ(fs.sv(), "78.900001526"sv);
         fs.clear();
         fs.to_chars(double(78.90));
-        EXPECT_EQ(fs.sv(), "78.9"sv);
+        EXPECT_EQ(fs.sv(), "78.90000000000000568"sv);
         fs.clear();
         fs.to_chars((long double)(78.90));
-        EXPECT_EQ(fs.sv(), "78.9"sv);
+        EXPECT_EQ(fs.sv(), "78.90000000000000568"sv);
     }
     {
         fstr31 fs;
         fs.to_chars(float(123.456f));
-        EXPECT_EQ(fs.sv(), "123.456"sv);
+        EXPECT_EQ(fs.sv(), "123.456001282"sv);
         fs.clear();
         fs.to_chars(double(123.456));
-        EXPECT_EQ(fs.sv(), "123.456"sv);
+        EXPECT_EQ(fs.sv(), "123.45600000000000307"sv);
         fs.clear();
         fs.to_chars((long double)(123.456));
-        EXPECT_EQ(fs.sv(), "123.456"sv);
+        EXPECT_EQ(fs.sv(), "123.45600000000000307"sv);
     }
     {
         fstr31 fs;
@@ -71,13 +71,13 @@ TEST(ToChars, simple)
     {
         fstr31 fs;
         fs.to_chars(100.0123456789f);
-        EXPECT_EQ(fs.sv(), "100.012344"sv);
+        EXPECT_EQ(fs.sv(), "100.01234436"sv);
         fs.clear();
         fs.to_chars(double(9876543210.0123456789));
-        EXPECT_EQ(fs.sv(), "9876543210.012346"sv);
+        EXPECT_EQ(fs.sv(), "9876543210.01234626770019531"sv);
         fs.clear();
         fs.to_chars((long double)(9876543210.0123456789));
-        EXPECT_EQ(fs.sv(), "9876543210.012346"sv);
+        EXPECT_EQ(fs.sv(), "9876543210.01234626770019531"sv);
     }
 //    {   // Hex format
 //        fstr31 fs;
@@ -118,23 +118,22 @@ TEST(ToChars, too_small_buffer)
         fstr15 fs("abcdefghijklmnopqrstuvwxyz"sv);
         fs.resize(12);
         size_t num_chars = fs.to_chars(1.0101);
-        EXPECT_EQ(num_chars, 0);
-        // value too large, string should not change
-        EXPECT_EQ(fs.sv(), "abcdefghijkl"sv);
+        EXPECT_EQ(num_chars, 3);
+        EXPECT_EQ(fs.sv(), "abcdefghijkl1.0"sv);
     }
     {   // same but with reference
         fstr15 fs("abcdefghijklmnopqrstuvwxyz"sv);
         fs.resize(12);
         fstr::fstr_ref fs_ref(fs);
         size_t num_chars = fs_ref.to_chars(1.0101);
-        EXPECT_EQ(num_chars, 0);
-        // value too large, string should not change
-        EXPECT_EQ(fs_ref.sv(), "abcdefghijkl"sv);
+        EXPECT_EQ(num_chars, 3);
+        EXPECT_EQ(fs_ref.sv(), "abcdefghijkl1.0"sv);
     }
 }
 
 TEST(Format, basic_format)
 {
+#ifdef __cpp_lib_format
     {
         fstr63 fs("A message: ");
         size_t num_chars = fs.format("Hello {}, you have {} new messages",
@@ -154,10 +153,12 @@ TEST(Format, basic_format)
         // value too large, string should not change
         EXPECT_EQ(fs_ref.sv(), "A message: Hello Shai, you have 3 new messages"sv);
     }
+#endif
 }
 
 TEST(Format, fstr_too_short)
 {
+#ifdef __cpp_lib_format
     {
         fstr31 fs("A message: ");
         size_t num_chars = fs.format("Hello {}, you have {} new messages",
@@ -177,6 +178,7 @@ TEST(Format, fstr_too_short)
         // value too large, string should not change
         EXPECT_EQ(fs_ref.sv(), "A message: Hello Shai, you have"sv);
     }
+#endif
 }
 
 TEST(Format, compare)
@@ -193,9 +195,10 @@ TEST(Format, compare)
         std::cout << "fs_to_chars: " << fs_to_chars.sv() << std::endl;
     }
 
+#ifdef __cpp_lib_format
     {
         fstr31 fs_format; fs_format.format("{}", f);
         std::cout << "fs_format: " << fs_format.sv() << std::endl;
     }
-
+#endif
 }

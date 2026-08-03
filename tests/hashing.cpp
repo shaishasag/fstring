@@ -5,7 +5,7 @@
 
 TEST(Hashing, unordered_map)
 {
-    using fstring_map_t = std::unordered_map<fstr::fstr15, fstr::fstr31, fstr::fstr_hasher>;
+    using fstring_map_t = std::unordered_map<fstr::fstr15, fstr::fstr31, fstr::hasher>;
 
     fstring_map_t my_map;
 

@@ -9,20 +9,10 @@
 
 using namespace fstr;
 
-
-struct fstring_ref_hasher
-{
-    std::size_t operator()(fstr::fstr_ref in_fixed_ref_to_hash) const noexcept
-    {
-        std::string_view sv{in_fixed_ref_to_hash};
-        return std::hash<std::string_view>()(sv);
-    }
-};
-
 /// fstr::fstr_base as key and value in std::unordered_map
 TEST(Containers, UnorderedMap)
 {
-    std::unordered_map<fstr::fstr31, fstr::fstr31, fstr::fstr_hasher> uom;
+    std::unordered_map<fstr::fstr31, fstr::fstr31, fstr::hasher> uom;
     fstr::fstr31 s31("1st");
     uom[s31] = s31;
     EXPECT_EQ(uom.count("1st"), 1);

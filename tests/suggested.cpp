@@ -126,7 +126,7 @@ TEST(FStringExceptionTest, OutOfRange)
 
 TEST(FStringCompatibilityTest, HashWorksInUnorderedSet)
 {
-    std::unordered_set<fstr::fstr31, fstr::fstr_hasher> set;
+    std::unordered_set<fstr::fstr31, fstr::hasher> set;
     set.insert(fstr::fstr31("alpha"));
     set.insert(fstr::fstr31("beta"));
     EXPECT_EQ(set.count("alpha"), 1);

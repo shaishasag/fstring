@@ -10,8 +10,12 @@
 #include <limits.h>
 #include <charconv>
 #include <iostream>
+#include <type_traits>
 
 // compiler does not know how to convert from fstring_base<CharT> to  fstring_ref_base<CharT>
+
+namespace fstr
+{
 
 inline fstr::fstr_ref operator<<(fstr::fstr_ref fref, const char* in_c_str_to_stream)
 {
@@ -65,15 +69,32 @@ inline std::ostream& operator<<(std::ostream& os, const fstr::fstr_ref myStr)
     return os;
 }
 
-namespace fstr
+template<typename ToDQuote>
+class quote_me
 {
-struct fstr_hasher
-{
-    std::size_t operator()(const fstr::fstr_ref in_fixed_str_to_hash) const noexcept
+public:
+    explicit quote_me(const ToDQuote& in_to_quote)
+    : m_to_quote(in_to_quote)
     {
-        return std::hash<std::string_view>()(std::string_view(in_fixed_str_to_hash));
     }
+    
+    const ToDQuote& m_to_quote;
 };
+
+// Without this guide, CTAD would treat the constructor's parameter as a plain
+// rvalue reference (ToDQuote is declared by the class template, so it is not a
+// forwarding reference here) and lvalue arguments would fail to deduce.
+template<typename ToDQuote>
+quote_me(ToDQuote&&) -> quote_me<std::decay_t<ToDQuote>>;
+
+template<typename ToDQuote>
+inline fstr::fstr_ref operator<<(fstr::fstr_ref fref, const quote_me<ToDQuote>& thing_to_dquote)
+{
+    fref << '"' << thing_to_dquote.m_to_quote << '"';
+    return fref;
+    
+};
+
 
 /// Splits a std::string_view using a string delimiter into a vector of string_views.
 ///
@@ -161,15 +182,31 @@ void join(const std::vector<std::string_view>& parts,
             total_size += part.size();
         }
         total_size += delim.size() * (parts.size() - 1);
-    
+
         result.reserve(total_size);
     }
-    
+
     result += parts[0];
     for (size_t i = 1; i < parts.size() && result.max_size() > result.size(); ++i)
     {
         result += delim;
         result += parts[i];
+    }
+}
+
+inline void replace_all_not_of(fstr::fstr_ref in_out_str,
+                               std::string_view in_allowed,
+                               char in_replacement)
+{
+    bool table[256] = {false};
+
+    for (unsigned char c : in_allowed)
+        table[c] = true;
+
+    for (auto& ch : in_out_str)
+    {
+        if (!table[static_cast<unsigned char>(ch)])
+            ch = in_replacement;
     }
 }
 
