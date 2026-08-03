@@ -11,6 +11,7 @@
 #include <charconv>
 #include <iostream>
 #include <type_traits>
+#include <utility>
 
 // compiler does not know how to convert from fstring_base<CharT> to  fstring_ref_base<CharT>
 
@@ -69,31 +70,123 @@ inline std::ostream& operator<<(std::ostream& os, const fstr::fstr_ref myStr)
     return os;
 }
 
-template<typename ToDQuote>
-class quote_me
+// Streaming a wrap_me writes TOpen, then the value, then TClose. The value is
+// held by reference, so a wrap_me must not outlive the full-expression it was
+// created in - which is the normal usage: stream << quote_me(x).
+// TClose defaults to TOpen, so a symmetric wrapper only needs the one character:
+// wrap_me<'#', std::string_view> is the same as wrap_me<'#', std::string_view, '#'>.
+template<char TOpen, typename ToWrap, char TClose = TOpen>
+class wrap_me
 {
 public:
-    explicit quote_me(const ToDQuote& in_to_quote)
-    : m_to_quote(in_to_quote)
+    explicit wrap_me(const ToWrap& in_to_wrap)
+    : m_to_wrap(in_to_wrap)
     {
     }
-    
-    const ToDQuote& m_to_quote;
+
+    static constexpr char opening_char{TOpen};
+    static constexpr char closing_char{TClose};
+
+    const ToWrap& m_to_wrap;
 };
 
-// Without this guide, CTAD would treat the constructor's parameter as a plain
-// rvalue reference (ToDQuote is declared by the class template, so it is not a
-// forwarding reference here) and lvalue arguments would fail to deduce.
-template<typename ToDQuote>
-quote_me(ToDQuote&&) -> quote_me<std::decay_t<ToDQuote>>;
+// The named wrappers are aliases of wrap_me where the compiler supports CTAD
+// through an alias template - C++20's P1814 - and derived classes otherwise.
+// Both forms spell the same thing and support the same usage; only the alias
+// form needs P1814, because fstr::quote_me(x) with no template argument list
+// has to deduce ToWrap through the alias.
+// The feature test is on __cpp_deduction_guides rather than __cplusplus on
+// purpose: P1814 is a core C++20 feature, but compilers shipped it long after
+// they began claiming C++20 - Apple clang 16 still reports 201703 even under
+// -std=c++23, so keying off __cplusplus would break that build.
+#if defined(__cpp_deduction_guides) && __cpp_deduction_guides >= 201907L
 
-template<typename ToDQuote>
-inline fstr::fstr_ref operator<<(fstr::fstr_ref fref, const quote_me<ToDQuote>& thing_to_dquote)
+template<typename ToWrap> using quote_me        = wrap_me<'"',  ToWrap>;
+template<typename ToWrap> using single_quote_me = wrap_me<'\'', ToWrap>;
+template<typename ToWrap> using brace_me        = wrap_me<'[',  ToWrap, ']'>;
+template<typename ToWrap> using curly_brace_me  = wrap_me<'{',  ToWrap, '}'>;
+template<typename ToWrap> using angle_brace_me  = wrap_me<'<',  ToWrap, '>'>;
+template<typename ToWrap> using parenthesize_me = wrap_me<'(',  ToWrap, ')'>;
+
+#else
+
+// Each derived wrapper needs its own deduction guide: without one, CTAD would
+// treat the inherited constructor's parameter as a plain rvalue reference -
+// ToWrap is declared by the class template, so it is not a forwarding reference
+// there - and lvalue arguments would fail to deduce.
+#define FSTR_DECLARE_WRAPPER(WRAPPER_NAME, OPENING_CHAR, CLOSING_CHAR)      \
+template<typename ToWrap>                                                   \
+class WRAPPER_NAME : public wrap_me<OPENING_CHAR, ToWrap, CLOSING_CHAR>     \
+{                                                                           \
+public:                                                                     \
+    using wrap_me<OPENING_CHAR, ToWrap, CLOSING_CHAR>::wrap_me;             \
+};                                                                          \
+template<typename ToWrap>                                                   \
+WRAPPER_NAME(ToWrap&&) -> WRAPPER_NAME<std::decay_t<ToWrap>>
+
+FSTR_DECLARE_WRAPPER(quote_me,        '"',  '"');
+FSTR_DECLARE_WRAPPER(single_quote_me, '\'', '\'');
+FSTR_DECLARE_WRAPPER(brace_me,        '[',  ']');
+FSTR_DECLARE_WRAPPER(curly_brace_me,  '{',  '}');
+FSTR_DECLARE_WRAPPER(angle_brace_me,  '<',  '>');
+FSTR_DECLARE_WRAPPER(parenthesize_me, '(',  ')');
+
+#undef FSTR_DECLARE_WRAPPER
+
+#endif // __cpp_deduction_guides >= 201907L
+
+// For characters with no named wrapper, when the value type should be deduced:
+//     fstr << fstr::wrap<'|'>(value);        // both characters are '|'
+//     fstr << fstr::wrap<'<', '>'>(value);   // asymmetric
+// The characters stay adjacent here, unlike in wrap_me itself, so that TClose can
+// be given without also spelling out the value type. Naming wrap_me directly and
+// leaving TClose to default needs the type: wrap_me<'#', std::string_view>.
+template<char TOpen, char TClose = TOpen, typename ToWrap>
+inline wrap_me<TOpen, ToWrap, TClose> wrap(const ToWrap& in_to_wrap)
 {
-    fref << '"' << thing_to_dquote.m_to_quote << '"';
+    return wrap_me<TOpen, ToWrap, TClose>(in_to_wrap);
+}
+
+// Only declared, never defined - used solely to ask "does T derive from some
+// wrap_me?" inside the concept below.
+template<char TOpen, typename ToWrap, char TClose>
+void is_wrap_me_probe(const wrap_me<TOpen, ToWrap, TClose>&);
+
+template<typename TWrapper>
+concept IsWrapMe = requires (const TWrapper& in_wrapper) { is_wrap_me_probe(in_wrapper); };
+
+// Note this takes the wrapper as a deduced parameter constrained by IsWrapMe,
+// rather than as a wrap_me<TOpen, ToWrap, TClose> pattern. With the pattern, a
+// derived wrapper such as quote_me needs a derived-to-base conversion, which
+// ranks below the exact match that the generic operator<<(fstr_ref, const
+// ToStream&) above offers - so the generic one would win and silently write
+// nothing, since a wrapper matches none of the branches in its if constexpr
+// chain. Deducing the wrapper type makes this an exact match too, and the
+// constraint then makes it the more specialized candidate.
+template<IsWrapMe TWrapper>
+inline fstr::fstr_ref operator<<(fstr::fstr_ref fref, const TWrapper& thing_to_wrap)
+{
+    fref << TWrapper::opening_char << thing_to_wrap.m_to_wrap << TWrapper::closing_char;
     return fref;
-    
-};
+}
+
+// Same for any other stream, so long as 'stream << char << value << char'
+// compiles for it - std::ostream, std::ostringstream, or a user's own type.
+// TStream is a forwarding reference so that both lvalue streams (std::cout) and
+// prvalue handles bind, and decltype(auto) propagates whatever the underlying
+// chain returns: a reference for std::ostream, a value for a handle.
+// A stream that cannot accept the wrapped type fails to compile inside, which is
+// intended. Streams convertible to fstr_ref are excluded so this never competes
+// with the overload above - without that, an already-exact fstr_ref left
+// operand makes the two candidates ambiguous, since each is more specialized in
+// a different parameter.
+template<typename TStream, IsWrapMe TWrapper>
+requires (! std::is_convertible_v<TStream, fstr::fstr_ref>)
+inline decltype(auto) operator<<(TStream&& stream, const TWrapper& thing_to_wrap)
+{
+    return std::forward<TStream>(stream)
+                << TWrapper::opening_char << thing_to_wrap.m_to_wrap << TWrapper::closing_char;
+}
 
 
 /// Splits a std::string_view using a string delimiter into a vector of string_views.
